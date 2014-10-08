@@ -1,0 +1,10 @@
+Package: fit4NM
+Version: 3.9.0
+Date: 2013-7-27
+Title: NONMEM platform
+Author: Eun-Kyung Lee, Gyujeong Noh
+Maintainer: Eun-Kyung Lee <lee.eunk@ewha.ac.kr>
+Depends: gWidgets, tcltk, tkrplot, RGtk2, gWidgetsRGtk2, cairoDevice, 
+Imports: PPtree, coda
+Description: This package is for NONMEM user
+License: LGPL-2.1
