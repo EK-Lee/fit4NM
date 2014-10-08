@@ -1,6 +1,7 @@
 fit4NM<-function()
 {  options(guiToolkit="RGtk2")
-#   imports(gWidgets)
+
+   #   imports(gWidgets)
 #   imports(tcltk)
 #   imports(tkrplot)
 #   imports(RGtk2)
@@ -7289,7 +7290,7 @@ if(add.Command!=" ")
                AddInfo<-select.AddInfo(file.id)
 
             
-# PE °è»ê
+# PE ????
 # MDWR / MDAWR / MAWR / MWR 
                CVTEST.ctl()
                CV.command<-paste(Default.NMpath," CV-TEST.CTL CV-TEST.RES")
