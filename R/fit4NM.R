@@ -1,27 +1,42 @@
+#' Platform for PKPD modelling using NONMEM
+#' 
+#' fit4NM is the software for the exploratory analysis for pharmacometrics. 
+#' It helps NONMEM users check their data, fit their model using NONMEM, 
+#' and diagnosis their fitted model. This software is build on R and provide
+#' a user-friendly graphical interface for the graphics and statistical analysis 
+#' including running NONMEM.  Therefore, na?ve users can use fit4NM to check their 
+#' data, fit their model using NONMEM, and diagnosis their model by clicking mouse button.
+#' @usage fit4NM()
+#' @references Lee, E., Noh, GJ(2011) 
+#' fit4NM: A tool for NONMEM users, PAGANZ 2011, Auckland
+#' @keywords  GUI
+#' @export
+#' @examples
+#' fit4NM()
 fit4NM<-function()
 {  options(guiToolkit="RGtk2")
-
-   #   imports(gWidgets)
-#   imports(tcltk)
-#   imports(tkrplot)
-#   imports(RGtk2)
-#   imports(gWidgetsRGtk2)
-#   imports(cairoDevice)   
-#   imports(PPtree)
-#   imports(mcsm)
-   fit4NM.env<-new.env()   
+   require(gWidgets)
+   require(tcltk)
+   require(tkrplot)
+   require(RGtk2)
+   require(gWidgetsRGtk2)
+   require(cairoDevice)   
+   require(PPtree)
+   require(mcsm)
+   
    dir.create("c:/fit4NM",showWarnings=FALSE)
    if(length(dir("c:/fit4NM",all.files=TRUE))>2)
-   {   load("c:/fit4NM/.Rdata",fit4NM.env)
+   {   load("c:/fit4NM/.Rdata",.GlobalEnv)
    }
    
-   assign("PRED.list.7",c("PRED","IPRED", "NPRED" ,"PREDI","CPRED","CPREDI","EPRED"),envir = fit4NM.env)
-   assign("RES.list.7",c("RES","IRES","WRES","IWRES","NWRES","NRES","RESI","WRESI","CRES",
-                 "CWRES","CRESI","CWRESI","ERES","EWRES","NPDE"),envir = fit4NM.env)
-   assign("PRED.list.7.1",c("PRED","IPRED"),envir = fit4NM.env)
-   assign("RES.list.7.1",c("RES","IRES","WRES","IWRES"),envir = fit4NM.env)
-   assign("PRED.list.6",c("PRED","IPRE"),envir = fit4NM.env)
-   assign("RES.list.6",c("RES","WRES","IWRE","IRES"),envir = fit4NM.env)
+   PRED.list.7<<-c("PRED","IPRED", "NPRED" ,"PREDI","CPRED","CPREDI","EPRED")
+   RES.list.7<<-c("RES","IRES","WRES","IWRES","NWRES","NRES","RESI","WRESI","CRES",
+               "CWRES","CRESI","CWRESI","ERES","EWRES","NPDE")
+   PRED.list.7.1<<-c("PRED","IPRED")
+   RES.list.7.1<<-c("RES","IRES","WRES","IWRES")
+               
+   PRED.list.6<<-c("PRED","IPRE")
+   RES.list.6<<-c("RES","WRES","IWRE","IRES")
  
    ############################################################################# 
    # Configuration
@@ -31,46 +46,46 @@ fit4NM<-function()
    ConfigNotes<-function(h,...)
    {  gmessage("*** Notes before configuration ***
                 \nNONMEM help
-                \n      Find \'c:\\NONMEM folder\\html\\index.htm\\' for both of the default and alternative NONMEM.",container=TRUE,width=600)   
+                \n      Find \'c:\\NONMEM folder\\html\\index.htm\\' for both of the default and alternative NONMEM.",cont=TRUE,width=600)   
    }
    
    #### Set NONMEM path-default ################################################
    NMpath1<-function(h,...)
-   {  assign("Default.NMpath",gfile(text="Choose default NONMEM",type="open"),envir = fit4NM.env)
+   {  Default.NMpath<<-gfile(text="Choose default NONMEM",type="open")
    }
 
    #### Set NONMEM help-default ################################################  
    NMpathHelp1<-function(h,...)
-   {  assign("Default.Helppath",gfile(text="Choose default NONMEM help - index.htm",type="open"),envir = fit4NM.env)
+   {  Default.Helppath<<-gfile(text="Choose default NONMEM help - index.htm",type="open")
    }
 
    #### Set path for parallel computing############################################
    
    PSEXE<-function(h,...)
-   {  assign("path.PSEXE",gfile(text="Choose path for psexec.exe",type="open"),envir = fit4NM.env)   
+   {  path.PSEXE<<-gfile(text="Choose path for psexec.exe",type="open")   
    }
    
    MPI<-function(h,...)
-   {  assign("path.MPI",gfile(text="Choose path for *.pnm(MPI)",type="open"),envir = fit4NM.env)   
+   {  path.MPI<<-gfile(text="Choose path for *.pnm(MPI)",type="open")   
    } 
    
    FPI<-function(h,...)
-   {  assign("path.FPI",gfile(text="Choose path for *.pnm(FPI)",type="open"),envir = fit4NM.env)   
+   {  path.FPI<<-gfile(text="Choose path for *.pnm(FPI)",type="open")   
    }   
 
    #### Set NONMEM path-alternative ############################################
    NMpath2<-function(h,...)
-   {  assign("Alternative.NMpath",gfile(text="Choose alternative NONMEM",type="open"),envir = fit4NM.env)
+   {  Alternative.NMpath<<-gfile(text="Choose alternative NONMEM",type="open")
    }
     
    #### Set NONMEM help-alternative ############################################
    NMpathHelp2<-function(h,...)
-   {  assign("Alternative.Helppath",gfile(text="Choose alternative NONMEM help - index.htm",type="open"),envir = fit4NM.env)
+   {  Alternative.Helppath<<-gfile(text="Choose alternative NONMEM help - index.htm",type="open")
    }
      
    #### Set external editor ####################################################
    Editorpath<-function(h,...)
-   {  assign("Editor.path",gfile(text="Choose external editor",type="open"),envir = fit4NM.env)
+   {  Editor.path<<-gfile(text="Choose external editor",type="open")
    }
     
    #### Save configuration #####################################################
@@ -93,18 +108,16 @@ fit4NM<-function()
       save.list<-save.list[!is.na(save.list)]
       save(list = save.list, file = "c:/fit4NM/.Rdata")
    }
+
    ############################################################################# 
    # Data
    #############################################################################
 
    #### Data manipulation ###################################################### 
-   #### Data manipulation ###################################################### 
    ###### Calculate elapsed time ###############################################  
    CalcTime<-function(h,...)
-   {  CalcTime.env<-new.env()
-      openStandard<-function(h,...)
-      {  with(CalcTime.env,{
-         standard.file<-gfile(text="Choose standard time file",type="open")
+   {  openStandard<-function(h,...)
+      {  standard.file<<-gfile(text="Choose standard time file",type="open")
          temp<-strsplit(standard.file,split="\\\\")[[1]]
          file.id<-temp[length(temp)]
          dir.name<-strsplit(standard.file,split=file.id)[[1]]
@@ -112,39 +125,36 @@ fit4NM<-function()
          svalue(standard.t)<-standard.file
          ref.data<-read.csv(standard.file)
          ind.list<-colnames(ref.data)
-         tmp<-gframe("",container=BBgroup,height=50)
+         tmp<-gframe("",cont=BBgroup,height=50)
          button4<-gbutton("Select indicator",width=20,height=10)
          add(tmp,button4)
-         indc.t<-gdroplist(c("NONE",ind.list))
+         indc.t<<-gdroplist(c("NONE",ind.list))
          add(tmp,indc.t)        
-         tmp<-gframe("",container=BBgroup)
+         tmp<-gframe("",cont=BBgroup)
          button2<-gbutton("Select data folder #ID, DATE (yyyy-mm-dd), TIME (h:mm:ss),... after data split by ID",handler=openIndiv1,width=20,height=10)
          add(tmp,button2)
-         indiv.t<-gdroplist(c(" "))
+         indiv.t<<-gdroplist(c(" "))
          add(tmp,indiv.t)
-         tmp<-gframe("",container=BBgroup,height=50)
+         tmp<-gframe("",cont=BBgroup,height=50)
          button4<-gbutton("Select time unit",width=20,height=10)
          add(tmp,button4)
-         time.t<-gdroplist(c("secs","mins","hours","days","weeks"))
+         time.t<<-gdroplist(c("secs","mins","hours","days","weeks"))
          add(tmp,time.t)
-         tmp<-gframe("",container=BBgroup)
+         tmp<-gframe("",cont=BBgroup)
          button3<-gbutton("Calculate and save as csv",handler=ElapseTime,width=20,height=10)
-         add(tmp,button3)   
-         } )     
+         add(tmp,button3)         
       }
       
       openIndiv1<-function(h,...)
-      {  with(CalcTime.env,{        
-         indiv.dir<-gfile(text="Choose folder for individual data",type="selectdir")
+      {  indiv.dir<<-gfile(text="Choose folder for individual data",type="selectdir")
          indiv.file<-dir(indiv.dir)
          for(i in 1:length(indiv.file))
          {  indiv.t[i]<-indiv.file[i]
          }
-         })
       }
   
       ElapseTime<-function(h,...)
-      {   with(CalcTime.env,{
+      {       
          setTIME<-svalue(standard.t)
          setDIR<-indiv.dir 
          UNIT<-svalue(time.t)
@@ -155,12 +165,10 @@ fit4NM<-function()
          file.name<-strsplit(temp,split="\\.")[[1]][1]
          write.csv(New.Time,paste(file.name,".csv",sep=""),row.names=F,quote=F)
          dispose(timewin1)  
-         })
       }
 
       CalcTIME0<-function(setTIME,setDIR,UNIT,ind.VAR)
-      {   with(CalcTime.env,{
-         file.list<-dir(setDIR)
+      {  file.list<-dir(setDIR)
          setTIME<-read.csv(standard.file)
          tot.data<-NULL
          for(i in 1:length(file.list))
@@ -209,43 +217,39 @@ fit4NM<-function()
          temp[temp=="X.ID"]<-"#ID"
          colnames(tot.data)<-temp
          return(tot.data)
-         })
       }
-      with(CalcTime.env,{
-      timewin1<-gwindow("Caclulate elapsed time")
-      BBgroup<-ggroup(container=timewin1,horizontal=FALSE)
-      Bgroup1<-ggroup(container=BBgroup,horizontal=TRUE)
-      tmp<-gframe("",container=BBgroup)
+
+      timewin1<<-gwindow("Caclulate elapsed time")
+      BBgroup<<-ggroup(cont=timewin1,horizontal=FALSE)
+      Bgroup1<<-ggroup(cont=BBgroup,horizontal=TRUE)
+      tmp<-gframe("",cont=BBgroup)
       standard.t<-gedit(" ",width=50)
       button1<-gbutton("Open reference time file #ID, DATE0 (yyyy-mm-dd), TIME0 (h:mm:ss)",handler=openStandard)
       add(tmp,button1)
       add(tmp,standard.t)
-      })
    }
+
    ###### Join data ############################################################  
    DataJoinhandler<-function(h,...)
-   {  DataJoin.env<-new.env()
-      DataJoin<-function(h,...)
-      {  with(DataJoin.env,{
-         tmp<-DataJoin.totDATA
-         dir.name<-gfile(text="Data file folder",type="selectdir")
-         tclvalue(DataJoin.Name)<-dir.name
+   {  DataJoin<-function(h,...)
+      {  tmp<-DataJoin.totDATA
+         dir.name<<-gfile(text="Data file folder",type="selectdir")
+         tclvalue(DataJoin.Name)<<-dir.name
          setwd(dir.name)
          indiv.file<-dir(dir.name)
          for(i in 1:length(indiv.file))
          {  tmp[[i]]<-read.csv(indiv.file[i],na.strings=".")
          }
-         DataJoin.totDATA<-tmp
-         DJk<-length(indiv.file)
-         })
+         DataJoin.totDATA<<-tmp
+         DJk<<-length(indiv.file)
       }
 
       JoinData<-function(h,...)
-      {   with(DataJoin.env,{
-          merge.data<-DataJoin.totDATA[[1]]
+      {  merge.data<-DataJoin.totDATA[[1]]
             if(DJk>=2)
             {  for(i in 2:DJk)
-               {  merge.data<-merge(merge.data,DataJoin.totDATA[[i]],all=T)
+               {  #merge.data<-merge(merge.data,DataJoin.totDATA[[i]],by=by.var,suffixes=c("",""))
+                  merge.data<-merge(merge.data,DataJoin.totDATA[[i]],all=T)
                }
                temp<-colnames(merge.data)
                temp[temp=="X.ID"]<-"#ID"
@@ -255,12 +259,11 @@ fit4NM<-function()
             } else
             {  warnings()
             }
-            tkdestroy(Toptt)  
-        })  
+            tkdestroy(Toptt)    
       }
-      with(DataJoin.env,{
-      DataJoin.totDATA<-list()
-      Toptt<-tktoplevel()
+
+      DataJoin.totDATA<<-list()
+      Toptt<<-tktoplevel()
       tkwm.title(Toptt,"Data join")
       tt<-tkframe(Toptt)
       ttg<-tkframe(tt)
@@ -273,15 +276,13 @@ fit4NM<-function()
       tkgrid(tklabel(tt,text=""),
                     OK.but2,DataJoinName,tklabel(tt,text=""),tklabel(tt,text=""),Join.but)
       tkgrid(tt)	
-      })
    }
       
    ###### Split data ###########################################################  
 
    DataSplit<-function(h,...)
    {  splitD<-function(h,...)
-      {  
-         splitDIR<-gfile("Choose folder",type="selectdir")
+      {  splitDIR<-gfile("Choose folder",type="selectdir")
          setwd(splitDIR)
          cond1<-svalue(VarList.g1)
          cond2<-svalue(VarList.g2)
@@ -313,23 +314,21 @@ fit4NM<-function()
       VarList.g1<-gdroplist(Var.Name)
       VarList.g2<-gdroplist(c("NONE",Var.Name))
       gDS<-gwindow("Data split",width=100)
-      ggDS<-ggroup(horizontal=FALSE,container=gDS)
-      tmp<-gframe("Level 1",container=ggDS)
+      ggDS<-ggroup(horizontal=FALSE,cont=gDS)
+      tmp<-gframe("Level 1",cont=ggDS)
       add(tmp,VarList.g1)
-      tmp<-gframe("Level 2",container=ggDS)
+      tmp<-gframe("Level 2",cont=ggDS)
       add(tmp,VarList.g2)
       Button1<-gbutton("OK",handler=splitD)
-      tmp<-gframe("Split",container=ggDS)
+      tmp<-gframe("Split",cont=ggDS)
       add(tmp,Button1)
    }
       
    ###### Convert data #########################################################  
    ######## colume to line #####################################################  
    ColtoLine<-function(h,...)
-   {  ColtoLine.env<-new.env()
-      convert.CL<-function(h,...)
-      {  with(ColtoLine.env,{
-         CL.name.list<-NULL
+   {  convert.CL<-function(h,...)
+      {  CL.name.list<-NULL
          if(sum(toupper(colnames(conv.data))=="MDV")!=0)
             conv.data<-conv.data[conv.data$MDV!=1,]        
          for(i in 1:3)
@@ -352,55 +351,47 @@ fit4NM<-function()
             prep.i<-cbind(prep.i,temp$Y)
          }
          colnames(prep.i)<- c("X",subj)
-         assign("CL.final",prep.i,envir = fit4NM.env)
-         tmp<-gframe("Save as csv",container=Bgroup1)
-         gbutton("Save",handler=save.CL,container=tmp)
-         })
+         CL.final<<-prep.i
+         tmp<-gframe("Save as csv",cont=Bgroup1)
+         gbutton("Save",handler=save.CL,cont=tmp)
       }   
 
       save.CL<-function(h,...)
-      {  with(ColtoLine.env,{
-         save.name<-gfile(text="save as csv",type="save")
+      {  save.name<-gfile(text="save as csv",type="save")
          write.table(CL.final, paste(save.name,".csv",sep=""), sep=",", row.names=F,na=".")
          dispose(CtoL.win)
-         })
       } 
 
       select.CL<-function(h,...)
-      {  with(ColtoLine.env,{
-         sum.name<-gfile(text="csv file with column data (eg: ID, TIME, DV)",type="open")
+      {  sum.name<-gfile(text="csv file with column data (eg: ID, TIME, DV)",type="open")
          svalue(file.CL)<-sum.name
-         conv.data<-read.csv(sum.name,na.strings=".")
+         conv.data<<-read.csv(sum.name,na.strings=".")
          CL.g<-list()
-         assign("CL.list",list(),envir = fit4NM.env)
+         CL.list<<-list()
          CLparam.input<-c("ID","X","Y")
          for(i in 1:3)
-         {  CL.g[[i]]<-ggroup(container=Bgroup1)
-            glabel(CLparam.input[i],container=CL.g[[i]])
-            temp<- gdroplist(colnames(conv.data),container=CL.g[[i]])
-            CL.list[[i]]<-temp
+         {  CL.g[[i]]<-ggroup(cont=Bgroup1)
+            glabel(CLparam.input[i],cont=CL.g[[i]])
+            temp<- gdroplist(colnames(conv.data),cont=CL.g[[i]])
+            CL.list[[i]]<<-temp
          }
-         tmp<-gframe("Convert",container=Bgroup1)
-         gbutton("Convert",handler=convert.CL,container=tmp)
-         })
+         tmp<-gframe("Convert",cont=Bgroup1)
+         gbutton("Convert",handler=convert.CL,cont=tmp)
       }  
-      with(ColtoLine.env,{
-      CtoL.win<-mgwindow("Convert data : column to line")
-      BBgroup<-ggroup(container=CtoL.win,horizontal=TRUE)
-      Bgroup1<-ggroup(container=BBgroup, horizontal=FALSE)
-      tmp<-gframe("Open csv file with column data (eg: ID, TIME, DV)",container=Bgroup1)
-      assign("file.CL",gedit(" ",container=tmp),envir = fit4NM.env)
-      glabel("(missing=\".\")",container=tmp)        
-      gbutton("Open",handler=select.CL,container=tmp)
-      })
+ 
+      CtoL.win<<-gwindow("Convert data : column to line")
+      BBgroup<-ggroup(cont=CtoL.win,horizontal=TRUE)
+      Bgroup1<-ggroup(cont=BBgroup, horizontal=FALSE)
+      tmp<-gframe("Open csv file with column data (eg: ID, TIME, DV)",cont=Bgroup1)
+      file.CL<<-gedit(" ",cont=tmp)
+      glabel("(missing=\".\")",cont=tmp)        
+      gbutton("Open",handler=select.CL,cont=tmp)
    }
       
    ######## line to colume #####################################################  
    LinetoCol<-function(h,...)
-   {  LinetoCol.env<-new.env()
-      convert.CL<-function(h,...)
-      {  with(LinetoCol,{
-         ID.n<-ncol(conv.data)-1
+   {  convert.CL<-function(h,...)
+      {  ID.n<-ncol(conv.data)-1
          tot.data<-NULL
          ID.list<-as.character(conv.data[1,-1])
          name.by.ID<-as.character(conv.data[,1])[-1]
@@ -409,64 +400,55 @@ fit4NM<-function()
             tot.data<-rbind(tot.data,temp)
          }
          colnames(tot.data)<-c("ID",as.character(conv.data[1,1])," ")
-         assign("LC.final",tot.data,envir = fit4NM.env)
-         tmp<-gframe("Save as csv",container=Bgroup1)
-         gbutton("Save",handler=save.LC,container=tmp)
-         })
+         LC.final<<-tot.data
+         tmp<-gframe("Save as csv",cont=Bgroup1)
+         gbutton("Save",handler=save.LC,cont=tmp)
       }   
 
       save.LC<-function(h,...)
-      {  with(LinetoCol,{
-         save.name<-gfile(text="save as csv",type="save")
+      {  save.name<-gfile(text="save as csv",type="save")
          write.table(LC.final, paste(save.name,".csv",sep=""), sep=",", row.names=F,na=".")
          dispose(CtoL.win)
-         })
       } 
 
       select.CL<-function(h,...)
-      {  with(LinetoCol,{
-         sum.name<-gfile(text="colume to line file",type="open")
+      {  sum.name<-gfile(text="colume to line file",type="open")
          svalue(file.CL)<-sum.name
-         conv.data<-read.csv(sum.name,na.strings=".",header=F)
-         tmp<-gframe("Convert",container=Bgroup1)
-         gbutton("Convert",handler=convert.CL,container=tmp)
-         })
+         conv.data<<-read.csv(sum.name,na.strings=".",header=F)
+         tmp<-gframe("Convert",cont=Bgroup1)
+         gbutton("Convert",handler=convert.CL,cont=tmp)
       }  
-      with(LinetoCol,{
-      CtoL.win<-gwindow("Convert data : line to column")
-      BBgroup<-ggroup(container=CtoL.win,horizontal=TRUE)
-      Bgroup1<-ggroup(container=BBgroup, horizontal=FALSE)
-      tmp<-gframe("Open csv file with line data",container=Bgroup1)
-      file.CL<-gedit(" ",container=tmp)
-      glabel("(missing=\".\")",container=tmp)        
-      })
-      gbutton("Open",handler=select.CL,container=tmp)
+
+      CtoL.win<<-gwindow("Convert data : line to column")
+      BBgroup<-ggroup(cont=CtoL.win,horizontal=TRUE)
+      Bgroup1<-ggroup(cont=BBgroup, horizontal=FALSE)
+      tmp<-gframe("Open csv file with line data",cont=Bgroup1)
+      file.CL<<-gedit(" ",cont=tmp)
+      glabel("(missing=\".\")",cont=tmp)        
+      gbutton("Open",handler=select.CL,cont=tmp)
    }
    ###### Biosignal data selection##############################################  
    #### Notes before selection #############################################
    BiosignalNotes<-function(h,...)
    {  gmessage("*** Notes before biosignal data preparation ***
-                \nPlease use elapsed time instead of actual time.",container=TRUE,width=600)   
+                \nPlease use elapsed time instead of actual time.",cont=TRUE,width=600)   
    }   
    ######## Batch process ######################################################  
    BDS.batch<-function(h,...)
-   {  BDS.env<-new.env()
+   {
       openBDS<-function(h,...)
-      {   with(BDS.env,{
-          BDS.dir<-gfile(text="Open biosignal data file folder",type="selectdir")
-          svalue(containerrol.t)<-BDS.dir
-          })
+      {   BDS.dir<<-gfile(text="Open biosignal data file folder",type="selectdir")
+          svalue(control.t)<-BDS.dir
       }
       
       BDScalc<-function(h,...)
-      {  with(BDS.env,{
-         N.BDS<-length(indiv.file)
+      {  N.BDS<-length(indiv.file)
          saveDIR<-gfile(text="Select folder for saving data",type="selectdir")
          win<-gwindow(paste("Biosignal data : Selection : Barch progressing : N=",N.BDS,sep=""),width=300,height=50)
-         BDS.progress<-gslider(from=0,to=N.BDS,by=1,value=0,container=win)               
+         BDS.progress<-gslider(from=0,to=N.BDS,by=1,value=0,cont=win)               
          for(i in 1:length(indiv.file))
          {   svalue(BDS.progress)<-i
-             temp.tot<-read.csv(indiv.file[i],na.strings=".")
+             temp.tot<-read.csv(indiv.file[i],na.string=".")
              var.name<-colnames(temp.tot)
              X.id<-which(var.name==svalue(BDS.list[[1]]))
              Y.id<-which(var.name==svalue(BDS.list[[2]]))
@@ -488,26 +470,25 @@ fit4NM<-function()
              write.csv(select.data,file.name)           
           }  
           dispose(win)
-         })
+#          dispose(BDSwin)  
       }      
       
       TDselect<-function(h,...)
-      {  with(BDS.env,{
-         setwd(BDS.dir)
-         indiv.file<-dir(BDS.dir)
-         temp<-read.csv(indiv.file[1],na.strings=".")
+      {  setwd(BDS.dir)
+         indiv.file<<-dir(BDS.dir)
+         temp<-read.csv(indiv.file[1],na.string=".")
          var.name.temp<-colnames(temp)
          BDSparam.input<-c("TIME  ","DV ")
             
          BDS.g<-list()
          BDS.list<-list()
          for(i in 1:2)
-         {  BDS.g[[i]]<-ggroup(container=BBgroup)
-            temp<- gdroplist(var.name.temp,contaier=BDS.g[[i]])
-            glabel(BDSparam.input[i],container=BDS.g[[i]])
+         {  BDS.g[[i]]<-ggroup(cont=BBgroup)
+            temp<- gdroplist(var.name.temp,cont=BDS.g[[i]])
+            glabel(BDSparam.input[i],cont=BDS.g[[i]])
              BDS.list[[i]]<-temp
          }
-         BDS.list<-BDS.list
+         BDS.list<<-BDS.list           
          
          Button2<-gbutton("Select data",handler= BDScalc)
          tmp=gframe("",container=BBgroup)
@@ -517,63 +498,62 @@ fit4NM<-function()
                    container=tmp)       
         
 #         add(BigGroup,ggraphics())
-         })
+         
       }  
-      with(BDS.env,{
-      BDSwin<-gwindow("Biosignal data selection : Batch processing")
-      BigGroup<-ggroup(container=BDSwin,horizontal=TRUE)
-      BBgroup<-ggroup(container=BigGroup,horizontal=FALSE)
+    
+      BDSwin<<-gwindow("Biosignal data selection : Batch processing")
+      BigGroup<<-ggroup(cont=BDSwin,horizontal=TRUE)
+      BBgroup<<-ggroup(cont=BigGroup,horizontal=FALSE)
  
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       control.t<-gedit(" ",width=50)
       button1<-gbutton("Open data folder",handler=openBDS)
       add(tmp,button1)
       add(tmp,control.t)
-      sel.rate<-gedit(" ",width=50)
+      sel.rate<<-gedit(" ",width=50)   
       tmp=gframe("Cutoff percentile of difference",container=BBgroup)
       add(tmp,sel.rate)                   
       Button<-gbutton("Select TIME and DV",handler= TDselect)
       tmp=gframe("",container=BBgroup)
       add(tmp,Button)
-      })
    }  
 
    ######## Individual process##################################################  
    BDS.indiv<-function(h,...)
-   {  BDS.indiv.env<-new.env()
+   {
       BDSsave<-function(h,...)
-      {  with(BDS.indiv.env,{
-         temp.tot<-read.csv(file.name,na.strings=".")    
+      {  temp.tot<-read.csv(file.name,na.string=".")    
          select.data<-cbind(temp.tot,sel.FINAL)
          colnames(select.data)<-c(colnames(temp.tot),paste("selected",svalue(BDS.list[[2]]),sep="."))
          write.csv(select.data,paste(gfile(text="Save case deletion raw data as csv",
-              type="save",filter=list("csv files"=list(patterns=c("*.csv")))),".csv",sep=""),row.names=F)     
-              })    
+              type="save",filter=list("csv files"=list(patterns=c("*.csv")))),".csv",sep=""),row.names=F)         
       }
               
       BDS.indiv.GUI<-function(h,...)
-      {  with(BDS.indiv.env,{
-         file.name<-svalue(FileList)
-         temp.tot<-read.csv(file.name,na.strings=".")
+      {  file.name<<-svalue(FileList)
+         temp.tot<-read.csv(file.name,na.string=".")
          var.name.temp<-c("NONE",colnames(temp.tot))
          BDSparam.input<-c("TIME  ","DV ","Previous selection")
       
-         BDSINDwin<-gwindow(paste("Biosignal data : Selection : Individual processing",
+         BDSINDwin<<-gwindow(paste("Biosignal data : Selection : Individual processing",
          file.name,sep="---"))
-         BigGroup<-ggroup(container=BDSINDwin,horizontal=TRUE)
-         BBgroup<-ggroup(container=BigGroup,horizontal=FALSE)
-         sel.rate<-gedit(" ",width=20)
+         BigGroup<<-ggroup(cont=BDSINDwin,horizontal=TRUE)
+         BBgroup<<-ggroup(cont=BigGroup,horizontal=FALSE)
+         sel.rate<<-gedit(" ",width=20)   
          tmp=gframe("Cutoff percentile of difference",container=BBgroup)
          add(tmp,sel.rate)  
          BDS.g<-list()
          BDS.list<-list()
          for(i in 1:3)
-         {  BDS.g[[i]]<-ggroup(container=BBgroup)
-            temp<- gdroplist(var.name.temp,container=BDS.g[[i]])
-            glabel(BDSparam.input[i],container=BDS.g[[i]])
+         {  BDS.g[[i]]<-ggroup(cont=BBgroup)
+            temp<- gdroplist(var.name.temp,cont=BDS.g[[i]])
+            glabel(BDSparam.input[i],cont=BDS.g[[i]])
              BDS.list[[i]]<-temp
          }
-         assign("BDS.list",BDS.list,envir = fit4NM.env)           
+         BDS.list<<-BDS.list           
+#         checkB<-gcheckbox("Use  previous selection")
+#         tmp=gframe("",container=BBgroup)
+#         add(tmp,checkB)
          Button2<-gbutton("Select data",handler= BDScalc)
          tmp<-gframe("",container=BBgroup)
          add(tmp,Button2)
@@ -584,41 +564,40 @@ fit4NM<-function()
          glabel("Difference[t] = (DV[t] - DV[t-1])/(TIME[t]-TIME[t-1]),discard DV[t] if abs(difference[t]) ranked in descending order > cutoff percentile",
                    container=tmp)       
          
-         flag.start<-TRUE
-         iter.N<-0
-         })
+         flag.start<<-TRUE
+         iter.N<<-0
     }
  
       openBDS<-function(h,...)
-      {   with(BDS.indiv.env,{
-          BDS.dir<-gfile(text="Open biosignal data file folder",type="selectdir")
+      {   BDS.dir<<-gfile(text="Open biosignal data file folder",type="selectdir")
           svalue(control.t)<-BDS.dir
           setwd(BDS.dir)
-          indiv.file<-dir(BDS.dir)
+          indiv.file<<-dir(BDS.dir)
           tmp<-gframe("Files",container=BBgroup)
           Files<-matrix(indiv.file,ncol=1)
           colnames(Files)<-"Files"
-          FileList<-gtable(Files,multiple=T,handler=BDS.indiv.GUI)
+          FileList<<-gtable(Files,multiple=T,handler=BDS.indiv.GUI)
           size(FileList)<-c(500,200)
           add(tmp,FileList)
-          })
       }
       
       BDScalc<-function(h,...)
-      {  with(BDS.indiv.env,{ 
-         
-         iter.N<-iter.N+1
+      {   iter.N<<-iter.N+1
+      
           if(flag.start)
-          {  flag.start<-FALSE 
-             temp.tot<-read.csv(file.name,na.strings=".")
+          {  flag.start<<-FALSE 
+             temp.tot<-read.csv(file.name,na.string=".")
              N1<-N2<-nrow(temp.tot)
              if(svalue(BDS.list[[3]])!="NONE")
              {  N2<-sum(temp.tot[,svalue(BDS.list[[3]])])         
              }
+#             tmp<-gframe("",cont=BBgroup,horizontal=FALSE)
+#             glabel(paste("total number of observation = ", N1,"\n",sep=""),cont=tmp)
+#             glabel(paste("total number of previous selection = ", N2,"\n",sep=""),cont=tmp)
 
              niter<-matrix(c("total N","0",N1,N2),ncol=2)
              colnames(niter)<-c("iteration","N")
-             NList<-gtable(niter,multiple=T)
+             NList<<-gtable(niter,multiple=T)
              size(NList)<-c(150,200)             
              add(BigGroup,NList)
              add(BigGroup,ggraphics())                  
@@ -635,11 +614,13 @@ fit4NM<-function()
              {  presel<-NULL            
                 sel.NULL<-rep(TRUE,length(Y))
              }
-             sel.FINAL<-sel.NULL   
-             flag.start<-FALSE 
+             sel.FINAL<-sel.NULL
+             Y<<-Y
+             X<<-X    
+             flag.start<<-FALSE        
           }
           sel.NULL<-sel.FINAL
-          flag.start<-FALSE
+          flag.start<<-FALSE  
           Y.new<-Y[sel.NULL]
           X.new<-X[sel.NULL]     
           N<-length(Y.new)
@@ -651,45 +632,39 @@ fit4NM<-function()
           select.flag.temp<-rep(FALSE,length(X.new))
           select.flag.temp[c(1,sel.id+1)]<-TRUE
           sel.FINAL[sel.NULL]<-select.flag.temp
-          sel.FINAL<-sel.FINAL
+          sel.FINAL<<-sel.FINAL          
           plot(X.new[sel.id],Y.new[sel.id],type='l',col=3,xlab="TIME",ylab="DV",main=paste("N=",length(sel.id),sep=""))
           NList[]<-rbind(NList[],c(iter.N,length(sel.id)))
-          })
       }      
-      with(BDS.indiv.env,{    
-      BDSwin<-gwindow("Biosignal data : Selection : Individual processing")
-      BigGroup<-ggroup(container=BDSwin,horizontal=TRUE)
-      BBgroup<-ggroup(container=BigGroup,horizontal=FALSE)
-      NITER<-1
-      tmp<-gframe("",container=BBgroup)
+    
+      BDSwin<<-gwindow("Biosignal data : Selection : Individual processing")
+      BigGroup<<-ggroup(cont=BDSwin,horizontal=TRUE)
+      BBgroup<<-ggroup(cont=BigGroup,horizontal=FALSE)
+      NITER<<-1
+      tmp<-gframe("",cont=BBgroup)
       control.t<-gedit(" ",width=50)
       button1<-gbutton("Open data folder",handler=openBDS)
       add(tmp,button1)
       add(tmp,control.t)
-      })
    }    
    ######## Batch smoothing ##################################################  
    BDS.smooth.batch<-function(h,...)
-   {  BDSsmooth.env<-new.env()
-      openBDS<-function(h,...)
-      {   with(BDSsmooth.env,{
-          BDS.dir<-gfile(text="Open biosignal data file folder",type="selectdir")
+   {  openBDS<-function(h,...)
+      {   BDS.dir<<-gfile(text="Open biosignal data file folder",type="selectdir")
           svalue(control.t)<-BDS.dir
-          })
       }
       
       BDScalc<-function(h,...)
-      {   with(BDSsmooth.env,{
-         N.BDS<-length(indiv.file)
-         saveDIR<-gfile(text="Select folder for data saving",type="selectdir")
+      {  N.BDS<-length(indiv.file)
+         saveDIR<<-gfile(text="Select folder for data saving",type="selectdir")
          win<-gwindow(paste("Biosignal data : Central moving average : Barch progressing : N=",N.BDS,sep=""),width=300,height=50)
-         BDS.progress<-gslider(from=0,to=N.BDS,by=1,value=0,container=win)               
+         BDS.progress<-gslider(from=0,to=N.BDS,by=1,value=0,cont=win)               
          for(i in 1:length(indiv.file))
          {   svalue(BDS.progress)<-i
-             assign("file.name",paste(strsplit(indiv.file[i],split="\\.")[[1]][1],"-",
-                              svalue(BDS.list[[2]]),".csv",sep=""),envir = fit4NM.env)
+             file.name<<-paste(strsplit(indiv.file[i],split="\\.")[[1]][1],"-",
+                              svalue(BDS.list[[2]]),".csv",sep="")                
              full.file<-paste(saveDIR, file.name,sep="\\")                          
-             temp.tot<-read.csv(indiv.file[i],na.strings=".")
+             temp.tot<-read.csv(indiv.file[i],na.string=".")
              var.name<-colnames(temp.tot)
              X.id<-which(var.name==svalue(BDS.list[[1]]))
              Y.id<-which(var.name==svalue(BDS.list[[2]]))             
@@ -724,89 +699,83 @@ fit4NM<-function()
              tot.data<-cbind(temp.tot,Y)
 
              colnames(tot.data)<-c(colnames(temp.tot),paste(svalue(BDS.list[[2]]),".smooth",sep=""))
-             assign("tot.data",tot.data,envir = fit4NM.env)
+             tot.data<<-tot.data            
              write.csv(tot.data,full.file)           
           }  
           dispose(win)
-          })
+#          dispose(BDSwin)  
       }      
       
       TDselect<-function(h,...)
-      {  with(BDSsmooth.env,{
-         setwd(BDS.dir)
-         indiv.file<-dir(BDS.dir)
-         temp<-read.csv(indiv.file[1],na.strings=".")
+      {  setwd(BDS.dir)
+         indiv.file<<-dir(BDS.dir)
+         temp<-read.csv(indiv.file[1],na.string=".")
          var.name.temp<-colnames(temp)
          BDSparam.input<-c("TIME  ","DV ","Previous selection")
             
          BDS.g<-list()
          BDS.list<-list()
          for(i in 1:3)
-         {  BDS.g[[i]]<-ggroup(container=BBgroup)
-            temp<- gdroplist(var.name.temp,container=BDS.g[[i]])
-            glabel(BDSparam.input[i],container=BDS.g[[i]])
+         {  BDS.g[[i]]<-ggroup(cont=BBgroup)
+            temp<- gdroplist(var.name.temp,cont=BDS.g[[i]])
+            glabel(BDSparam.input[i],cont=BDS.g[[i]])
              BDS.list[[i]]<-temp
          }
-         BDS.list<-BDS.list
+         BDS.list<<-BDS.list           
          
          Button2<-gbutton("Calculate central moving average",handler= BDScalc)
          tmp=gframe("",container=BBgroup)
          add(tmp,Button2)
-         })
+        
       }  
     
-     with(BDSsmooth.env,{
-      BDSwin<-gwindow("Biosignal data : Selection : Batch processing")
-      BigGroup<-ggroup(container=BDSwin,horizontal=TRUE)
-      BBgroup<-ggroup(container=BigGroup,horizontal=FALSE)
+      BDSwin<<-gwindow("Biosignal data : Selection : Batch processing")
+      BigGroup<<-ggroup(cont=BDSwin,horizontal=TRUE)
+      BBgroup<<-ggroup(cont=BigGroup,horizontal=FALSE)
  
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       control.t<-gedit(" ",width=50)
       button1<-gbutton("Open data folder",handler=openBDS)
       add(tmp,button1)
       add(tmp,control.t)
-      assign("MW",gedit(" ",width=20),envir = fit4NM.env)   
+      MW<<-gedit(" ",width=20)   
       tmp=gframe("Moving window (# of obs, odd number)",container=BBgroup)
       add(tmp,MW)                  
       Button<-gbutton("Select TIME and DV",handler= TDselect)
       tmp=gframe("",container=BBgroup)
       add(tmp,Button)
-      })
    }  
       
    ######## Individual smoothing ##################################################  
    BDS.smooth<-function(h,...)
-   {  BDSsmooth1.env<-new.env()
+   {
       BDSsave<-function(h,...)
-      {  with(BDSsmooth1.env,{  
-         write.csv(tot.data,paste(gfile(text="Save central moving average data as csv",
-              type="save",filter=list("csv files"=list(patterns=c("*.csv")))),".csv",sep=""),row.names=F)    
-              })     
+      {    write.csv(tot.data,paste(gfile(text="Save central moving average data as csv",
+              type="save",filter=list("csv files"=list(patterns=c("*.csv")))),".csv",sep=""),row.names=F)         
       }
               
       BDS.indiv.GUI<-function(h,...)
-      {   with(BDSsmooth1.env,{  
-         file.name<-svalue(FileList)
-         temp.tot<-read.csv(file.name,na.strings=".")
+      {  file.name<<-svalue(FileList)
+         temp.tot<-read.csv(file.name,na.string=".")
          var.name.temp<-c("NONE",colnames(temp.tot))
          BDSparam.input<-c("TIME  ","DV ","Previous selection")
       
-         BDSINDwin<-gwindow(paste("Biosignal data : Central moving average : Individual process",
+         BDSINDwin<<-gwindow(paste("Biosignal data : Central moving average : Individual process",
          file.name,sep="---"))
-         BigGroup<-ggroup(container=BDSINDwin,horizontal=TRUE)
-         BBgroup<-ggroup(container=BigGroup,horizontal=FALSE)
-         MW<-gedit(" ",width=20)  
+         BigGroup<<-ggroup(cont=BDSINDwin,horizontal=TRUE)
+         BBgroup<<-ggroup(cont=BigGroup,horizontal=FALSE)
+         MW<<-gedit(" ",width=20)   
          tmp=gframe("Moving window (# of obs, odd number)",container=BBgroup)
          add(tmp,MW)  
          BDS.g<-list()
          BDS.list<-list()
          for(i in 1:3)
-         {  BDS.g[[i]]<-ggroup(container=BBgroup)
-            temp<- gdroplist(var.name.temp,container=BDS.g[[i]])
-            glabel(BDSparam.input[i],container=BDS.g[[i]])
+         {  BDS.g[[i]]<-ggroup(cont=BBgroup)
+            temp<- gdroplist(var.name.temp,cont=BDS.g[[i]])
+            glabel(BDSparam.input[i],cont=BDS.g[[i]])
              BDS.list[[i]]<-temp
          }
-         BDS.list<-BDS.list          
+         BDS.list<<-BDS.list           
          Button2<-gbutton("Calculate central moving average",handler= BDSsmoothcalc)
          tmp<-gframe("",container=BBgroup)
          add(tmp,Button2)
@@ -816,37 +785,31 @@ fit4NM<-function()
          Button3<-gbutton("Save data",handler= BDSsave)
          tmp<-gframe("",container=BBgroup)
          add(tmp,Button3)
-         flag.start<-TRUE
-         })
+         flag.start<<-TRUE
       }
       
       BDSplot<-function(h,...)
-      {    with(BDSsmooth1.env,{  
-          plot(X.plot,Y.plot,type='l',lty=2,col="grey",xlab="TIME",ylab="DV")
+      {   plot(X.plot,Y.plot,type='l',lty=2,col="grey",xlab="TIME",ylab="DV")
           lines(X.plot,Y.new.plot,col=2,lwd=2)
-          })
        }
       
       openBDS<-function(h,...)
-      {    with(BDSsmooth1.env,{  
-          BDS.dir<-gfile(text="Open biosignal data file folder",type="selectdir")
+      {   BDS.dir<<-gfile(text="Open biosignal data file folder",type="selectdir")
           svalue(control.t)<-BDS.dir
           setwd(BDS.dir)
-          indiv.file<-dir(BDS.dir)
+          indiv.file<<-dir(BDS.dir)
           tmp<-gframe("Files",container=BBgroup)
-          FileList<-gtable(indiv.file,handler=BDS.indiv.GUI)
+          FileList<<-gtable(indiv.file,handler=BDS.indiv.GUI)
           size(FileList)<-c(500,200)
           add(tmp,FileList)
-          })
       }
  
       BDSsmoothcalc<-function(h,...)
-      {    with(BDSsmooth1.env,{  
-          if(start.flag)
+      {   if(start.flag)
           {  add(BigGroup,ggraphics())  
           } 
-          start.flag<-FALSE
-          temp.tot<-read.csv(file.name,na.strings=".")
+          start.flag<<-FALSE
+          temp.tot<-read.csv(file.name,na.string=".")
           var.name<-colnames(temp.tot)
           X.id<-which(var.name==svalue(BDS.list[[1]]))
           Y.id<-which(var.name==svalue(BDS.list[[2]]))
@@ -879,28 +842,26 @@ fit4NM<-function()
           } 
           tot.data<-cbind(temp.tot,Y.t)
           colnames(tot.data)<-c(colnames(temp.tot),paste(svalue(BDS.list[[2]]),".smooth",sep=""))
-          tot.data<-tot.data
-          X.plot<-X
-          Y.plot<-Y
-          Y.new.plot<-Y.new
+          tot.data<<-tot.data     
+          X.plot<<-X
+          Y.plot<<-Y
+          Y.new.plot<<-Y.new        
           plot(X,Y,type='l',lty=2,col="grey",xlab="TIME",ylab="DV")
           lines(X,Y.new,col=2,lwd=2)
-          })
       }      
       
 
-     with(BDSsmooth1.env,{  
-      BDSwin<-gwindow("Biosignal data selection : Central moving average")
-      BigGroup<-ggroup(container=BDSwin,horizontal=TRUE)
-      BBgroup<-ggroup(container=BigGroup,horizontal=FALSE)
+    
+      BDSwin<<-gwindow("Biosignal data selection : Central moving average")
+      BigGroup<<-ggroup(cont=BDSwin,horizontal=TRUE)
+      BBgroup<<-ggroup(cont=BigGroup,horizontal=FALSE)
  
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       control.t<-gedit(" ",width=50)
       button1<-gbutton("Open data folder",handler=openBDS)
       add(tmp,button1)
       add(tmp,control.t)
-      start.flag<-TRUE
-      })
+      start.flag<<-TRUE
    } 
      
    #### NONMEM data ############################################################  
@@ -909,82 +870,68 @@ fit4NM<-function()
    {  gmessage("*** Notes before NONMEM data creation ***
                 \nIDs should be successive in ascending order.
                 \n   1, 2, 3, 4, 5, ... (O)
-                \n   1, 2, 5, 7, 8, ... (X)",container=TRUE,width=600)   
+                \n   1, 2, 5, 7, 8, ... (X)",cont=TRUE,width=600)   
    }
    
    ###### Create NONMEM data ###################################################  
    DataPrep<-function(h,...)
-   {  Dataprep.env<-new.env()
-      DemogOK <- function()
-      {  with(Dataprep.env,{
-         fileName1<-gfile(text="Choose demographic data file",type="open")
+   {  DemogOK <- function()
+      {  fileName1<<-gfile(text="Choose demographic data file",type="open")
          tclvalue(DemogName)<-fileName1
          dir.name<-strsplit(fileName1,split="\\.")[[1]][1]
          temp<-strsplit(dir.name,"\\\\")[[1]]    
          dataname<-temp[length(temp)]
          dir.name<-strsplit(dir.name,dataname)[[1]]  
-         setwd(dir.name)   
-         })    
+         setwd(dir.name)       
       }
       
       AdmOK <- function()
-      {  with(Dataprep.env,{
-         fileName2<-gfile(text="Choose dosing data file",type="open")
+      {  fileName2<<-gfile(text="Choose dosing data file",type="open")
          tclvalue(AdmName)<-fileName2
-         })
       }
       
       DVOK <- function()
-      {  with(Dataprep.env,{
-         fileName3<-gfile(text="Choose DV data file",type="open")
+      {  fileName3<<-gfile(text="Choose DV data file",type="open")
          tclvalue(DVName)<-fileName3
-         })
       }
       
       IPKOK<-function()
-      {  with(Dataprep.env,{
-         fileName5<-gfile(text="Choose IPK data file",type="open")
+      {  fileName5<<-gfile(text="Choose IPK data file",type="open")
          tclvalue(IPKName)<-fileName5
-         })
       }
 
       displayInTable <- function(tclarray,title="",height=-1,width=-1,nrow=-1,ncol=-1)
-      {  with(Dataprep.env,{
-         tt <- tktoplevel()
-      	 tclRequire("Tktable")
-  	     tkwm.title(tt,title)
-      	 table1 <- tkwidget(tt,"table",rows=nrow,cols=ncol,titlerows=1,titlecols=0,
+      {  tt <- tktoplevel()
+  	 tclRequire("Tktable")
+  	 tkwm.title(tt,title)
+  	 table1 <- tkwidget(tt,"table",rows=nrow,cols=ncol,titlerows=1,titlecols=0,
           	height=height+1,width=width+1,xscrollcommand=function(...) tkset(xscr,...),
 	        yscrollcommand=function(...) tkset(yscr,...))
-  	     xscr <-tkscrollbar(tt,orient="horizontal", command=function(...)tkxview(table1,...))
-  	     yscr <- tkscrollbar(tt,command=function(...)tkyview(table1,...))
-  	     tkgrid(table1,yscr)
-  	     tkgrid.configure(yscr,sticky="nsw")
-  	     tkgrid(xscr,sticky="new")
-  	     tkconfigure(table1,variable=tclarray,background="white",selectmode="extended")
-  	     return(table1)
-      	 })
+  	 xscr <-tkscrollbar(tt,orient="horizontal", command=function(...)tkxview(table1,...))
+  	 yscr <- tkscrollbar(tt,command=function(...)tkyview(table1,...))
+  	 tkgrid(table1,yscr)
+  	 tkgrid.configure(yscr,sticky="nsw")
+  	 tkgrid(xscr,sticky="new")
+  	 tkconfigure(table1,variable=tclarray,background="white",selectmode="extended")
+  	 return (table1)
       }
 
       openSpread<-function()
-      {  with(Dataprep.env,{
-         NM.data.temp<-matrix(as.character(NM.data),ncol=ncol(NM.data))
-      	 NM.data.temp<-rbind(colnames(NM.data),NM.data.temp)
-      	 tclArray1 <- tclArray()
-     	   for(i in (1:nrow(NM.data.temp)))
+      {  NM.data.temp<-matrix(as.character(NM.data),ncol=ncol(NM.data))
+   	 NM.data.temp<-rbind(colnames(NM.data),NM.data.temp)
+    	 tclArray1 <- tclArray()
+    	 for(i in (1:nrow(NM.data.temp)))
     	    for(j in (1:ncol(NM.data.temp)))
        	       tclArray1[[i-1,j-1]] <- NM.data.temp[i,j]
-	       table1 <- displayInTable(tclArray1,nrow=nrow(NM.data.temp),ncol=ncol(NM.data.temp))
-	       })
+	 table1 <- displayInTable(tclArray1,nrow=nrow(NM.data.temp),ncol=ncol(NM.data.temp))
       }
 
       Combine<-function()
-      {  with(Dataprep.env,{
-          Demog<-read.csv(fileName1)
-    	   Adm<-read.csv(fileName2)
-    	   DV<-read.csv(fileName3)
-    	   fileName5<-tclvalue(IPKName)
-    	 if(fileName5!="") IPK<-read.csv(fileName5)
+      {  Demog<<-read.csv(fileName1)
+    	 Adm<<-read.csv(fileName2)
+    	 DV<<-read.csv(fileName3)
+    	 fileName5<<-tclvalue(IPKName)
+    	 if(fileName5!="") IPK<<-read.csv(fileName5)
     	 ID.list<-unique(Demog$X.ID)
     	 if(fileName5!="")
     	 {  Demog.temp<-matrix(0,nrow=length(ID.list),ncol=(ncol(Demog)+ncol(IPK)-1))
@@ -993,7 +940,7 @@ fit4NM<-function()
        	    Demog.temp[,1]<-ID.list
        	    for(i in ID.list)
                Demog.temp[Demog.temp$X.ID==i,]<-c(Demog[Demog$X.ID==i,],IPK[IPK$X.ID==i,-1])
-       	    Demog<-Demog.temp
+       	    Demog<<-Demog.temp
     	 }
     	 tot.data<-NULL
     	 colname.final1<-c(colnames(Adm),"DV","MDV")
@@ -1020,25 +967,22 @@ fit4NM<-function()
     	 tot.data<-matrix(temp,ncol=ncol(tot.data))
     	 colname.final2[1]<-"#ID"
     	 tot.data<-rbind(colname.final2,tot.data)
-    	 NM.data<-tot.data
+    	 NM.data<<-tot.data
     	 openSpread()
-    	 })
       }
       
       Save<-function()
-      {  with(Dataprep.env,{
-         fileName4<-tclvalue(tkgetSaveFile(filetypes="{{CSV Files} {.csv}}")) 
+      {  fileName4<-tclvalue(tkgetSaveFile(filetypes="{{CSV Files} {.csv}}")) 
     	 fileName4<-paste(fileName4,".csv",sep="")
     	 write.table(NM.data,fileName4,sep=",",quote=FALSE,row.names=FALSE, col.names=FALSE)
     	 tkdestroy(Toptt)
-    	 })
       }
-      with(Dataprep.env,{
-      Demog<-NULL
-      Adm<-NULL
-      DV<-NULL
-      IPK<-NULL
-      Toptt<-tktoplevel()
+
+      Demog<<-NULL
+      Adm<<-NULL
+      DV<<-NULL
+      IPK<<-NULL
+      Toptt<<-tktoplevel()
       tkwm.title(Toptt,"NM data preparation for PREDPP")
       tt<-tkframe(Toptt)
       DemogName <- tclVar("")
@@ -1062,13 +1006,12 @@ fit4NM<-function()
       tkgrid(tklabel(tt,text=" "),tklabel(tt,text=" "),CombineOK)
       tkgrid(tklabel(tt,text=" "),tklabel(tt,text=" "),SaveOK)
       tkgrid(tt)
-      })
    }   
    
    ###### Create successive ID #################################################  
    data.ID<-function(h,...)
    {  data.file<-gfile(text="Choose data file",type="open")
-      DD.data<- read.csv(data.file,na.strings=".")
+      DD.data<- read.csv(data.file,na.string=".")
       rep.n<-table(DD.data$X.ID)
       seq.id<-1:length(rep.n)
       new.id<-rep(seq.id,rep.n)
@@ -1084,27 +1027,22 @@ fit4NM<-function()
    }
    #### Explore NONMEM data ####################################################  
    ###### Select data file #####################################################  
-   EDA.env<-new.env()
    OpenEDAData<-function(h,...)
-   {  with(EDA.env,{
-      EDAfileName<-gfile(text="Choose EDA data file",type="open")
-      EDA.data<-read.csv(EDAfileName,na.strings=".")
-      Var.Name<-colnames(EDA.data)
+   {  EDAfileName<<-gfile(text="Choose EDA data file",type="open")
+      EDA.data<<-read.csv(EDAfileName,na.string=".")
+      Var.Name<<-colnames(EDA.data)
       dir.name<-strsplit(EDAfileName,split="\\.")[[1]][1]
       temp<-strsplit(dir.name,"\\\\")[[1]]    
       dataname<-temp[length(temp)]
       dir.name<-strsplit(dir.name,dataname)[[1]]
       setwd(dir.name)
-      })
    }
    
    ###### Summary ##############################################################  
    ######## Summary statistics-continuous ######################################  
    Summary.stat<-function(h,...)
-   {  with(EDA.env,{
-      calc.summary<-function()
-      {  with(EDA.env,{
-         DA.data<-as.matrix(EDA.data[,Con.list])
+   {  calc.summary<-function()
+      {  DA.data<-as.matrix(EDA.data[,Con.list])
          colnames(DA.data)<-Con.list
          summary.stat1<-rbind(apply(DA.data,2,function(x) mean(x,na.rm=T)),
          apply(DA.data,2,function(x) sd(x,na.rm=T)), 
@@ -1127,36 +1065,30 @@ fit4NM<-function()
                  type="save",filter=list("csv files"=list(patterns=c("*.csv")))),".csv",sep=""),row.names=F)
          }
          summary.w<-gwindow("Summary statistics")
-         gsummary<-ggroup(container=summary.w,horizontal=F)
-         summary.table<-gtable(summary.stat,do.subset=TRUE,container=gsummary)
+         gsummary<-ggroup(cont=summary.w,horizontal=F)
+         summary.table<-gtable(summary.stat,do.subset=TRUE,cont=gsummary)
          size(summary.table)<-c(20,200)
-         tmp<-gframe(container=gsummary,spacing=10000)
+         tmp<-gframe(cont=gsummary,spacing=10000)
          Button1<-gbutton("Save",handler=savesummarydata,spacing=2000)
          size(Button1)<-c(50,30)
          add(tmp,Button1)
-         })
       }
 
       saveCat<-function(h,...)
-      {  with(EDA.env,{
-         Con.list<-svalue(catcheck)
+      {  Con.list<<-svalue(catcheck)
          dispose(checkg)
          calc.summary()
-         })
       }
 
       Var.Name<-colnames(EDA.data)
       checkg<-gwindow("Select continuous variable for summary statistics")
-      catcheck<-gcheckboxgroup(Var.Name,use.table=TRUE,container=checkg)
-      Button1<-gbutton("OK",type="OK",handler=saveCat,container=checkg)
-      })
+      catcheck<-gcheckboxgroup(Var.Name,use.table=TRUE,cont=checkg)
+      Button1<-gbutton("OK",type="OK",handler=saveCat,cont=checkg)
    }   
    ######## Summary statistics-continuous by ID ################################
    Summary.stat.ind<-function(h,...)
-   {  with(EDA.env,{
-      calc.summary<-function()
-      {  with(EDA.env,{
-         DA.data<-c(EDA.data[,Con.list])
+   {  calc.summary<-function()
+      {  DA.data<-c(EDA.data[,Con.list])
          if(length(Cat.list)==0)
          {  Con.data<-as.matrix(EDA.data[,c("X.ID")]) 
          } else
@@ -1199,44 +1131,38 @@ fit4NM<-function()
                  type="save",filter=list("csv files"=list(patterns=c("*.csv")))),".csv",sep=""),row.names=F)
          }
          summary.w<-gwindow(paste("Summary statistics by ID : ",Con.list ))
-         gsummary<-ggroup(container=summary.w,horizontal=F)
-         summary.table<-gtable(summary.stat,do.subset=TRUE,container=gsummary)
+         gsummary<-ggroup(cont=summary.w,horizontal=F)
+         summary.table<-gtable(summary.stat,do.subset=TRUE,cont=gsummary)
          size(summary.table)<-c(20,200)
-         tmp<-gframe(container=gsummary,spacing=10000)
+         tmp<-gframe(cont=gsummary,spacing=10000)
          Button1<-gbutton("Save",handler=savesummarydata,spacing=2000)
          size(Button1)<-c(50,30)
          add(tmp,Button1)
-         })
       }
 
       saveCat<-function(h,...)
-      {  with(EDA.env,{
-         Con.list<-svalue(catcheck)
-         Cat.list<-svalue(catcheck1)
+      {  Con.list<<-svalue(catcheck)
+         Cat.list<<-svalue(catcheck1)
          dispose(checkg)
          calc.summary()
-         })
       }
 
       Var.Name<-colnames(EDA.data)[-1]
       checkg<-gwindow("Summary statistics by ID")
-      tmp<-gframe("Select continuous variable", container=checkg)      
-      catcheck<-gradio(Var.Name,use.table=TRUE,container=tmp) 
-      gg<-ggroup(container=checkg)
-      tmp<-gframe("Select categorical variables for levels", container=gg,horizontal=FALSE)      
+      tmp<-gframe("Select continuous variable", cont=checkg)      
+      catcheck<-gradio(Var.Name,use.table=TRUE,cont=tmp) 
+      gg<-ggroup(cont=checkg)
+      tmp<-gframe("Select categorical variables for levels", cont=gg,horizontal=FALSE)      
       catcheck1<-gcheckboxgroup(Var.Name,use.table=TRUE)
       size(catcheck1)<-c(200,300)
       add(tmp,catcheck1)
-      Button1<-gbutton("OK",type="OK",handler=saveCat,container=checkg)
-      })
+      Button1<-gbutton("OK",type="OK",handler=saveCat,cont=checkg)
    }
    
    ######## Summary statistics-categorical by ID ################################
    Summary.stat.cat.ind<-function(h,...)
-   {  with(EDA.env,{
-      calc.summary<-function()
-      {  with(EDA.env,{
-         DA.data<-data.frame(EDA.data[,c(Con.list,"X.ID")])
+   {  calc.summary<-function()
+      {  DA.data<-data.frame(EDA.data[,c(Con.list,"X.ID")])
          sum.cat<-as.data.frame(table(DA.data))
          p<-ncol(sum.cat)
          summary.stat<-sum.cat[,c(p-1,1:(p-2),p)]
@@ -1253,48 +1179,41 @@ fit4NM<-function()
          for(i in 1:length(Con.list))
            title.N<-paste(title.N,Con.list[i])         
          summary.w<-gwindow(title.N)
-         gsummary<-ggroup(container=summary.w,horizontal=F)
-         summary.table<-gtable(summary.stat,do.subset=TRUE,container=gsummary)
+         gsummary<-ggroup(cont=summary.w,horizontal=F)
+         summary.table<-gtable(summary.stat,do.subset=TRUE,cont=gsummary)
          size(summary.table)<-c(20,200)
-         tmp<-gframe(container=gsummary,spacing=10000)
+         tmp<-gframe(cont=gsummary,spacing=10000)
          Button1<-gbutton("Save",handler=savesummarydata,spacing=2000)
          size(Button1)<-c(50,30)
          add(tmp,Button1)
-         })
       }
 
       saveCat<-function(h,...)
-      {  with(EDA.env,{
-         Con.list<-svalue(catcheck)
+      {  Con.list<<-svalue(catcheck)
          dispose(checkg)
          calc.summary()
-         })
       }
 
       Var.Name<-colnames(EDA.data)[-1]
       checkg<-gwindow("Select categorical variables for summary statistics by ID")
-      catcheck<-gcheckboxgroup(Var.Name,use.table=TRUE,container=checkg)
-      Button1<-gbutton("OK",type="OK",handler=saveCat,container=checkg)
-      })
+      catcheck<-gcheckboxgroup(Var.Name,use.table=TRUE,cont=checkg)
+      Button1<-gbutton("OK",type="OK",handler=saveCat,cont=checkg)
    }   
         
    ######## Summary statistics-categorical-single level per person #############  
    Summary.cat<-function(h,...)
-   {  with(EDA.env,{
-      saveCat<-function(h,...)
+   {  saveCat<-function(h,...)
       {  savesummarycdata<-function(h,...)
-         {  with(EDA.env,{
-            dir.name<-strsplit(EDAfileName,split="\\.")[[1]][1]
+         {  dir.name<-strsplit(EDAfileName,split="\\.")[[1]][1]
             temp<-strsplit(dir.name,"\\\\")[[1]]    
             dataname<-temp[length(temp)]
             dir.name<-strsplit(dir.name,dataname)[[1]]
             setwd(dir.name)
             write.csv(Cat.summary,paste(gfile(text="Save as csv",
               type="save",filter=list("csv files"=list(patterns=c("*.csv")))),".csv",sep=""),row.names=F)
-            })
          }
-         with(EDA.env,{
-         Cat.list<-svalue(catcheck)
+         
+         Cat.list<<-svalue(catcheck)
          dispose(checkg)
          n.table<-tapply(rep(1,nrow(EDA.data)),EDA.data$X.ID,sum)
          temp<-EDA.data[1,]   
@@ -1315,41 +1234,35 @@ fit4NM<-function()
             Cat.summary[(i-1)*2+2,2:(length(cont.list[[i]])+1)]<-cont.list[[i]]
          }    
          summary.cw<-gwindow("Summary Categorical variable Statistics")
-         gsummary<-ggroup(container=summary.cw,horizontal=F)
-         summary.table<-gtable(Cat.summary,do.subset=TRUE,container=gsummary)
+         gsummary<-ggroup(cont=summary.cw,horizontal=F)
+         summary.table<-gtable(Cat.summary,do.subset=TRUE,cont=gsummary)
          size(summary.table)<-c(20,200)
-         tmp<-gframe(container=gsummary,spacing=10000)
+         tmp<-gframe(cont=gsummary,spacing=10000)
          Button1<-gbutton("Save",handler=savesummarycdata,spacing=2000)
          size(Button1)<-c(50,30)
          add(tmp,Button1)
-         })
       }
-
+      
       Var.Name<-colnames(EDA.data)
       checkg<-gwindow("Select categorical variable for summary statistics")
-      catcheck<-gcheckboxgroup(Var.Name,use.table=TRUE,container=checkg)
-      Button1<-gbutton("OK",type="OK",handler=saveCat,container=checkg)
-      })
+      catcheck<-gcheckboxgroup(Var.Name,use.table=TRUE,cont=checkg)
+      Button1<-gbutton("OK",type="OK",handler=saveCat,cont=checkg)
    }
       
    ######## Summary statistics-categorical-multiple levels per person ##########  
    Summary.cat1<-function(h,...)
-   {  with(EDA.env,{
-      saveCat<-function(h,...)
-      {  with(EDA.env,{
-         savesummarycdata<-function(h,...)
-         {  with(EDA.env,{
-            dir.name<-strsplit(EDAfileName,split="\\.")[[1]][1]
+   {  saveCat<-function(h,...)
+      {  savesummarycdata<-function(h,...)
+         {  dir.name<-strsplit(EDAfileName,split="\\.")[[1]][1]
             temp<-strsplit(dir.name,"\\\\")[[1]]    
             dataname<-temp[length(temp)]
             dir.name<-strsplit(dir.name,dataname)[[1]]
             setwd(dir.name)
             write.csv(Cat.summary,paste(gfile(text="Save as csv",
               type="save",filter=list("csv files"=list(patterns=c("*.csv")))),".csv",sep=""),row.names=F)
-              })
          }
          
-         Cat.list<-svalue(catcheck)
+         Cat.list<<-svalue(catcheck)
          dispose(checkg)
          n.table<-tapply(rep(1,nrow(EDA.data)),EDA.data$X.ID,sum)
          temp<-EDA.data
@@ -1371,21 +1284,19 @@ fit4NM<-function()
             Cat.summary[(i-1)*2+2,2:(length(cont.list[[i]])+1)]<-cont.list[[i]]
          }
          summary.cw<-gwindow("Summary Categorical variable Statistics")
-         gsummary<-ggroup(container=summary.cw,horizontal=F)
-         summary.table<-gtable(Cat.summary,do.subset=TRUE,container=gsummary)
+         gsummary<-ggroup(cont=summary.cw,horizontal=F)
+         summary.table<-gtable(Cat.summary,do.subset=TRUE,cont=gsummary)
          size(summary.table)<-c(20,200)
-         tmp<-gframe(container=gsummary,spacing=10000)
+         tmp<-gframe(cont=gsummary,spacing=10000)
          Button1<-gbutton("Save",handler=savesummarycdata,spacing=2000)
          size(Button1)<-c(50,30)
          add(tmp,Button1)
-         })
       }
-     
+      
       Var.Name<-colnames(EDA.data)
       checkg<-gwindow("Select categorical variable for summary statistics")
-      catcheck<-gcheckboxgroup(Var.Name,use.table=TRUE,container=checkg)
-      Button1<-gbutton("OK",type="OK",handler=saveCat,container=checkg)
-      })
+      catcheck<-gcheckboxgroup(Var.Name,use.table=TRUE,cont=checkg)
+      Button1<-gbutton("OK",type="OK",handler=saveCat,cont=checkg)
    }
    
    ###### Plot #################################################################  
@@ -1424,8 +1335,8 @@ fit4NM<-function()
       Button1<-gbutton("OK",handler=updatePlot)
       Button2<-gbutton("Save",handler=saveData) 
       win<-gwindow("XY plot")
-      BigGroup<-ggroup(container=win)
-      group<-ggroup(horizontal=FALSE,container=BigGroup)
+      BigGroup<-ggroup(cont=win)
+      group<-ggroup(horizontal=FALSE,cont=BigGroup)
       tmp<-gframe(" X variable",container=group)
       add(tmp,VarList.X)
       tmp<-gframe(" Y variable",container=group)
@@ -1482,8 +1393,8 @@ fit4NM<-function()
          }
          IDlist <- gtable(ID,multiple=T,handler=updatePlot) 
          window <- gwindow("DV vs TIME by ID")
-         Biggroup<-ggroup(container=window,horizontal=TRUE)
-         group<-ggroup(container=Biggroup,horizontal=FALSE)
+         Biggroup<-ggroup(cont=window,horizontal=TRUE)
+         group<-ggroup(cont=Biggroup,horizontal=FALSE)
          tmp<-gframe("ID",container=group)
          size(IDlist)<-c(100,200)
          add(tmp,IDlist)
@@ -1644,8 +1555,8 @@ fit4NM<-function()
       Button1<-gbutton("OK",handler=updatePlot)
       Button2<-gbutton("Save",handler=saveData)
       win<-gwindow("DV vs TIME by covariates")
-      BigGroup<-ggroup(container=win)
-      group<-ggroup(horizontal=FALSE,container=BigGroup)
+      BigGroup<-ggroup(cont=win)
+      group<-ggroup(horizontal=FALSE,cont=BigGroup)
       tmp<-gframe("Covariate 1 : ",container=group)
       add(tmp,VarList.g1)
       add(tmp,VarType.g1)
@@ -1705,7 +1616,7 @@ fit4NM<-function()
                temp<-rbind(temp,apply(temp.data[(sum(n.table[1:(i-1)])+1):sum(n.table[1:i]),],2,function(x) median(x,na.rm=T)))
 
             D.data<-temp[,c("X.ID",Cov.list)]
-            assign("DD",D.data,envir = fit4NM.env)
+            DD<<-D.data
       
             ID.id<-NULL
             Var.Name11<-colnames(D.data)
@@ -1753,8 +1664,8 @@ fit4NM<-function()
          Button2<-gbutton("SAVE",handler=saveData)
     
          win<-gwindow("Covariate vs covariate plot")
-         BigGroup<-ggroup(container=win)
-         group<-ggroup(horizontal=FALSE,container=BigGroup)
+         BigGroup<-ggroup(cont=win)
+         group<-ggroup(horizontal=FALSE,cont=BigGroup)
          tmp<-gframe(" Select ",container=group)
          add(tmp,VarList.cond1)
          add(tmp,From.label.1);add(tmp,From.id.cond1)
@@ -1780,15 +1691,15 @@ fit4NM<-function()
       }
 
       saveCov<-function(h,...)
-      {  assign("Cov.list",svalue(groupcheck),envir = fit4NM.env)
+      {  Cov.list<<-svalue(groupcheck)
          dispose(checkg)
          CovPlot()
       }
 
       Var.Name1<-colnames(EDA.data)
       checkg<-gwindow("Covariate selection",width=200,height=400)
-      groupcheck<-gcheckboxgroup(Var.Name1,container=checkg,use.table=TRUE)
-      Button1<-gbutton("OK",type="OK",handler=saveCov,container=checkg)
+      groupcheck<-gcheckboxgroup(Var.Name1,cont=checkg,use.table=TRUE)
+      Button1<-gbutton("OK",type="OK",handler=saveCov,cont=checkg)
    }
 
    ############################################################################# 
@@ -1799,8 +1710,8 @@ fit4NM<-function()
    EditEditor<-function(h,...)
    {  file.ctl<-gfile(text="Choose NONMEM control file",type="open")
       D.temp<-readLines(file.ctl)
-      assign("Current.CTL",D.temp,envir = fit4NM.env)
-      assign("NONMEM.CTL",D.temp,envir = fit4NM.env)
+      Current.CTL<<-D.temp
+      NONMEM.CTL<<-D.temp
       if(is.null(Current.CTL))
       {  edit.txt<-" "
       } else
@@ -1813,7 +1724,7 @@ fit4NM<-function()
       file.name<-temp[length(temp)]    
       setwd(strsplit(file.ctl,split=file.name)[[1]][1])
       edit.win<-gwindow(temp[length(temp)])
-      g<-ggroup(horizontal=FALSE,container=edit.win)
+      g<-ggroup(horizontal=FALSE,cont=edit.win)
      	tmp<-gframe("Editor",container=g)
       a<-gtext(edit.txt,width=600,height=300,
                 font.attr=c(sizes="large",family="monospace"))
@@ -1825,7 +1736,7 @@ fit4NM<-function()
                  write.table(svalue(a),file.new,quote=FALSE,row.names=FALSE,col.names=FALSE)
                  dispose(edit.win)
                  Editor1(file.new)})
-      gb<-ggroup(horizontal=TRUE,container=g)
+      gb<-ggroup(horizontal=TRUE,cont=g)
       tmp<-gframe("",container=gb)  
       add(tmp,save.b)
       tmp<-gframe("",container=gb)  
@@ -1864,12 +1775,12 @@ fit4NM<-function()
            \n        Control and data input files are copied automatically to a runnumber subdirectory. 
            \n        The data input file copied to a runnumber subdirectory is duplicated automatically to runnumber.csv.
            \nThe number of data records in several ouput files should be equal to that of data input file (ACCEPT argument in $DATA is not allowed).
-           \nModel description should be written in English and should not include comma(,) separators",container=T)
+           \nModel description should be written in English and should not include comma(,) separators",cont=T)
    }   
    
    ###### From default editor ##################################################
    Editor<-function(h,...)
-   {  assign("file.ctl",gfile(text="Choose NONMEM control file",type="open"),envir = fit4NM.env)
+   {  file.ctl<<-gfile(text="Choose NONMEM control file",type="open")
       Editor1<-function(file.ctl)
       {	 D.temp<-readLines(file.ctl)
       	 Current.CTL<-D.temp
@@ -1887,7 +1798,7 @@ fit4NM<-function()
          setwd(strsplit(file.ctl,split=file.name)[[1]][1])
 
       	 edit.win<-gwindow(temp[length(temp)])
-      	 g<-ggroup(horizontal=FALSE,container=edit.win)
+      	 g<-ggroup(horizontal=FALSE,cont=edit.win)
      	 tmp<-gframe("Editor",container=g)
       	 a<-gtext(edit.txt,width=600,height=300,
                 font.attr=c(sizes="large",family="monospace"))
@@ -1899,14 +1810,14 @@ fit4NM<-function()
              	write.table(svalue(a),file.new,quote=FALSE,row.names=FALSE,col.names=FALSE)
              	dispose(edit.win)
              	Editor1(file.new)
-             	assign("file.ctl",file.new,envir = fit4NM.env)})
-      	 gb<-ggroup(horizontal=TRUE,container=g)
+             	file.ctl<<-file.new})
+      	 gb<-ggroup(horizontal=TRUE,cont=g)
       	 tmp<-gframe("",container=gb)  
       	 add(tmp,save.b)
       	 tmp<-gframe("",container=gb)  
       	 add(tmp,saveas.b)
      	 RunNM.1<-gbutton("Run default NONMEM",handler=function(h,...){ 
-     	        assign("CWRES.flag",svalue(CWRESoption),envir = fit4NM.env)
+     	        CWRES.flag<<-svalue(CWRESoption)
                 dir.create(dir.name,showWarnings=F)
                 file.copy(file.ctl,dir.name,overwrite=T)
       	        temp<-strsplit(data.file,"\\\\")[[1]]
@@ -1946,7 +1857,7 @@ fit4NM<-function()
                 TOT.temp$num<-TOT.temp$num+1
                 TOT.temp$data<-rbind(TOT.temp$data,c(file.id,dir.name,svalue(parent)))
                 colnames(TOT.temp$data)<-c("ID","path","parents")
-                assign("TOT.RUN",TOT.temp,envir = fit4NM.env)
+                TOT.RUN<<-TOT.temp
                 OpenResult(file.id,paste(dir.name,"\\",file.id,".res",sep=""))
                 D.LST<-readLines(paste(dir.name,"\\",file.id,".res",sep=""))
                 if(sum(dir()==paste(file.id,".ETA",sep=""))!=0)
@@ -1961,7 +1872,7 @@ fit4NM<-function()
                 } else
                 { ETA<-NULL
                 }                        
-                data.tempt<-read.csv(data.file,na.strings=".")   
+                data.tempt<-read.csv(data.file,na.string=".")   
                 if(sum(toupper(colnames(data.tempt))=="MDV")!=0)
                 {  data.i<-which(toupper(colnames(data.tempt))=="MDV")
                    temp<-data.tempt[,data.i]
@@ -1974,7 +1885,7 @@ fit4NM<-function()
          })
                 
       	 RunNM.2<-gbutton("Run alternative NONMEM",handler=function(h,...){ 
-   	        assign("CWRES.flag",svalue(CWRESoption),envir = fit4NM.env)
+   	        CWRES.flag<<-svalue(CWRESoption)
                 dir.create(dir.name,showWarnings=F)
                 file.copy(file.ctl,dir.name,overwrite=T)
       	        temp<-strsplit(data.file,"\\\\")[[1]]
@@ -2017,7 +1928,7 @@ fit4NM<-function()
                 TOT.temp$num<-TOT.temp$num+1
                 TOT.temp$data<-rbind(TOT.temp$data,c(file.id,dir.name,svalue(parent)))
                 colnames(TOT.temp$data)<-c("ID","path","parents")
-                assign("TOT.RUN",TOT.temp,envir = fit4NM.env)
+                TOT.RUN<<-TOT.temp
                 OpenResult(file.id,paste(dir.name,"\\",file.id,".res",sep=""))
                 D.LST<-readLines(paste(dir.name,"\\",file.id,".res",sep=""))
                 if(sum(dir()==paste(file.id,".ETA",sep=""))!=0)
@@ -2032,7 +1943,7 @@ fit4NM<-function()
                 } else
                 {  ETA<-NULL
                 }   
-                data.tempt<-read.csv(data.file,na.strings=".")   
+                data.tempt<-read.csv(data.file,na.string=".")   
                 if(sum(toupper(colnames(data.tempt))=="MDV")!=0)
                 {  data.i<-which(toupper(colnames(data.tempt))=="MDV")
                    temp<-data.tempt[,data.i]
@@ -2045,39 +1956,39 @@ fit4NM<-function()
          })  
                   
          openrundata<-function(h,...)
-         {  assign("data.file",gfile(text="Choose data file",type="open"),envir = fit4NM.env)
+         {  data.file<<-gfile(text="Choose data file",type="open")
             svalue(data.set)<-data.file
          }
 
-         grunNM<-ggroup(horizontal=F,container=g) 
-         tmp<-gframe("Model description",container=grunNM)
+         grunNM<-ggroup(horizontal=F,cont=g) 
+         tmp<-gframe("Model description",cont=grunNM)
          model.description<-gtext(" ",width=250,height=20)
          add(tmp,model.description)
-         tmp<-gframe("Choose parents",container=grunNM)
+         tmp<-gframe("Choose parents",cont=grunNM)
          item<-unique(c("ROOT",TOT.RUN$data[,"ID"]))
          parent<-gdroplist(item)
          add(tmp,parent)       
-         tmp<-gframe("CWRES option",container=grunNM)
+         tmp<-gframe("CWRES option",cont=grunNM)
          item<-unique(c("ROOT",TOT.RUN$data[,"ID"]))
-         assign("CWRES.flag",FALSE,envir = fit4NM.env)
-         assign("CWRESoption",gcheckbox("add CWRES calculation"),envir = fit4NM.env)
+         CWRES.flag<<-FALSE
+         CWRESoption<<-gcheckbox("add CWRES calculation")
          add(tmp,CWRESoption)                  
-         tmp<-gframe("Number of parameters\n # of theta + # of omega and sigma(except fixed)",container=grunNM)
+         tmp<-gframe("Number of parameters\n # of theta + # of omega and sigma(except fixed)",cont=grunNM)
          num.param<-gtext("",width=100,height=15)
          add(tmp,num.param)         
-         tmp<-gframe("NONMEM data file",container=grunNM)
+         tmp<-gframe("NONMEM data file",cont=grunNM)
          data.set<-gtext(" ",width=400,height=30)
          add(tmp,data.set)
          open.but<-gbutton("Open",handler=openrundata)
          add(tmp,open.but)                         
-     	 gc<-ggroup(horizontal=TRUE,container=g)
+     	 gc<-ggroup(horizontal=TRUE,cont=g)
       	 tmp<-gframe("",container=gc)  
       	 add(tmp,RunNM.1)
       	 tmp<-gframe("",container=gc)  
       	 add(tmp,RunNM.2)
       	 tmp<-gframe("",container=gc)      
-      	 assign("add.pnm",NULL,envir = fit4NM.env)
-      	 assign("add.Command"," ",envir = fit4NM.env)  	 
+      	 add.pnm<<-NULL
+      	 add.Command<<-" "  	 
          Option.Button<-gbutton("Parallel",handler=Option1)      	 
       	 add(tmp,Option.Button)      	 
       	 
@@ -2117,7 +2028,7 @@ fit4NM<-function()
 
    OpenResult<-function(NonmemRunID,filename)
    {  NonmemRes<-gwindow(paste(as.character(NonmemRunID),".res",sep=""))
-      a<-gtext("",container=NonmemRes,font.attr=c(family="korea1deb"),width=700)
+      a<-gtext("",cont=NonmemRes,font.attr=c(family="korea1deb"),width=700)
       old<-0
       console.text<-readLines(filename)
       svalue(a)<-console.text
@@ -2129,7 +2040,7 @@ fit4NM<-function()
       }
       
       NonmemConsole<-gwindow(as.character(NonmemRunID))
-      a<-gtext("",container=NonmemConsole,font.attr=c(family="korea1deb"))
+      a<-gtext("",cont=NonmemConsole,font.attr=c(family="korea1deb"))
       diff.t<-TRUE
       old<-0
       console.text<-readLines(filename)
@@ -2338,7 +2249,7 @@ fit4NM<-function()
       colnames(tot.res)<-c("Parameters","Estimates","SE","%RSE","Lower","Upper","%Shrinkage","%CV")
       tot.res[is.na(tot.res)| is.nan(tot.res) | tot.res=="NA"| tot.res=="NaN"]<-" "
       tot.res<-tot.res[-which(apply(tot.res,1,function(x) sum(x==" "))==7),]
-      gtable(tot.res, container=gwindow(paste(file.id,".sum",sep="")),do.subset=TRUE,width=150)
+      gtable(tot.res, cont=gwindow(paste(file.id,".sum",sep="")),do.subset=TRUE,width=150)
       write.csv(tot.res,paste(dir.name,"\\",file.id,".sum",sep=""),quote=F)
       write.csv(tot.res,paste(dir.name,"\\",file.id,".sum.csv",sep=""),quote=F)      
    }
@@ -2347,12 +2258,12 @@ fit4NM<-function()
 
    ExternalRun<-function(h,...)
    {  opendata<-function(h,...)
-      {  assign("data.file",gfile(text="Open data file",type="open"),envir = fit4NM.env)
+      {  data.file<<-gfile(text="Open data file",type="open")
          svalue(data.t)<-data.file      
       }
 
       openControl<-function(h,...)
-      {  assign("control.file",gfile(text="Open control file (runnumber.ctl)",type="open"),envir = fit4NM.env)
+      {  control.file<<-gfile(text="Open control file (runnumber.ctl)",type="open")
          svalue(control.t)<-control.file
          dir.name<-strsplit(control.file,split="\\.")[[1]][1]
          svalue(dir.t)<-dir.name
@@ -2376,7 +2287,7 @@ fit4NM<-function()
          temp<-strsplit(Default.NMpath,split="\\\\")[[1]]
          NMversion<-ifelse(temp[length(temp)]=="nmfe6.bat","NM6","NM7")
          write.table(NMversion,"NM.version")
-         assign("CWRES.flag",FALSE,envir = fit4NM.env)
+         CWRES.flag<<-FALSE
          RemakeCTL(file.id)
 
          temp<-strsplit( Editor.path,split="\\\\")[[1]]
@@ -2389,26 +2300,26 @@ fit4NM<-function()
       }
  
       Outerwin<-gwindow("Run from external editor")
-      Bgroup<-ggroup(container=Outerwin,horizontal=TRUE)
-      BBgroup<-ggroup(container=Bgroup,horizontal=FALSE)
+      Bgroup<-ggroup(cont=Outerwin,horizontal=TRUE)
+      BBgroup<-ggroup(cont=Bgroup,horizontal=FALSE)
  
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       control.t<-gedit("",width=50)
       button1<-gbutton("Open control file",handler=openControl)
       add(tmp,button1)
       add(tmp,control.t)
 
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       button2<-gbutton("Open data files",handler=opendata,width=20,height=10)
       data.t<-gedit(" ",width=50)
       add(tmp,button2)
       add(tmp,data.t) 
-      tmp<-gframe("NONMEM runnumber directory",container=BBgroup)
+      tmp<-gframe("NONMEM runnumber directory",cont=BBgroup)
       dir.t<-gedit(" ",width=50)
       add(tmp,button2)
       add(tmp,dir.t) 
  
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       button3<-gbutton("Open external editor for run",handler=openEdtRun,width=20,height=10)
       add(tmp,button3)   
    }
@@ -2438,7 +2349,7 @@ fit4NM<-function()
          temp<-strsplit(Default.NMpath,split="\\\\")[[1]]
          NMversion<-ifelse(temp[length(temp)]=="nmfe6.bat","NM6","NM7")
          write.table(NMversion,"NM.version")
-         assign("CWRES.flag",FALSE,envir = fit4NM.env)
+         CWRES.flag<<-FALSE
          RemakeCTL(paste(dir.name,file.name,sep="\\"))
 #         write.table(" ",paste(dir.name,"\\",file.id,".console",sep=""))
          temp.dir<-getwd()
@@ -2459,7 +2370,7 @@ fit4NM<-function()
          TOT.temp$num<-TOT.temp$num+1
          TOT.temp$data<-rbind(TOT.temp$data,c(file.id,dir.name,parents))
          colnames(TOT.temp$data)<-c("ID","path","parents")
-         assign("TOT.RUN",TOT.temp,envir = fit4NM.env)
+         TOT.RUN<<-TOT.temp
 
          OpenResult(file.id,paste(dir.name,"\\",file.id,".res",sep=""))
          D.LST<-readLines(paste(dir.name,"\\",file.id,".res",sep=""))
@@ -2475,7 +2386,7 @@ fit4NM<-function()
          } else
          {  ETA<-NULL
          }   
-         data.tempt<-read.csv(data.file,na.strings=".")   
+         data.tempt<-read.csv(data.file,na.string=".")   
          if(sum(toupper(colnames(data.tempt))=="MDV")!=0)
          {  data.i<-which(toupper(colnames(data.tempt))=="MDV")
             temp<-data.tempt[,data.i]
@@ -2489,7 +2400,7 @@ fit4NM<-function()
       }
 
       SeqRun<-function()
-      {  assign("CWRES.flag",ifelse(tclvalue(CWRESVal)=="0",FALSE,TRUE),envir = fit4NM.env)
+      {  CWRES.flag<<-ifelse(tclvalue(CWRESVal)=="0",FALSE,TRUE)
          for(i in 1:k)
          {  data.file<-tclvalue(DataFile.Name[[i]])
             file.ctl<-tclvalue(ControlFile.Name[[i]])
@@ -2533,7 +2444,7 @@ fit4NM<-function()
             TOT.temp$num<-TOT.temp$num+1
             TOT.temp$data<-rbind(TOT.temp$data,c(file.id,dir.name,parents))
             colnames(TOT.temp$data)<-c("ID","path","parents")
-            assign("TOT.RUN",TOT.temp,envir = fit4NM.env)
+            TOT.RUN<<-TOT.temp
 
             OpenResult(file.id,paste(dir.name,"\\",file.id,".res",sep=""))      
             D.LST<-readLines(paste(dir.name,"\\",file.id,".res",sep=""))
@@ -2549,7 +2460,7 @@ fit4NM<-function()
             } else
             {  ETA<-NULL
             }   
-            data.tempt<-read.csv(data.file,na.strings=".")   
+            data.tempt<-read.csv(data.file,na.string=".")   
             if(sum(toupper(colnames(data.tempt))=="MDV")!=0)
             {  data.i<-which(toupper(colnames(data.tempt))=="MDV")
                temp<-data.tempt[,data.i]
@@ -2567,19 +2478,19 @@ fit4NM<-function()
       }
 
       AddLine<-function(id)
-      {  assign("k",id,envir = fit4NM.env)
-         assign("ControlFile.Name[[id]]",tclVar(""),envir = fit4NM.env)
-         assign("ControlFileName[[id]]",tkentry(tt,width="20",textvariable=ControlFile.Name[[id]]),envir = fit4NM.env)
-         assign("DataFile.Name[[id]]",tclVar(""),envir = fit4NM.env)
-         assign("DataFileName[[id]]",tkentry(tt,width="20",textvariable=DataFile.Name[[id]]),envir = fit4NM.env)
-         assign("Run.Num[[id]]",tclVar(""),envir = fit4NM.env)
-         assign("RunNum[[id]]",tkentry(tt,width="15",textvariable=Run.Num[[id]]),envir = fit4NM.env)
-         assign("Description.N[[id]]",tclVar(""),envir = fit4NM.env)
-         assign("DescriptionN[[id]]",tkentry(tt,width="60",textvariable=Description.N[[id]]),envir = fit4NM.env)
-         assign("Param.Num[[id]]",tclVar(""),envir = fit4NM.env)
-         assign("ParamNum[[id]]",tkentry(tt,width="15",textvariable=Param.Num[[id]]),envir = fit4NM.env)
-         assign("Parent.Num[[id]]",tclVar(""),envir = fit4NM.env)
-         assign("ParentNum[[id]]",tkentry(tt,width="15",textvariable=Parent.Num[[id]]),envir = fit4NM.env)
+      {  k<<-id
+         ControlFile.Name[[id]]<<-tclVar("")
+         ControlFileName[[id]]<<-tkentry(tt,width="20",textvariable=ControlFile.Name[[id]])
+         DataFile.Name[[id]]<<-tclVar("")
+         DataFileName[[id]]<<-tkentry(tt,width="20",textvariable=DataFile.Name[[id]])
+         Run.Num[[id]]<<-tclVar("")
+         RunNum[[id]]<<-tkentry(tt,width="15",textvariable=Run.Num[[id]])
+         Description.N[[id]]<<-tclVar("")
+         DescriptionN[[id]]<<-tkentry(tt,width="60",textvariable=Description.N[[id]])
+         Param.Num[[id]]<<-tclVar("")
+         ParamNum[[id]]<<-tkentry(tt,width="15",textvariable=Param.Num[[id]])
+         Parent.Num[[id]]<<-tclVar("")
+         ParentNum[[id]]<<-tkentry(tt,width="15",textvariable=Parent.Num[[id]])
          tkgrid(ControlFileName[[id]],RunNum[[id]],tklabel(tt,text=" "),ParentNum[[id]],
                    tklabel(tt,text=" "),ParamNum[[id]], tklabel(tt,text=" "),
                       DescriptionN[[id]],DataFileName[[id]],tklabel(tt,text=" "))
@@ -2588,12 +2499,12 @@ fit4NM<-function()
 
       ConFile<-function()
       {  kk<-k
-         assign("tclvalue(ControlFile.Name[[kk]])",gfile(text="Open control file (runnumber.ctl)",type="open"),envir = fit4NM.env)
+         tclvalue(ControlFile.Name[[kk]])<<-gfile(text="Open control file (runnumber.ctl)",type="open")
          file.ctl<-tclvalue(ControlFile.Name[[kk]])
          temp<-strsplit(file.ctl,"\\\\")[[1]]
          RunNumber<-strsplit(tolower(temp[length(temp)]),split="\\.ctl")[[1]][1]  
-         assign("tclvalue(Run.Num[[kk]])",RunNumber,envir = fit4NM.env)
-         assign("DirectRunNum",c(DirectRunNum,RunNumber),envir = fit4NM.env)
+         tclvalue(Run.Num[[kk]])<<-RunNumber
+         DirectRunNum<<-c(DirectRunNum,RunNumber)
       }
 
       DataFile<-function()
@@ -2603,7 +2514,7 @@ fit4NM<-function()
          file.name<-temp[length(temp)]
          dir.name<-strsplit(file.ctl,split=file.name)[[1]] 
          setwd(dir.name)
-         assign("tclvalue(DataFile.Name[[kk]])",gfile(text="Data file",type="open"),envir = fit4NM.env)
+         tclvalue(DataFile.Name[[kk]])<<-gfile(text="Data file",type="open")
       }
       
       SaveRun<-function(h,...)
@@ -2622,16 +2533,16 @@ fit4NM<-function()
          write.csv(TOT.table,run.file)
       }
       
-      assign("DirectRunNum",NULL,envir = fit4NM.env)
-      assign("Toptt",tktoplevel(),envir = fit4NM.env)
+      DirectRunNum<<-NULL
+      Toptt<<-tktoplevel()
       tkwm.title(Toptt,"Direct run")
       tt<-tkframe(Toptt)
       ttg<-tkframe(tt)
       OK.but3 <-tkbutton(ttg,text="Sequential runs",command=SeqRun)
       OK.but4 <-tkbutton(ttg,text="Save as csv",command=SaveRun)
-      assign("CWRES.flag",FALSE,envir = fit4NM.env)
+      CWRES.flag<<-FALSE
       CWRESoption<-tkcheckbutton(ttg,text="CWRES option")         
-      assign("CWRESVal",tclVar("0"),envir = fit4NM.env)
+      CWRESVal<<-tclVar("0")
       OptionButton<-tkbutton(ttg,text="Parallel",command=Option1)
       tkconfigure(CWRESoption,variable=CWRESVal)
       tkgrid(tklabel(ttg,text=""),tklabel(ttg,text=""),tklabel(ttg,text=""),
@@ -2646,39 +2557,39 @@ fit4NM<-function()
                     tklabel(tt,text="# of parameters"),tklabel(tt,text=""),tklabel(tt,text="Description (English only)"),OK.but2,Add.but)
 
       tkgrid(tt)
-      assign("ControlFile.Name",list(),envir = fit4NM.env)
-      assign("ControlFileName",list(),envir = fit4NM.env)
-      assign("DataFile.Name",list(),envir = fit4NM.env)
-      assign("DataFileName",list(),envir = fit4NM.env)
-      assign("RunNum",list(),envir = fit4NM.env)
-      assign("Run.Num",list(),envir = fit4NM.env)
-      assign("DescriptionN",list(),envir = fit4NM.env)
-      assign("Description.N",list(),envir = fit4NM.env)
-      assign("ParamNum",list(),envir = fit4NM.env)
-      assign("Param.Num",list(),envir = fit4NM.env)
-      assign("ParentNum",list(),envir = fit4NM.env)
-      assign("Parent.Num",list(),,envir = fit4NM.env)
+      ControlFile.Name<<-list()
+      ControlFileName<<-list()
+      DataFile.Name<<-list()
+      DataFileName<<-list()
+      RunNum<<-list()
+      Run.Num<<-list()
+      DescriptionN<<-list()
+      Description.N<<-list()
+      ParamNum<<-list()
+      Param.Num<<-list()      
+      ParentNum<<-list()
+      Parent.Num<<-list()
             
-      assign("k",1,envir = fit4NM.env)
-      assign("ControlFile.Name[[k]]",tclVar(""),envir = fit4NM.env)
-      assign("ControlFileName[[k]]",tkentry(tt,width="20",textvariable=ControlFile.Name[[k]]),envir = fit4NM.env)
-      assign("DataFile.Name[[k]]",tclVar(""),envir = fit4NM.env)
-      assign("DataFileName[[k]]",tkentry(tt,width="20",textvariable=DataFile.Name[[k]]),envir = fit4NM.env) 
-      assign("Run.Num[[k]]",tclVar(""),envir = fit4NM.env)
-      assign("RunNum[[k]]",tkentry(tt,width="15",textvariable=Run.Num[[k]]),envir = fit4NM.env)
-      assign("Description.N[[k]]",tclVar(""),envir = fit4NM.env)
-      assign("DescriptionN[[k]]",tkentry(tt,width="60",textvariable=Description.N[[k]]),envir = fit4NM.env)
-      assign("Param.Num[[k]]",tclVar(""),envir = fit4NM.env)
-      assign("ParamNum[[k]]",tkentry(tt,width="15",textvariable=Param.Num[[k]]),envir = fit4NM.env)
-      assign("Parent.Num[[k]]",tclVar(""),envir = fit4NM.env)
-      assign("ParentNum[[k]]",tkentry(tt,width="15",textvariable=Parent.Num[[k]]),envir = fit4NM.env)
+      k<<-1
+      ControlFile.Name[[k]]<<-tclVar("")
+      ControlFileName[[k]]<<-tkentry(tt,width="20",textvariable=ControlFile.Name[[k]])
+      DataFile.Name[[k]]<<-tclVar("")
+      DataFileName[[k]]<<-tkentry(tt,width="20",textvariable=DataFile.Name[[k]]) 
+      Run.Num[[k]]<<-tclVar("")
+      RunNum[[k]]<<-tkentry(tt,width="15",textvariable=Run.Num[[k]])
+      Description.N[[k]]<<-tclVar("")
+      DescriptionN[[k]]<<-tkentry(tt,width="60",textvariable=Description.N[[k]])
+      Param.Num[[k]]<<-tclVar("")
+      ParamNum[[k]]<<-tkentry(tt,width="15",textvariable=Param.Num[[k]])
+      Parent.Num[[k]]<<-tclVar("")
+      ParentNum[[k]]<<-tkentry(tt,width="15",textvariable=Parent.Num[[k]])
 
       tkgrid(ControlFileName[[k]],RunNum[[k]],tklabel(tt,text=" "),ParentNum[[k]],
                    tklabel(tt,text=" "),ParamNum[[k]], tklabel(tt,text=" "),
                       DescriptionN[[k]],DataFileName[[k]],tklabel(tt,text=" "))
       tkgrid(tt)	
-            	 assign("add.pnm",NULL,envir = fit4NM.env)
-      	 assign("add.Command"," "  	,envir = fit4NM.env)
+            	 add.pnm<<-NULL
+      	 add.Command<<-" "  	
    }
       
    #### Run table ##############################################################
@@ -2694,7 +2605,7 @@ fit4NM<-function()
             TOT.temp$num<-TOT.temp$num+1
             TOT.temp$data<-rbind(TOT.temp$data,c(file.id,dir.name,toupper(tclvalue(Parent.Num[[ii]]))))
             colnames(TOT.temp$data)<-c("ID","path","parents")
-            assign("TOT.RUN",TOT.temp,envir = fit4NM.env)
+            TOT.RUN<<-TOT.temp
 
             D.LST<-readLines(paste(dir.name,"\\",file.id,".res",sep=""))
             if(sum(dir(dir.name)==paste(file.id,".ETA",sep=""))!=0)
@@ -2710,7 +2621,7 @@ fit4NM<-function()
             {  ETA<-NULL
             }             
             data.file<-paste(dir.name,"\\",file.id,".csv",sep="")
-            data.tempt<-read.csv(data.file,na.strings=".")   
+            data.tempt<-read.csv(data.file,na.string=".")   
             if(sum(toupper(colnames(data.tempt))=="MDV")!=0)
             {  data.i<-which(toupper(colnames(data.tempt))=="MDV")
                temp<-data.tempt[,data.i]
@@ -2821,17 +2732,17 @@ fit4NM<-function()
       }
 
       AddLine<-function(id)
-      {  assign("kk",id,envir = fit4NM.env)
-         assign("ControlFile.Dir[[id]]",tclVar(""),envir = fit4NM.env)
-         assign("ControlFileDir[[id]]",tkentry(tt,width="20",textvariable=ControlFile.Dir[[id]]),envir = fit4NM.env)
-         assign("Run.Num[[id]]",tclVar(""),envir = fit4NM.env)
-         assign("RunNum[[id]]",tkentry(tt,width="15",textvariable=Run.Num[[id]]),envir = fit4NM.env)
-         assign("Description.N[[id]]",tclVar(""),envir = fit4NM.env)
-         assign("DescriptionN[[id]]",tkentry(tt,width="60",textvariable=Description.N[[id]]),envir = fit4NM.env)
-         assign("Param.Num[[id]]",tclVar(""),envir = fit4NM.env)
-         assign("ParamNum[[id]]",tkentry(tt,width="15",textvariable=Param.Num[[id]]),envir = fit4NM.env)
-         assign("Parent.Num[[id]]",tclVar(""),envir = fit4NM.env)
-         assign("ParentNum[[id]]",tkentry(tt,width="15",textvariable=Parent.Num[[id]]),envir = fit4NM.env)
+      {  kk<<-id
+         ControlFile.Dir[[id]]<<-tclVar("")
+         ControlFileDir[[id]]<<-tkentry(tt,width="20",textvariable=ControlFile.Dir[[id]])
+         Run.Num[[id]]<<-tclVar("")
+         RunNum[[id]]<<-tkentry(tt,width="15",textvariable=Run.Num[[id]])
+         Description.N[[id]]<<-tclVar("")
+         DescriptionN[[id]]<<-tkentry(tt,width="60",textvariable=Description.N[[id]])
+         Param.Num[[id]]<<-tclVar("")
+         ParamNum[[id]]<<-tkentry(tt,width="15",textvariable=Param.Num[[id]])
+         Parent.Num[[id]]<<-tclVar("")
+         ParentNum[[id]]<<-tkentry(tt,width="15",textvariable=Parent.Num[[id]])
 
          tkgrid(ControlFileDir[[id]],RunNum[[id]],tklabel(tt,text=" "),ParentNum[[id]],
                    tklabel(tt,text=" "),ParamNum[[id]], tklabel(tt,text=" "),
@@ -2841,15 +2752,15 @@ fit4NM<-function()
 
       ConFile<-function()
       {  kkk<-kk
-         assign("tclvalue(ControlFile.Dir[[kkk]])",gfile(text="Choose runnumber subdirectory",type="selectdir"),envir = fit4NM.env)
+         tclvalue(ControlFile.Dir[[kkk]])<<-gfile(text="Choose runnumber subdirectory",type="selectdir")
          file.ctl<-tclvalue(ControlFile.Dir[[kkk]])
          temp<-strsplit(file.ctl,"\\\\")[[1]]
          RunNumber<-temp[length(temp)]
-         assign("tclvalue(Run.Num[[kkk]])",RunNumber,envir = fit4NM.env)
+         tclvalue(Run.Num[[kkk]])<<-RunNumber
          setwd(strsplit(file.ctl,split=RunNumber)[[1]])
       }
 
-      assign("Toptt",tktoplevel(),envir = fit4NM.env)
+      Toptt<<-tktoplevel()
       tkwm.title(Toptt,"Make run table from runnumber subdirectory")
       tt<-tkframe(Toptt)
       ttg<-tkframe(tt)
@@ -2865,28 +2776,28 @@ fit4NM<-function()
                     tklabel(tt,text="Parents"),tklabel(tt,text=""),
                     tklabel(tt,text="# of parameters"),tklabel(tt,text=""),tklabel(tt,text="Description (English only)"),Add.but)
       tkgrid(tt)
-      assign("ControlFile.Dir",list(),envir = fit4NM.env)
-      assign("ControlFileDir",list(),envir = fit4NM.env)
-      assign("RunNum",list(),envir = fit4NM.env)
-      assign("Run.Num",list(),envir = fit4NM.env)
-      assign("DescriptionN",list(),envir = fit4NM.env)
-      assign("Description.N",list(),envir = fit4NM.env)
-      assign("ParamNum",list(),envir = fit4NM.env)
-      assign("Param.Num",list()      ,envir = fit4NM.env)
-      assign("ParentNum",list(),envir = fit4NM.env)
-      assign("Parent.Num",list(),envir = fit4NM.env)
+      ControlFile.Dir<<-list()
+      ControlFileDir<<-list()
+      RunNum<<-list()
+      Run.Num<<-list()
+      DescriptionN<<-list()
+      Description.N<<-list()
+      ParamNum<<-list()
+      Param.Num<<-list()      
+      ParentNum<<-list()
+      Parent.Num<<-list()
             
-      assign("kk",1,envir = fit4NM.env)
-      assign("ControlFile.Dir[[kk]]",tclVar(""),envir = fit4NM.env)
-      assign("ControlFileDir[[kk]]",tkentry(tt,width="20",textvariable=ControlFile.Dir[[kk]]),envir = fit4NM.env)
-      assign("Run.Num[[kk]]",tclVar(""),envir = fit4NM.env)
-      assign("RunNum[[kk]]",tkentry(tt,width="15",textvariable=Run.Num[[kk]]),envir = fit4NM.env)
-      assign("Description.N[[kk]]",tclVar(""),envir = fit4NM.env)
-      assign("DescriptionN[[kk]]",tkentry(tt,width="60",textvariable=Description.N[[kk]]),envir = fit4NM.env)
-      assign("Param.Num[[kk]]",tclVar(""),envir = fit4NM.env)
-      assign("ParamNum[[kk]]",tkentry(tt,width="15",textvariable=Param.Num[[kk]]),envir = fit4NM.env)
-      assign("Parent.Num[[kk]]",tclVar(""),envir = fit4NM.env)
-      assign("ParentNum[[kk]]",tkentry(tt,width="15",textvariable=Parent.Num[[kk]]),envir = fit4NM.env)
+      kk<<-1
+      ControlFile.Dir[[kk]]<<-tclVar("")
+      ControlFileDir[[kk]]<<-tkentry(tt,width="20",textvariable=ControlFile.Dir[[kk]])
+      Run.Num[[kk]]<<-tclVar("")
+      RunNum[[kk]]<<-tkentry(tt,width="15",textvariable=Run.Num[[kk]])
+      Description.N[[kk]]<<-tclVar("")
+      DescriptionN[[kk]]<<-tkentry(tt,width="60",textvariable=Description.N[[kk]])
+      Param.Num[[kk]]<<-tclVar("")
+      ParamNum[[kk]]<<-tkentry(tt,width="15",textvariable=Param.Num[[kk]])
+      Parent.Num[[kk]]<<-tclVar("")
+      ParentNum[[kk]]<<-tkentry(tt,width="15",textvariable=Parent.Num[[kk]])
 
       tkgrid(ControlFileDir[[kk]],RunNum[[kk]],tklabel(tt,text=" "),ParentNum[[kk]],
                    tklabel(tt,text=" "),ParamNum[[kk]], tklabel(tt,text=" "),
@@ -2924,7 +2835,7 @@ fit4NM<-function()
       colnames(TOT.temp$data)<-c("ID","path","parents")
       TOT.temp$data<-rbind(TOT.RUN$data,TOT.temp$data)
       TOT.temp$num<-TOT.RUN$num+nrow(run.f)   
-      assign("TOT.RUN",TOT.temp      ,envir = fit4NM.env)
+      TOT.RUN<<-TOT.temp      
     }
    
    #### Model tree #############################################################
@@ -2990,7 +2901,7 @@ fit4NM<-function()
       A<-TREE.display
       colnames(A)<-c("ROOT",rep(" ",ncol(A)-1))
       MT<-gwindow("Model tree")
-      gtable(A,container=MT)
+      gtable(A,cont=MT)
    }
    
    #### Explore output #########################################################
@@ -3034,19 +2945,19 @@ fit4NM<-function()
               {  sel.id<-(1:nrow(D.data))
               }               
             }
-            assign("SEL.ID",sel.id,envir = fit4NM.env)
+            SEL.ID<<-sel.id
             TEMP<-read.table(paste(file.id,".noh",sep=""),skip=1,header=T)   
             if(length(sel.id)!=nrow(D.data))
-            {  assign("OUTPUT.file", paste(gfile(text="Save selected data as csv",
-                  type="save",filter=list("csv files"=list(patterns=c("*.csv")))),".csv",sep=""),envir = fit4NM.env)        
+            {  OUTPUT.file<<- paste(gfile(text="Save selected data as csv",
+                  type="save",filter=list("csv files"=list(patterns=c("*.csv")))),".csv",sep="")        
                write.csv(TEMP[SEL.ID,],OUTPUT.file,row.names=F,quote=F)     
             } else
-            {  assign("OUTPUT.file",paste(svalue(id.sel),".noh",sep=""),envir = fit4NM.env)
+            {  OUTPUT.file<<-paste(svalue(id.sel),".noh",sep="")
             }  
             dispose(win)
          }
          file.id<-svalue(id.sel)
-         assign("FILE.ID",file.id,envir = fit4NM.env)
+         FILE.ID<<-file.id
          runnum.path<-TOT.RUN$data[which(TOT.RUN$data[,"ID"]==file.id),"path"]
          setwd(runnum.path)
          Orig.Data<-read.csv(paste(file.id,".csv",sep=""))
@@ -3086,8 +2997,8 @@ fit4NM<-function()
       id.sel<-gdroplist(runid.list)
 
       win<-gwindow("Select output data")
-      BigGroup<-ggroup(container=win)
-      group=ggroup(horizontal=FALSE,container=BigGroup)
+      BigGroup<-ggroup(cont=win)
+      group=ggroup(horizontal=FALSE,cont=BigGroup)
       tmp<-gframe("Runnumber",container=group)
       add(tmp,id.sel)
       add(tmp,Button)
@@ -3101,7 +3012,7 @@ fit4NM<-function()
        temp[is.na(temp)]<-""
        tot.res<-temp
        colnames(tot.res)<-c("Parameters","Estimates","SE","%RSE","Lower","Upper","%Shrinkage","%CV")
-       gtable(tot.res, container=gwindow(paste(FILE.ID,".sum",sep="")),do.subset=TRUE,width=150)
+       gtable(tot.res, cont=gwindow(paste(FILE.ID,".sum",sep="")),do.subset=TRUE,width=150)
     }
    
    ###### Measures of performance 1 ##############################################
@@ -3137,13 +3048,13 @@ fit4NM<-function()
          MP.pop.temp<-round(MP.pop,5)
 
          g1<-gwindow("Performance errors - Population")
-         gtable(MP.pop.temp,container=g1)
+         gtable(MP.pop.temp,cont=g1)
 
          g2<-gwindow("Performance errors - Individual")
-         gtable(MP.Indiv,container=g2)
+         gtable(MP.Indiv,cont=g2)
 
-         assign("MP.Indiv",MP.Indiv,envir = fit4NM.env)
-         assign("MP.pop",MP.pop       ,envir = fit4NM.env)
+         MP.Indiv<<-MP.Indiv
+         MP.pop<<-MP.pop       
       }
 
       save.MP.pop<-function(h,...)
@@ -3165,42 +3076,42 @@ fit4NM<-function()
          EX.data<-data.frame(EX.data.temp)
          MeasureP(EX.data)
 
-         tmp<-gframe("Save performance errors - Population",container=Bgroup1)
-         gbutton("OK",handler=save.MP.pop,container=tmp)
-         tmp<-gframe("Save performance errors - Individual",container=Bgroup1)
-         gbutton("OK",handler=save.MP.indiv,container=tmp)
+         tmp<-gframe("Save performance errors - Population",cont=Bgroup1)
+         gbutton("OK",handler=save.MP.pop,cont=tmp)
+         tmp<-gframe("Save performance errors - Individual",cont=Bgroup1)
+         gbutton("OK",handler=save.MP.indiv,cont=tmp)
       }
       
       select.MP<-function(h,...)
       {  noh.name<-gfile(text="data file",type="open")
          svalue(file.MP)<-noh.name
-         assign("EX.data.T",read.csv(noh.name,na.strings="."),envir = fit4NM.env)
+         EX.data.T<<-read.csv(noh.name,na.string=".")
          temp.list<-colnames(EX.data.T)  
          MPparam.input<-c("ID      ","Observation(Y)   ","Prediction(Y_hat)    ")
          MP.g<-list()
          MP.list<-list()
          for(i in 1:3)
-         {  MP.g[[i]]<-ggroup(container=Bgroup1)
-            temp<- gdroplist(temp.list,container=MP.g[[i]])
-            glabel(MPparam.input[i],container=MP.g[[i]])
+         {  MP.g[[i]]<-ggroup(cont=Bgroup1)
+            temp<- gdroplist(temp.list,cont=MP.g[[i]])
+            glabel(MPparam.input[i],cont=MP.g[[i]])
             MP.list[[i]]<-temp
          }
-         assign("MP.list",MP.list,envir = fit4NM.env)
-         tmp<-gframe("Calculate performance error",container=Bgroup1)
-         gbutton("OK",handler=calc.MP,container=tmp)
-         tmp<-gframe("Formulae",container=Bgroup1,horizontal=FALSE)        
-         glabel("Weighted residual(WR) = (observation-prediction)/prediction x 100(%)\n",container=tmp)                
-         glabel("Median weighted residual(MDWR) = median(WR)\n",container=tmp)        
-         glabel("Median absolute weighted residual(MDAWR) = median(|WR|)\n",container=tmp)        
-         glabel("Mean weighted residual(MWR) = mean(WR)\n",container=tmp)        
-         glabel("Mean absolute weighted residual(MAWR) = mean(|WR|)\n",container=tmp)              
+         MP.list<<-MP.list
+         tmp<-gframe("Calculate performance error",cont=Bgroup1)
+         gbutton("OK",handler=calc.MP,cont=tmp)
+         tmp<-gframe("Formulae",cont=Bgroup1,horizontal=FALSE)        
+         glabel("Weighted residual(WR) = (observation-prediction)/prediction x 100(%)\n",cont=tmp)                
+         glabel("Median weighted residual(MDWR) = median(WR)\n",cont=tmp)        
+         glabel("Median absolute weighted residual(MDAWR) = median(|WR|)\n",cont=tmp)        
+         glabel("Mean weighted residual(MWR) = mean(WR)\n",cont=tmp)        
+         glabel("Mean absolute weighted residual(MAWR) = mean(|WR|)\n",cont=tmp)              
       }
-      assign("MP.win",gwindow("Performance errors"),envir = fit4NM.env)
-      BBgroup<-ggroup(container=MP.win,horizontal=TRUE)
-      Bgroup1<-ggroup(container=BBgroup, horizontal=FALSE)
-      tmp<-gframe("Open csv file with ID, observation and prediction",container=Bgroup1)
-      assign("file.MP",gedit(" ",container=tmp),envir = fit4NM.env)
-      gbutton("Open",handler=select.MP,container=tmp)
+      MP.win<<-gwindow("Performance errors")
+      BBgroup<-ggroup(cont=MP.win,horizontal=TRUE)
+      Bgroup1<-ggroup(cont=BBgroup, horizontal=FALSE)
+      tmp<-gframe("Open csv file with ID, observation and prediction",cont=Bgroup1)
+      file.MP<<-gedit(" ",cont=tmp)
+      gbutton("Open",handler=select.MP,cont=tmp)
    }
    
    ###### Measures of performance 2 ##############################################
@@ -3262,20 +3173,20 @@ fit4NM<-function()
             MP.Indiv<-rbind(MP.Indiv,c(i,Pki$Pk,sqrt(Pki$var.Pk),Pki$Pk-1.96*sqrt(Pki$var.Pk),Pki$Pk+1.96*sqrt(Pki$var.Pk)))            
          }
          Pk<-Pred.Prob(Ex.data$X,Ex.data$Y,xd,yd,XY.positive)
-         assign("pk.keep",Pk,envir = fit4NM.env)
+         pk.keep<<-Pk
          MP.pop<-matrix(c(Pk$Pk,sqrt(Pk$var.Pk),Pk$Pk-1.96*sqrt(Pk$var.Pk),Pk$Pk+1.96*sqrt(Pk$var.Pk)),nrow=1)
          colnames(MP.Indiv)<-c("ID","PredictionProbability","sd","95%Lower","95%Upper")
          colnames(MP.pop)<-c("PredictionProbability","sd","95%Lower","95%Upper")
          MP.pop.temp<-round(MP.pop,5)
 
          g1<-gwindow("Prediciton probability - Population")
-         gtable(MP.pop.temp,container=g1)
+         gtable(MP.pop.temp,cont=g1)
 
          g2<-gwindow("Prediction probability - Individual")
-         gtable(MP.Indiv,container=g2)
+         gtable(MP.Indiv,cont=g2)
 
-         assign("MP.Indiv",MP.Indiv,envir = fit4NM.env)
-         assign("MP.pop",MP.pop,envir = fit4NM.env)       
+         MP.Indiv<<-MP.Indiv
+         MP.pop<<-MP.pop       
       }
 
       save.MP.pop<-function(h,...)
@@ -3297,40 +3208,40 @@ fit4NM<-function()
          EX.data<-data.frame(EX.data.temp)
          MeasureP(EX.data)
 
-         tmp<-gframe("Save prediction probability - Population",container=Bgroup1)
-         gbutton("OK",handler=save.MP.pop,container=tmp)
-         tmp<-gframe("Save prediction probability - Individual",container=Bgroup1)
-         gbutton("OK",handler=save.MP.indiv,container=tmp)
+         tmp<-gframe("Save prediction probability - Population",cont=Bgroup1)
+         gbutton("OK",handler=save.MP.pop,cont=tmp)
+         tmp<-gframe("Save prediction probability - Individual",cont=Bgroup1)
+         gbutton("OK",handler=save.MP.indiv,cont=tmp)
       }
       select.MP<-function(h,...)
       {  noh.name<-gfile(text="data file",type="open")
          svalue(file.MP)<-noh.name
-         assign("EX.data.T",read.csv(noh.name),envir = fit4NM.env)
+         EX.data.T<<-read.csv(noh.name)
          temp.list<-colnames(EX.data.T)  
          MPparam.input<-c("ID      ","Predictor(X)       ","Observation(Y)   ")
          MP.g<-list()
          MP.list<-list()
          for(i in 1:3)
-         {  MP.g[[i]]<-ggroup(container=Bgroup1)
-            temp<- gdroplist(temp.list,container=MP.g[[i]])
-            glabel(MPparam.input[i],container=MP.g[[i]])
-            if(i==2) {assign("Xdigit",gedit("3",width=5,container=MP.g[[i]]),envir = fit4NM.env) ;glabel("rounding digits",container=MP.g[[i]])}
-            if(i==3) {assign("Ydigit",gedit("3",width=5,container=MP.g[[i]]),envir = fit4NM.env) ;glabel("rounding digits",container=MP.g[[i]])}            
+         {  MP.g[[i]]<-ggroup(cont=Bgroup1)
+            temp<- gdroplist(temp.list,cont=MP.g[[i]])
+            glabel(MPparam.input[i],cont=MP.g[[i]])
+            if(i==2) {Xdigit<<-gedit("3",width=5,cont=MP.g[[i]]) ;glabel("rounding digits",cont=MP.g[[i]])}
+            if(i==3) {Ydigit<<-gedit("3",width=5,cont=MP.g[[i]]) ;glabel("rounding digits",cont=MP.g[[i]])}            
             MP.list[[i]]<-temp
          }
-         assign("MP.list",MP.list,envir = fit4NM.env)
-         tmp<-gframe("Effect of predictor on prediction",container=Bgroup1)
-         assign("XY",gradio(c("Stimulation","Inhibition"),selected=1,container=tmp,horizontal=TRUE),envir = fit4NM.env)
-         gbutton("OK",handler=calc.MP,container=tmp)
-         tmp<-gframe("Formulae",container=Bgroup1,horizontal=FALSE)        
-         glabel("Prediction probability(Pk) = (Somers' d+1)/2\n",container=tmp) 
+         MP.list<<-MP.list
+         tmp<-gframe("Effect of predictor on prediction",cont=Bgroup1)
+         XY<<-gradio(c("Stimulation","Inhibition"),selected=1,cont=tmp,horizontal=TRUE)
+         gbutton("OK",handler=calc.MP,cont=tmp)
+         tmp<-gframe("Formulae",cont=Bgroup1,horizontal=FALSE)        
+         glabel("Prediction probability(Pk) = (Somers' d+1)/2\n",cont=tmp) 
       }
-      assign("MP.win",gwindow("Prediction probability"),envir = fit4NM.env)
-      BBgroup<-ggroup(container=MP.win,horizontal=TRUE)
-      Bgroup1<-ggroup(container=BBgroup, horizontal=FALSE)
-      tmp<-gframe("Open csv file with ID, predictor and observation",container=Bgroup1)
-      assign("file.MP",gedit(" ",container=tmp),envir = fit4NM.env)
-      gbutton("Open",handler=select.MP,container=tmp)
+      MP.win<<-gwindow("Prediction probability")
+      BBgroup<-ggroup(cont=MP.win,horizontal=TRUE)
+      Bgroup1<-ggroup(cont=BBgroup, horizontal=FALSE)
+      tmp<-gframe("Open csv file with ID, predictor and observation",cont=Bgroup1)
+      file.MP<<-gedit(" ",cont=tmp)
+      gbutton("Open",handler=select.MP,cont=tmp)
    }
         
    ###### Plot #################################################################
@@ -3338,7 +3249,7 @@ fit4NM<-function()
    postXY.plot<-function(h,...)
    {  runnum.path<-TOT.RUN$data[which(TOT.RUN$data[,"ID"]==FILE.ID),"path"]
       datafile.name1<-paste(FILE.ID,".csv",sep="")
-      D.data1<-read.csv(datafile.name1,na.strings=".")
+      D.data1<-read.csv(datafile.name1,na.string=".")
       colnames(D.data1)<-paste(colnames(D.data1),"-EDA  ",sep="")
       datafile.name2<-paste(FILE.ID,".noh",sep="")
       D.data2<-read.table(datafile.name2,skip=1,header=T)
@@ -3378,8 +3289,8 @@ fit4NM<-function()
       Button1<-gbutton("OK",handler=updatePlot)
       Button2<-gbutton("Save",handler=saveData)   
       win<-gwindow("XY plot")
-      BigGroup<-ggroup(container=win)
-      group<-ggroup(horizontal=FALSE,container=BigGroup)
+      BigGroup<-ggroup(cont=win)
+      group<-ggroup(horizontal=FALSE,cont=BigGroup)
       tmp<-gframe(" X variable",container=group)
       add(tmp,VarList.X)
       tmp<-gframe(" Y variable",container=group)
@@ -3463,8 +3374,8 @@ fit4NM<-function()
       
       Button<-gbutton("OK",handler=updatePlot)
       win<-gwindow(paste("DV vs Predictions plot (",OUTPUT.file,")",sep=""))
-      BigGroup<-ggroup(container=win)
-      group=ggroup(horizontal=FALSE,container=BigGroup)
+      BigGroup<-ggroup(cont=win)
+      group=ggroup(horizontal=FALSE,cont=BigGroup)
       tmp=gframe(" Y variable",container=group)
       if(read.table("NM.version")=="NM6")
       {  PRED.list<-PRED.list.6
@@ -3576,8 +3487,8 @@ fit4NM<-function()
 
       Button<-gbutton("OK",handler=updatePlot)
       win<-gwindow(paste("DV vs Residuals plot (",OUTPUT.file,")",sep=""))
-      BigGroup<-ggroup(container=win)
-      group=ggroup(horizontal=FALSE,container=BigGroup)
+      BigGroup<-ggroup(cont=win)
+      group=ggroup(horizontal=FALSE,cont=BigGroup)
 
       tmp=gframe(" Y variable",container=group)
       if(read.table("NM.version")=="NM6")
@@ -3608,9 +3519,9 @@ fit4NM<-function()
          condX.V <-"TIME"
          condY.V<-svalue(RES.sel)
          if(sum(colnames(Output.Table)=="CWRES")==0)
-         {  assign("CWRES.flag",FALSE,envir = fit4NM.env)
+         {  CWRES.flag<<-FALSE
          } else
-         { assign( "CWRES.flag",TRUE,envir = fit4NM.env)
+         {  CWRES.flag<<-TRUE
          }
       
   
@@ -3659,15 +3570,15 @@ fit4NM<-function()
       Button<-gbutton("OK",handler=updatePlot)
 
       win<-gwindow(paste("TIME vs Residuals plot (",OUTPUT.file,")",sep=""))
-      BigGroup<-ggroup(container=win)
-      group=ggroup(horizontal=FALSE,container=BigGroup)
+      BigGroup<-ggroup(cont=win)
+      group=ggroup(horizontal=FALSE,cont=BigGroup)
       runnum.path<-TOT.RUN$data[which(TOT.RUN$data[,"ID"]==FILE.ID),"path"]
          outfile.name<-paste(runnum.path,"\\",FILE.ID,".NOH",sep="")
          Output.Table<-read.table(outfile.name,skip=1,header=T)
          if(sum(colnames(Output.Table)=="CWRES")==0)
-         {  assign("CWRES.flag",FALSE,envir = fit4NM.env)
+         {  CWRES.flag<<-FALSE
          } else
-         {  assign("CWRES.flag",TRUE,envir = fit4NM.env)
+         {  CWRES.flag<<-TRUE
          }
    
       tmp=gframe(" Y variable",container=group)
@@ -3732,8 +3643,8 @@ fit4NM<-function()
       
       Button<-gbutton("OK",handler=updatePlot)
       win<-gwindow(paste("Predictions and DV vs TIME plot (",OUTPUT.file,")",sep=""))
-      BigGroup<-ggroup(container=win)
-      group=ggroup(horizontal=FALSE,container=BigGroup)
+      BigGroup<-ggroup(cont=win)
+      group=ggroup(horizontal=FALSE,cont=BigGroup)
       runnum.path<-TOT.RUN$data[which(TOT.RUN$data[,"ID"]==FILE.ID),"path"]
          outfile.name<-paste(runnum.path,"\\",FILE.ID,".noh",sep="")
          Output.Table<-read.table(outfile.name,skip=1,header=T)
@@ -3764,7 +3675,7 @@ fit4NM<-function()
    TIMEvsDVandPREDID.plot<-function(h,...)
    {  runnum.path<-TOT.RUN$data[which(TOT.RUN$data[,"ID"]==FILE.ID),"path"]
       outfile.name<-paste(runnum.path,"\\",FILE.ID,".noh",sep="")
-      Output.Table<-read.table(outfile.name,skip=1,header=T,na.strings=".")
+      Output.Table<-read.table(outfile.name,skip=1,header=T,na.string=".")
       D.data<-Output.Table[SEL.ID,]
       n<-nrow(D.data)
       p<-names(table(D.data$ID))
@@ -3797,8 +3708,8 @@ fit4NM<-function()
       colnames(ID)<-c("ID")
 
       window<-gwindow("Predictions and DV vs TIME by ID plot")
-      Biggroup<-ggroup(container=window)
-      group=ggroup(horizontal=FALSE,container=Biggroup)
+      Biggroup<-ggroup(cont=window)
+      group=ggroup(horizontal=FALSE,cont=Biggroup)
       tmp<-gframe(" Y variable",container=group)
       if(read.table("NM.version")=="NM6")
       {  PRED.list<-PRED.list.6
@@ -3852,7 +3763,7 @@ fit4NM<-function()
       EBEfile.name<-paste(runnum.path,"\\",FILE.ID,".eta",sep="")
       PARfile.name<-paste(runnum.path,"\\",FILE.ID,".par",sep="")
     
-      Orig.data<-read.csv(datafile.name,na.strings=".")
+      Orig.data<-read.csv(datafile.name,na.string=".")
       EBE.data<-read.table(EBEfile.name,skip=1,header=T)
       PAR.data<-read.table(PARfile.name,skip=1,header=T)   
       if(nrow(EBE.data)!=nrow(PAR.data))
@@ -3871,13 +3782,13 @@ fit4NM<-function()
       }      
       
       TOT.data<-tot.data[SEL.ID,]
-      assign("T.data",TOT.data,envir = fit4NM.env)
+      T.data<<-TOT.data
       Button2<-gbutton("OK",handler=updatePlot)
       Button3<-gbutton("OK",handler=savePlot)
 
       win<-gwindow("Parameter vs covariate")
-      BigGroup<-ggroup(container=win)
-      group=ggroup(horizontal=FALSE,container=BigGroup)
+      BigGroup<-ggroup(cont=win)
+      group=ggroup(horizontal=FALSE,cont=BigGroup)
       tmp=gframe(" Parameter",container=group)
       EBE.sel<-gdroplist(EBE.name)
       add(tmp,EBE.sel)
@@ -3949,8 +3860,8 @@ fit4NM<-function()
          convert.P.print<-matrix(as.character(round(unlist(convert.T),6)),ncol=ncol(convert.T))
          convert.P.print[which(is.na(convert.P.print))]<-"  "
          colnames(convert.P.print)<-colnames(convert.T)
-         gtable(convert.P.print,container=gwindow())
-         assign("convert.T",convert.T,envir = fit4NM.env)
+         gtable(convert.P.print,cont=gwindow())
+         convert.T<<-convert.T
       }
 
       select.V1<-function(h,...)
@@ -4006,23 +3917,23 @@ fit4NM<-function()
          {  PKparam.input<-list.5.3
          } 
          PK.g<-list()
-         assign("PK.list",list(),envir = fit4NM.env)
-         PK.g[[1]]<-ggroup(container=Bgroup1)
-         glabel("ID   ",container=PK.g[[1]])
-         temp<- gdroplist(colnames(PK.data),container=PK.g[[1]])
-         assign("PK.list[[1]]",temp,envir = fit4NM.env)
+         PK.list<<-list()
+         PK.g[[1]]<-ggroup(cont=Bgroup1)
+         glabel("ID   ",cont=PK.g[[1]])
+         temp<- gdroplist(colnames(PK.data),cont=PK.g[[1]])
+         PK.list[[1]]<<-temp
        
          for(i in 2:(length(PKparam.input)+1))
-         {  PK.g[[i]]<-ggroup(container=Bgroup1)
-            glabel(PKparam.input[i-1],container=PK.g[[i]])
-            temp<- gdroplist(colnames(PK.data),container=PK.g[[i]])
-            assign("PK.list[[i]]",temp,envir = fit4NM.env)
+         {  PK.g[[i]]<-ggroup(cont=Bgroup1)
+            glabel(PKparam.input[i-1],cont=PK.g[[i]])
+            temp<- gdroplist(colnames(PK.data),cont=PK.g[[i]])
+            PK.list[[i]]<<-temp
          }
-         assign("PKparam.input",PKparam.input,envir = fit4NM.env)
-         tmp<-gframe("Convert and save",container=Bgroup1)
-         assign("PK.data",PK.data,envir = fit4NM.env)
-         gbutton("Convert",handler=convert.V,container=tmp)
-         gbutton("Save",handler=save.convert.PK,container=tmp)
+         PKparam.input<<-PKparam.input
+         tmp<-gframe("Convert and save",cont=Bgroup1)
+         PK.data<<-PK.data
+         gbutton("Convert",handler=convert.V,cont=tmp)
+         gbutton("Save",handler=save.convert.PK,cont=tmp)
       }
     
       select.V2<-function(h,...)
@@ -4077,23 +3988,23 @@ fit4NM<-function()
          {  PKparam.input<-list.5.3
          } 
          PK.g<-list()
-         assign("PK.list",list(),envir = fit4NM.env)
-         PK.g[[1]]<-ggroup(container=Bgroup1)
-         glabel("ID   ",container=PK.g[[1]])
-         temp<- gdroplist(colnames(PK.data),container=PK.g[[1]])
-         assign("PK.list[[1]]",temp,envir = fit4NM.env)
+         PK.list<<-list()
+         PK.g[[1]]<-ggroup(cont=Bgroup1)
+         glabel("ID   ",cont=PK.g[[1]])
+         temp<- gdroplist(colnames(PK.data),cont=PK.g[[1]])
+         PK.list[[1]]<<-temp
        
          for(i in 2:(length(PKparam.input)+1))
-         {  PK.g[[i]]<-ggroup(container=Bgroup1)
-            glabel(PKparam.input[i-1],container=PK.g[[i]])
-            temp<- gdroplist(colnames(PK.data),container=PK.g[[i]])
-            assign("PK.list[[i]]",temp,envir = fit4NM.env)
+         {  PK.g[[i]]<-ggroup(cont=Bgroup1)
+            glabel(PKparam.input[i-1],cont=PK.g[[i]])
+            temp<- gdroplist(colnames(PK.data),cont=PK.g[[i]])
+            PK.list[[i]]<<-temp
          }
-         assign("PKparam.input",PKparam.input,envir = fit4NM.env)
-         tmp<-gframe("Convert and save",container=Bgroup1)
-         assign("PK.data",PK.data,envir = fit4NM.env)
-         gbutton("Convert",handler=convert.V,container=tmp)
-         gbutton("Save",handler=save.convert.PK,container=tmp)
+         PKparam.input<<-PKparam.input
+         tmp<-gframe("Convert and save",cont=Bgroup1)
+         PK.data<<-PK.data
+         gbutton("Convert",handler=convert.V,cont=tmp)
+         gbutton("Save",handler=save.convert.PK,cont=tmp)
       }
        
       ## method 1 
@@ -4457,9 +4368,9 @@ fit4NM<-function()
          F.B	 <-T.B*V1  
          t.0.5.alpha <-log(2)/l1  
          t.0.5.beta<-log(2)/l2  	
-         assign("Result.P",rbind(V1,alpha,beta,K21,NA,
+         Result.P<<-rbind(V1,alpha,beta,K21,NA,
                       V2,Vdss,CL1,CL2,T.A,T.B,F.A,F.B,
-                      t.0.5.alpha,t.0.5.beta,K10,K12),envir = fit4NM.env)
+                      t.0.5.alpha,t.0.5.beta,K10,K12)
          return(Result.P)
       }
 
@@ -4492,72 +4403,72 @@ fit4NM<-function()
          t.0.5.beta<-log(2)/l2  
          t.0.5.gamma <-log(2)/l3  
 		
-         assign("Result.P",rbind(V1,alpha,beta,gamma,K21,K31,NA,
+         Result.P<<-rbind(V1,alpha,beta,gamma,K21,K31,NA,
                       V2,V3,Vdss,CL1,CL2,CL3,T.A,T.B,T.C,F.A,F.B,F.C,
-                      t.0.5.alpha,t.0.5.beta,t.0.5.gamma,K10,K12,K13),envir = fit4NM.env)
+                      t.0.5.alpha,t.0.5.beta,t.0.5.gamma,K10,K12,K13)
          return(Result.P)
       }
 
-      assign("convert.PK",gwindow("Convert PK parameters"),envir = fit4NM.env)
-      BBgroup<-ggroup(container=convert.PK,horizontal=TRUE)
-      Bgroup1<-ggroup(container=BBgroup, horizontal=FALSE)
-      tmp<-gframe("Compartment",container=Bgroup1)
-      assign("Comp.t",gradio(c("1-comp","2-comp","3-comp"),selected=1,container=tmp,horizontal=TRUE),envir = fit4NM.env)    
-      tmp<-gframe("Parameterization in NONMEM",container=Bgroup1)
-      assign("Method.t",gradio(c("Volumes and clearances","V1,Rate Constants","V1,Vdss,Cl,Half-lives",
-                        "Coefficients and Exponents","V1,exponents, K21,K31"),selected=1,container=tmp,horizontal=FALSE),envir = fit4NM.env)
-      tmp<-gframe("Individual PK parameters(runnumber.par)",container=Bgroup1)
-      assign("file.n1",gedit(" ",container=tmp),envir = fit4NM.env)
-      gbutton("Open",handler=select.V1,container=tmp)
-      tmp<-gframe("Individual PK parameters(csv file)",container=Bgroup1)
-      assign("file.n2",gedit(" ",container=tmp),envir = fit4NM.env)
-      gbutton("Open",handler=select.V2,container=tmp)
+      convert.PK<<-gwindow("Convert PK parameters")
+      BBgroup<-ggroup(cont=convert.PK,horizontal=TRUE)
+      Bgroup1<-ggroup(cont=BBgroup, horizontal=FALSE)
+      tmp<-gframe("Compartment",cont=Bgroup1)
+      Comp.t<<-gradio(c("1-comp","2-comp","3-comp"),selected=1,cont=tmp,horizontal=TRUE)    
+      tmp<-gframe("Parameterization in NONMEM",cont=Bgroup1)
+      Method.t<<-gradio(c("Volumes and clearances","V1,Rate Constants","V1,Vdss,Cl,Half-lives",
+                        "Coefficients and Exponents","V1,exponents, K21,K31"),selected=1,cont=tmp,horizontal=FALSE)
+      tmp<-gframe("Individual PK parameters(runnumber.par)",cont=Bgroup1)
+      file.n1<<-gedit(" ",cont=tmp)
+      gbutton("Open",handler=select.V1,cont=tmp)
+      tmp<-gframe("Individual PK parameters(csv file)",cont=Bgroup1)
+      file.n2<<-gedit(" ",cont=tmp)
+      gbutton("Open",handler=select.V2,cont=tmp)
    }
    
    #### Explore simulated data #################################################
    simulationD<-function(h,...)
    {  sim2GUI<-function()
       {  win<-gwindow("Summaries of Simulation")
-         assign("BigGroup",ggroup(container=win),envir = fit4NM.env)
-         assign("group",ggroup(horizontal=FALSE,container=BigGroup),envir = fit4NM.env)    
-         assign("dir.g1",gedit(""),envir = fit4NM.env)
+         BigGroup<<-ggroup(cont=win)
+         group<<-ggroup(horizontal=FALSE,cont=BigGroup)    
+         dir.g1<<-gedit("")
          button.g1<-gbutton("Open simulated data",handler=openF)
          tmp<-gframe("",container=group)
          add(tmp,button.g1)
          add(tmp,dir.g1)
-         assign("N.g1",gedit(""),envir = fit4NM.env)
+         N.g1<<-gedit("")
          tmp<-gframe("Number of simulations",container=group)
          add(tmp,N.g1)
       }
       
       openF<-function(h,...)
-      { assign("SIM.file",gfile("Select simulated data",type="open"),envir = fit4NM.env)
+      { SIM.file<<-gfile("Select simulated data",type="open")
          svalue(dir.g1)<-SIM.file
          SIM.var.temp<-colnames(read.table(SIM.file,skip=1,nrows=1,header=T))
          SIM.var<-SIM.var.temp[which(tolower(SIM.var.temp)!="id" &tolower(SIM.var.temp)!="time")]
-         tmp<-gframe("Stratification",container=group)
-         assign("str.list",gdroplist(c("NONE",SIM.var)),envir = fit4NM.env)
-         assign("str.v",gedit("")  ,envir = fit4NM.env)
+         tmp<-gframe("Stratification",cont=group)
+         str.list<<-gdroplist(c("NONE",SIM.var))
+         str.v<<-gedit("")  
          add(tmp,str.list)
          add(tmp,str.v)          
-         tmp<-gframe("Simulation summaries",container=group)
-         assign("var.list",gdroplist(SIM.var)  ,envir = fit4NM.env)
+         tmp<-gframe("Simulation summaries",cont=group)
+         var.list<<-gdroplist(SIM.var)  
          add(tmp,var.list)       
-         assign("Button1",gbutton("Calculate summaries",handler=CalcSIM),envir = fit4NM.env)
+         Button1<<-gbutton("Calculate summaries",handler=CalcSIM)
          add(tmp,Button1)
-         assign("Button2",gbutton("Save summaries",handler=SaveSIM),envir = fit4NM.env)
+         Button2<<-gbutton("Save summaries",handler=SaveSIM)
          add(tmp,Button2)
 
-         tmp<-gframe("Load summaries of simulation",container=group)
-         assign("Button14",gbutton("Open",handler=OpenSIM),envir = fit4NM.env)
-         assign("edit14",gedit(""),envir = fit4NM.env)
+         tmp<-gframe("Load summaries of simulation",cont=group)
+         Button14<<-gbutton("Open",handler=OpenSIM)
+         edit14<<-gedit("")
          add(tmp,Button14)
          add(tmp,edit14)
-         assign("CI.list",gdroplist(c("95%","90%","80%")),envir = fit4NM.env)
-         tmp<-gframe("PI",container=group)
+         CI.list<<-gdroplist(c("95%","90%","80%"))
+         tmp<-gframe("PI",cont=group)
          add(tmp,CI.list)
-         assign("Button",gbutton("OK",handler=updatePlot),envir = fit4NM.env)
-         tmp<-gframe("Plot",container=group)
+         Button<<-gbutton("OK",handler=updatePlot)
+         tmp<-gframe("Plot",cont=group)
          add(tmp,Button)  
          tmp<-gframe("median : red",container=group)
          tmp<-gframe("PI : blue",container=group)   
@@ -4567,9 +4478,9 @@ fit4NM<-function()
 
       CalcSIM<-function(h,...)
       {  SIM.win<-gwindow("Summaries of Simulation progress",width=300,height=50)
-         Bgroup<-ggroup(container=SIM.win,horizontal=FALSE)
-         SIM.progress<-gslider(from=0,to=100,by=1,value=0,container=Bgroup)
-         tmp<-gframe("Read line",container=Bgroup)
+         Bgroup<-ggroup(cont=SIM.win,horizontal=FALSE)
+         SIM.progress<-gslider(from=0,to=100,by=1,value=0,cont=Bgroup)
+         tmp<-gframe("Read line",cont=Bgroup)
          SIM.line<-gedit(" ",width=50)
          add(tmp,SIM.line)
          svalue(SIM.progress)<-0
@@ -4655,22 +4566,22 @@ fit4NM<-function()
                Quantile.tot1<-rbind(Quantile.tot1,unlist(q.temp))            
             }   
          }
-         assign("TTemp",Quantile.tot1 ,envir = fit4NM.env)
+         TTemp<<-Quantile.tot1 
          dispose(SIM.win)
          colnames(Quantile.tot1)<-c("TIME","N","Q02.5","Q05","Q10","Q25","Q50","Q75","Q90","Q95","Q97.5")
-         assign("Quantile.keep",data.frame(Quantile.tot1),envir = fit4NM.env)
+         Quantile.keep<<-data.frame(Quantile.tot1)
       }
 
       OpenSIM<-function(h,...)
-      {  assign("file.SIM",gfile(text="Open summaries of simulation",
-              type="open",filter=list("csv files"=list(patterns=c("*.csv")))),envir = fit4NM.env)
+      {  file.SIM<<-gfile(text="Open summaries of simulation",
+              type="open",filter=list("csv files"=list(patterns=c("*.csv"))))
          svalue(edit14)<-file.SIM       
-         assign("Quantile.keep",read.csv(file.SIM),envir = fit4NM.env)
+         Quantile.keep<<-read.csv(file.SIM)
       }
 
       SaveSIM<-function(h,...)
-      {  assign("file.SIM",gfile(text="Save Predictive check calculation as csv",
-                type="save",filter=list("csv files"=list(patterns=c("*.csv")))),envir = fit4NM.env)
+      {  file.SIM<<-gfile(text="Save Predictive check calculation as csv",
+                type="save",filter=list("csv files"=list(patterns=c("*.csv"))))
          write.csv(Quantile.keep,paste(file.SIM,".csv",sep=""),row.names=F)
          svalue(edit14)<-paste(file.SIM,".csv",sep="")  
       }
@@ -4728,7 +4639,7 @@ fit4NM<-function()
                 \n       All the variables used for stratification should be present at every time point. 
                 \n         Please remember this, especially for the stratification based on the dosing data which are not present at every time point in data input file.
                 \nFor the menus of predictive checks with PC.sim and summary data from joined bootstrap raw data file!.
-                \n     All the conditions but seed number, under which the results of predictive checks and bootstrap were obtained, should not be changed.",container=TRUE,width=500)   
+                \n     All the conditions but seed number, under which the results of predictive checks and bootstrap were obtained, should not be changed.",cont=TRUE,width=500)   
    }
     
    RTNote<-function(h,...)
@@ -4738,19 +4649,19 @@ fit4NM<-function()
                 \nSimilarly, the median value of a time varying covariate in an individual is permuted. The result of randomization test for time varying covariates should not be adopted.          
                 \nFor the menus of open randomization test result! 
                 \n   All the conditions but seed number, under which the result of randomization test was obtained, should not be changed. 
-                \n   Each result file of the randomization test performed in separate PC contains information of the covariate model at the record of prob 0. When you join these result files, leave only one prob 0 data record.",container=TRUE,width=500)   
+                \n   Each result file of the randomization test performed in separate PC contains information of the covariate model at the record of prob 0. When you join these result files, leave only one prob 0 data record.",cont=TRUE,width=500)   
    }     
    #### Randomization test #####################################################
    RandomTest<-function(h,...)
    {  openControl<-function(h,...)
       {  control.file<-gfile(text="Open control file",type="open")
-         assign("current.ctl",readLines(control.file),envir = fit4NM.env)
+         current.ctl<<-readLines(control.file)
          svalue(control.t)<-control.file
          temp<-strsplit(control.file,split="\\\\")[[1]]
          Random.RUN<-temp[length(temp)]
          setwd(strsplit(control.file,split=Random.RUN)[[1]])
-         assign("Random.RUN",strsplit(Random.RUN,split="\\.")[[1]][1],envir = fit4NM.env)
-         assign("file.id",strsplit(Random.RUN,split="\\.")[[1]][1],envir = fit4NM.env)
+         Random.RUN<<-strsplit(Random.RUN,split="\\.")[[1]][1]
+         file.id<<-strsplit(Random.RUN,split="\\.")[[1]][1]
       }
  
       randomsave<-function(h,...)
@@ -4768,45 +4679,45 @@ fit4NM<-function()
          n.row<-nrow(temp)-1
          temp$Prob[-1]<-1:n.row
          temp$Quantile[-1]<-c(1:n.row)/n.row
-         assign("RAN.result",temp,envir = fit4NM.env)
+         RAN.result<<-temp
          svalue(edit5)<-file.name
          Rplot()
       }
       
       opendata<-function(h,...)
-      {  assign("data.file",gfile(text="Open data file",type="open"),envir = fit4NM.env)
-         assign("D.data",read.csv(data.file,na.strings="."),envir = fit4NM.env)
+      {  data.file<<-gfile(text="Open data file",type="open")
+         D.data<<-read.csv(data.file,na.string=".")
          svalue(data.t)<-data.file
          Var.list<-colnames(D.data)
-         tmp<-gframe("Covariates",container=BBgroup)
-         assign("cov.t",gdroplist(Var.list),envir = fit4NM.env)
+         tmp<-gframe("Covariates",cont=BBgroup)
+         cov.t<<-gdroplist(Var.list)
          add(tmp,cov.t)
-         tmp<-gframe("OBJ for reference model",container=BBgroup)
-         assign("base.obj.t",gedit(" ",width=50),envir = fit4NM.env)
+         tmp<-gframe("OBJ for reference model",cont=BBgroup)
+         base.obj.t<<-gedit(" ",width=50)
          add(tmp,base.obj.t)
-         tmp<-gframe("# of iterations / Seed number",container=BBgroup)
+         tmp<-gframe("# of iterations / Seed number",cont=BBgroup)
          RT.label<-glabel("# of replicates")
-         assign("iteration.n",gedit("1000",width=10),envir = fit4NM.env)
+         iteration.n<<-gedit("1000",width=10)
          add(tmp,RT.label)
          add(tmp,iteration.n)
          Seed.label<-glabel("Seed number")
-         assign("Seed.input.RT",gedit("0",width=10),envir = fit4NM.env)
+         Seed.input.RT<<-gedit("0",width=10)
          add(tmp,Seed.label)
          add(tmp,Seed.input.RT) 
          
-         tmp<-gframe("Randomization test",container=BBgroup)
+         tmp<-gframe("Randomization test",cont=BBgroup)
          button.option<-gbutton("Parallel",handler=Option2,width=20,height=10)
          add(tmp,button.option)
          temp.label<-glabel("      ")
          add(tmp,temp.label)
          button3<-gbutton("Start",handler=randomstart,width=20,height=10)
          add(tmp,button3)
-         tmp<-gframe("Save randomization test result",container=BBgroup)
+         tmp<-gframe("Save randomization test result",cont=BBgroup)
          button4<-gbutton("Save",handler=randomsave,width=20,height=10)
          add(tmp,button4)
-          tmp<-gframe("Open randomization test result",container=BBgroup)
+          tmp<-gframe("Open randomization test result",cont=BBgroup)
          button5<-gbutton("Open",handler=randomopen,width=20,height=10)
-         assign("edit5",gedit("",width=50),envir = fit4NM.env)
+         edit5<<-gedit("",width=50)
          add(tmp,button5)
          add(tmp,edit5)                  
       }
@@ -4830,7 +4741,7 @@ fit4NM<-function()
          }
          iteration.N<-as.numeric(svalue(iteration.n))            
          RT.win<-gwindow("Randomization test progress",width=300,height=50)
-         RT.progress<-gslider(from=0,to=iteration.N,by=1,value=0,container=RT.win)
+         RT.progress<-gslider(from=0,to=iteration.N,by=1,value=0,cont=RT.win)
          svalue(RT.progress)<-0
 
          random.table<-NULL     
@@ -4985,14 +4896,14 @@ if(add.Command!=" ")
                print(SE)
                Delta<-as.numeric(svalue(base.obj.t))-Obj
                temp<-c(Prob,Delta,Obj,Min,COV.s,EST,SE)
-               assign("TT.temp",temp,envir = fit4NM.env)
+               TT.temp<<-temp
                random.table<-rbind(random.table,temp)
-               assign("RT.temp",random.table,envir = fit4NM.env)
+               RT.temp<<-random.table
             }   
             print(k)
          }  
          dispose(RT.win)
-         assign("AA",c("Prob","Delta","Obj","Min","Covariance",names.est,paste(names.est,":se",sep="")),envir = fit4NM.env)
+         AA<<-c("Prob","Delta","Obj","Min","Covariance",names.est,paste(names.est,":se",sep=""))
          colnames(random.table)<-c("Prob","Delta","Obj","Min","Covariance",names.est,paste(names.est,":se",sep=""))
          random.table<-data.frame(random.table)
          sort.id<-sort.list(as.numeric(as.character(random.table$Delta[-1])),decreasing=T)
@@ -5017,8 +4928,8 @@ if(add.Command!=" ")
          data.quantile<-1-sum(Delta>data.delta)/iteration.N
          lines(c(0,data.delta),c(data.quantile,data.quantile),col=3,lwd=2)   
          text(data.delta*1.1,data.quantile,round(data.delta,3),cex=0.6)        
-         assign("RAN.result", random.T  ,envir = fit4NM.env)
-         assign("tempR",random.table   ,envir = fit4NM.env)
+         RAN.result<<- random.T  
+         tempR<<-random.table   
       }
 
       Rplot<-function()
@@ -5044,21 +4955,21 @@ if(add.Command!=" ")
          text(data.delta*1.1,data.quantile,round(data.delta,3),cex=0.6)        
       }      
       timewin<-gwindow("Randomization test")
-      Bgroup<-ggroup(container=timewin,horizontal=TRUE)
-      BBgroup<-ggroup(container=Bgroup,horizontal=FALSE) 
-      tmp<-gframe("Find runnumber subdirectory",container=BBgroup)
+      Bgroup<-ggroup(cont=timewin,horizontal=TRUE)
+      BBgroup<-ggroup(cont=Bgroup,horizontal=FALSE) 
+      tmp<-gframe("Find runnumber subdirectory",cont=BBgroup)
       control.t<-gedit("",width=50)
       button1<-gbutton("Open control file",handler=openControl)
       add(tmp,button1)
       add(tmp,control.t)
-      tmp<-gframe("Find runnumber subdirectory",container=BBgroup)
+      tmp<-gframe("Find runnumber subdirectory",cont=BBgroup)
       button2<-gbutton("Open data files",handler=opendata,width=20,height=10)
       data.t<-gedit(" ",width=50)
       add(tmp,button2)
       add(tmp,data.t) 
       add(Bgroup,ggraphics())
-            	 assign("add.pnm",NULL,envir = fit4NM.env)
-      	 assign("add.Command"," "  	,envir = fit4NM.env)
+            	 add.pnm<<-NULL
+      	 add.Command<<-" "  	
    }   
    
    #### Predictive checks ######################################################
@@ -5068,7 +4979,7 @@ if(add.Command!=" ")
       L2<-svalue(VarList.g2)
       L3<-svalue(VarList.g3)
          
-      DV.data<-read.csv(paste(VPC.RUN,".csv",sep=""),na.strings=".")
+      DV.data<-read.csv(paste(VPC.RUN,".csv",sep=""),na.string=".")
 
       if(L1!="NONE"& sum(colnames(D.data)==L1)!=0)
       {  L1.d<-as.numeric(svalue(id.g1))
@@ -5165,11 +5076,11 @@ if(add.Command!=" ")
                                round(NPC.sum[7]/NPC.sum[8],2),"\n",sep="")
       NPC.txt<-paste(NPC.txt,"---------------------------------------------\n",sep="")
       edit.win<-gwindow("Predictive checks")
-      g<-ggroup(horizontal=FALSE,container=edit.win)
+      g<-ggroup(horizontal=FALSE,cont=edit.win)
       tmp<-gframe("",container=g)
       a<-gtext(NPC.txt,width=410,height=310,font.attr=c(sizes="large",family="monospace"))
       add(tmp,a)
-      assign("NPC",NPC.txt,envir = fit4NM.env)
+      NPC<<-NPC.txt
    }
       
    NumericalCheck.save<-function(h,...)
@@ -5183,7 +5094,7 @@ if(add.Command!=" ")
       L3<-svalue(VarList.g3)
       Quantile.tot<-Quantile.keep
 
-      DV.data<-read.csv(paste(VPC.RUN,".csv",sep=""),na.strings=".")
+      DV.data<-read.csv(paste(VPC.RUN,".csv",sep=""),na.string=".")
       if(L1!="NONE"& sum(colnames(D.data)==L1)!=0)
       {  L1.d<-as.numeric(svalue(id.g1))
          if(L2!="NONE"& sum(colnames(D.data)==L2)!=0)
@@ -5263,19 +5174,19 @@ if(add.Command!=" ")
       }  
       points(DV.data$TIME,DV.data$DV,pch=16,cex=0.5,col=1) 
       lines(Quantile.tot$TIME,Quantile.tot$Q50,lty=2,col=2,lwd=1)                 
-      assign("VPC.data",Quantile.tot,envir = fit4NM.env)
+      VPC.data<<-Quantile.tot
    } 
       
    OpenPC<-function(h,...)
-   {  assign("file.PC",gfile(text="Open predictive check calculation",
-          type="open",filter=list("csv files"=list(patterns=c("*.csv")))),envir = fit4NM.env)
+   {  file.PC<<-gfile(text="Open predictive check calculation",
+          type="open",filter=list("csv files"=list(patterns=c("*.csv"))))
       svalue(edit14)<-file.PC       
-      assign("Quantile.keep",read.csv(file.PC),envir = fit4NM.env)
+      Quantile.keep<<-read.csv(file.PC)
    }     
 
    SavePC<-function(h,...)
-   {  assign("file.PC",gfile(text="Save Predictive check calculation as csv",
-           type="save",filter=list("csv files"=list(patterns=c("*.csv")))),envir = fit4NM.env)
+   {  file.PC<<-gfile(text="Save Predictive check calculation as csv",
+           type="save",filter=list("csv files"=list(patterns=c("*.csv"))))
       write.csv(Quantile.keep,paste(file.PC,".csv",sep=""),row.names=F)
       svalue(edit14)<-paste(file.PC,".csv",sep="")       
    }
@@ -5287,7 +5198,7 @@ if(add.Command!=" ")
       current.dir<-TOT.RUN$data[temp.id,"path"]
  
       VPC.win<-gwindow("Predictive checks progress",width=300,height=50)
-      VPC.progress<-gslider(from=0,to=100,by=1,value=0,container=VPC.win)
+      VPC.progress<-gslider(from=0,to=100,by=1,value=0,cont=VPC.win)
       svalue(VPC.progress)<-0
       n.sim<-VPC.N
       n.data<-nrow(D.data)
@@ -5370,28 +5281,28 @@ if(add.Command!=" ")
       colnames(Quantile.tot1)<-c("TIME","N","Q02.5","Q05","Q10","Q25","Q50","Q75","Q90","Q95","Q97.5",
                                  "L-02.5","L-05","L-10","L-90","L-95","L-97.5",
                                  "U-02.5","U-05","U-10","U-90","U-95","U-97.5")
-      assign("Quantile.keep",data.frame(Quantile.tot1),envir = fit4NM.env)
+      Quantile.keep<<-data.frame(Quantile.tot1)
       alarm()
    }
 
    openF<-function(h,...)
-   {  assign("VPC.dir",gfile("Select runnumber foler with PC.sim",type="selectdir"),envir = fit4NM.env)
+   {  VPC.dir<<-gfile("Select runnumber foler with PC.sim",type="selectdir")
       setwd(VPC.dir)
       svalue(dir.g1)<-VPC.dir
       temp<-strsplit(VPC.dir,split="\\\\")[[1]]
-      assign("VPC.RUN",temp[length(temp)],envir = fit4NM.env)
-      assign("current.result",paste(VPC.RUN,".noh",sep=""),envir = fit4NM.env)
-      D.data<-read.csv(paste(VPC.RUN,".csv",sep=""),na.strings=".")
+      VPC.RUN<<-temp[length(temp)]
+      current.result<<-paste(VPC.RUN,".noh",sep="")
+      D.data<-read.csv(paste(VPC.RUN,".csv",sep=""),na.string=".")
        
       Var.Name<-colnames(D.data)
-      assign("group1",ggroup(horizontal=TRUE,container=group),envir = fit4NM.env)   
+      group1<<-ggroup(horizontal=TRUE,cont=group)   
       From.label.1<-glabel("")
-      assign("VarList.g1",gdroplist(c("MDV",Var.Name)),envir = fit4NM.env)
-      assign("VarList.g2",gdroplist(c("NONE",c("NONE",Var.Name))),envir = fit4NM.env)
-      assign("id.g1",gedit("0",width=10),envir = fit4NM.env)
-      assign("id.g2",gedit(" ",width=10),envir = fit4NM.env)
-      assign("label.g1",glabel("Include"),envir = fit4NM.env)
-      assign("label.g2",glabel("Exclude"),envir = fit4NM.env)
+      VarList.g1<<-gdroplist(c("MDV",Var.Name))
+      VarList.g2<<-gdroplist(c("NONE",c("NONE",Var.Name)))
+      id.g1<<-gedit("0",width=10)
+      id.g2<<-gedit(" ",width=10)
+      label.g1<<-glabel("Include")
+      label.g2<<-glabel("Exclude")
       
       tmp<-gframe("Select data",container=group1)
       add(tmp,label.g1)
@@ -5401,38 +5312,38 @@ if(add.Command!=" ")
       add(tmp,VarList.g2)
       add(tmp,id.g2)
 
-      assign("id.g3",gedit(" ",width=10),envir = fit4NM.env)
-      assign("VarList.g3",gdroplist(c("NONE",c("NONE",Var.Name))),envir = fit4NM.env)
+      id.g3<<-gedit(" ",width=10)
+      VarList.g3<<-gdroplist(c("NONE",c("NONE",Var.Name)))
       tmp<-gframe("Stratification",container=group)
       add(tmp,VarList.g3)
       add(tmp,id.g3)
    
-      tmp<-gframe("Calculate predictive checks",container=group)
-      assign("Button2",gbutton("OK",handler=CalcNPC2),envir = fit4NM.env)
+      tmp<-gframe("Calculate predictive checks",cont=group)
+      Button2<<-gbutton("OK",handler=CalcNPC2)
       add(tmp,Button2)
          
-      tmp<-gframe("Save predictive checks calculation",container=group)
+      tmp<-gframe("Save predictive checks calculation",cont=group)
 
-      assign("Button13",gbutton("OK",handler=SavePC),envir = fit4NM.env)
+      Button13<<-gbutton("OK",handler=SavePC)
       add(tmp,Button13)
 
-      tmp<-gframe("Load predictive checks calculation",container=group)
+      tmp<-gframe("Load predictive checks calculation",cont=group)
 
-      assign("Button14",gbutton("Open",handler=OpenPC),envir = fit4NM.env)
-      assign("edit14",gedit(""),envir = fit4NM.env)
+      Button14<<-gbutton("Open",handler=OpenPC)
+      edit14<<-gedit("")
       add(tmp,Button14)
       add(tmp,edit14)
  
-      assign("CI.list",gdroplist(c("95%","90%","80%")),envir = fit4NM.env)
-      assign("Button",gbutton("OK",handler=updatePlot),envir = fit4NM.env)
-      tmp<-gframe("PI",container=group)
+      CI.list<<-gdroplist(c("95%","90%","80%"))
+      Button<<-gbutton("OK",handler=updatePlot)
+      tmp<-gframe("PI",cont=group)
       add(tmp,CI.list)
-      tmp<-gframe("Plot",container=group)
+      tmp<-gframe("Plot",cont=group)
       add(tmp,Button)  
                    
-      tmp<-gframe("Summary",container=group)
-      assign("Button3",gbutton("OK",handler=NumericalCheck),envir = fit4NM.env)
-      assign("Button3.save",gbutton("save",handler=NumericalCheck.save),envir = fit4NM.env)
+      tmp<-gframe("Summary",cont=group)
+      Button3<<-gbutton("OK",handler=NumericalCheck)
+      Button3.save<<-gbutton("save",handler=NumericalCheck.save)
       add(tmp,Button3) 
       add(tmp,Button3.save)         
       tmp<-gframe("solid circles : DV",container=group)
@@ -5472,42 +5383,42 @@ if(add.Command!=" ")
    }
  
    VPC2GUI<-function()
-   {  assign("VPC.N",as.numeric(svalue(VPC.input))    ,envir = fit4NM.env)
+   {  VPC.N<<-as.numeric(svalue(VPC.input))    
       dispose(vpcwin)
       win<-gwindow("Predictive checks")
-      assign("BigGroup",ggroup(container=win),envir = fit4NM.env)
-      assign("group",ggroup(horizontal=FALSE,container=BigGroup)     ,envir = fit4NM.env)
+      BigGroup<<-ggroup(cont=win)
+      group<<-ggroup(horizontal=FALSE,cont=BigGroup)     
       
-      assign("dir.g1",gedit(""),envir = fit4NM.env)
+      dir.g1<<-gedit("")
       button.g1<-gbutton("Open folder",handler=openF)
 
       tmp<-gframe("Runnumber subdirectory with PC.sim",container=group)
       add(tmp,button.g1)
       add(tmp,dir.g1)
-      assign("N.g1",gedit(VPC.N),envir = fit4NM.env)
+      N.g1<<-gedit(VPC.N)
       tmp<-gframe("Number of simulated sample",container=group)
       add(tmp,N.g1)
    }
     
    openControl<-function(h,...)
    {  control.file<-gfile(text="Open control file",type="open")
-      assign("current.ctl",readLines(control.file),envir = fit4NM.env)
+      current.ctl<<-readLines(control.file)
       svalue(control.t)<-control.file
       temp<-strsplit(control.file,split="\\\\")[[1]]
       VPC.RUN<-temp[length(temp)]
-      assign("VPC.dir",strsplit(control.file,split=VPC.RUN)[[1]],envir = fit4NM.env)
+      VPC.dir<<-strsplit(control.file,split=VPC.RUN)[[1]]
       setwd(VPC.dir)
-      assign("VPC.RUN",strsplit(VPC.RUN,split="\\.")[[1]][1],envir = fit4NM.env)
+      VPC.RUN<<-strsplit(VPC.RUN,split="\\.")[[1]][1]
    }
 
    opendata<-function(h,...)
-   {  assign("data.file",gfile(text="Open data file",type="open"),envir = fit4NM.env)
-      assign("D.data",read.csv(data.file,na.strings="."),envir = fit4NM.env)
+   {  data.file<<-gfile(text="Open data file",type="open")
+      D.data<<-read.csv(data.file,na.string=".")
       svalue(data.t)<-data.file
    }
    
    set.VPCN<-function(h,...)
-   {  assign("VPC.N",as.numeric(svalue(VPC.input)),envir = fit4NM.env)
+   {  VPC.N<<-as.numeric(svalue(VPC.input))
       VPC.try()
    }
    
@@ -5518,32 +5429,32 @@ if(add.Command!=" ")
 
 
    VPC1GUI<-function(h,...)
-   {  assign("vpcwin",gwindow("Predictive checks"),envir = fit4NM.env)
-      BBgroup<-ggroup(container=vpcwin,horizontal=FALSE)
+   {  vpcwin<<-gwindow("Predictive checks")
+      BBgroup<-ggroup(cont=vpcwin,horizontal=FALSE)
  
-      tmp<-gframe("Find runnumber subdirectory",container=BBgroup)
-      assign("control.t",gedit(" ",width=50),envir = fit4NM.env)
+      tmp<-gframe("Find runnumber subdirectory",cont=BBgroup)
+      control.t<<-gedit(" ",width=50)
       button1<-gbutton("Open control file",handler=openControl)
       add(tmp,button1)
       add(tmp,control.t)
 
-      tmp<-gframe("Find runnumber subdirectory ",container=BBgroup)
+      tmp<-gframe("Find runnumber subdirectory ",cont=BBgroup)
       button2<-gbutton("Open data file for predictive checks",handler=opendata,width=20,height=10)
-      assign("data.t",gedit(" ",width=50),envir = fit4NM.env)
+      data.t<<-gedit(" ",width=50)
       add(tmp,button2)
       add(tmp,data.t)
  
       tmp=gframe("Number of simulations",container=BBgroup)
       VPC.label<-glabel("")
-      assign("VPC.input",gedit("1000",width=10),envir = fit4NM.env)
+      VPC.input<<-gedit("1000",width=10)
       
       
       Button<-gbutton("Start predictive checks",handler=set.VPCN)
       add(tmp,VPC.label)
       add(tmp,VPC.input)
       tmp=gframe("",container=BBgroup)
-      	 assign("add.pnm",NULL,envir = fit4NM.env)
-      	 assign("add.Command"," "  ,envir = fit4NM.env)
+      	 add.pnm<<-NULL
+      	 add.Command<<-" "  
       
       temp.option<-gbutton("Parallel",handler=Option2)
       add(tmp,temp.option)      
@@ -5727,8 +5638,8 @@ if(add.Command!=" ")
       s.Boot.total<-rbind(s.Boot.total,s.Boot.summary)
       colnames(s.Boot.total)[1:2]<-c("Condition","Parameter")
       win<-gwindow("Bootstrap Summary",width=600,height=300)
-      gtable(s.Boot.total,container=win)
-      assign("s.Boot.summary",s.Boot.total,envir = fit4NM.env)
+      gtable(s.Boot.total,cont=win)
+      s.Boot.summary<<-s.Boot.total
   }
 
 
@@ -5897,8 +5808,8 @@ if(add.Command!=" ")
       s.Boot.total<-rbind(s.Boot.total,s.Boot.summary)
       colnames(s.Boot.total)[1:2]<-c("Condition","Parameter")
       win<-gwindow("Bootstrap Summary",width=600,height=300)
-      gtable(s.Boot.total,container=win)
-      assign("s.Boot.summary",s.Boot.total,envir = fit4NM.env)
+      gtable(s.Boot.total,cont=win)
+      s.Boot.summary<<-s.Boot.total
    }
       
    Boot.ctl<-function()
@@ -5927,7 +5838,7 @@ if(add.Command!=" ")
 #      id<-which(indicator=="$THETA")
 #      temp.CTL<-c(temp.CTL[1:(id-1)],line2,
 #                   temp.CTL[id:length(temp.CTL)])
-      assign("Boot.CTL",temp.CTL,envir = fit4NM.env)
+      Boot.CTL<<-temp.CTL
       write.table(Boot.CTL,"boot.ctl",quote=FALSE,row.names=FALSE,col.names=FALSE)
    }
    
@@ -5938,7 +5849,7 @@ if(add.Command!=" ")
       ID.list<-as.numeric(names(table(D.data[,ID.id])))
       Boot.tot<-NULL
       win<-gwindow(paste("Bootstrap progress : B=",B,sep=""),width=300,height=50)
-      Boot.progress<-gslider(from=0,to=B,by=1,value=0,container=win)
+      Boot.progress<-gslider(from=0,to=B,by=1,value=0,cont=win)
  
       for(b in 1:B)
       {  svalue(Boot.progress)<-b
@@ -6109,9 +6020,9 @@ if(add.Command!=" ")
          {  COV.s<-"OK"
          }
 
-         assign("N.theta",length(THETA),envir = fit4NM.env)
-         assign("N.eta",ncol(OMEGA),envir = fit4NM.env)
-         assign("N.eps",length(SIGMA),envir = fit4NM.env)
+         N.theta<<-length(THETA)
+         N.eta<<-ncol(OMEGA)
+         N.eps<<-length(SIGMA)
          tot<-c(b,Obj,Min,COV.s,EST,SE)
          } else
          {   temp.LST<-readLines(paste(Boot.RUN,".res",sep=""))
@@ -6121,38 +6032,38 @@ if(add.Command!=" ")
          }
          Boot.tot<-rbind(Boot.tot,tot)
          colnames(Boot.tot)<-c("Prob","Obj","Min","Covariance",names.est,paste(names.est,":se",sep=""))
-         assign("Boot.keep",Boot.tot  ,envir = fit4NM.env)
+         Boot.keep<<-Boot.tot  
   
-       assign("TOT",Boot.tot,envir = fit4NM.env)
+       TOT<<-Boot.tot
       }
 
       dispose(win)
       colnames(Boot.tot)<-c("Prob","Obj","Min","Covariance",names.est,paste(names.est,":se",sep=""))
-      assign("Boot.keep",Boot.tot  ,envir = fit4NM.env)
+      Boot.keep<<-Boot.tot  
       show.BTsummary()
    }
 
 
    Boot.B.init<-function()
    {  setB<-function(h,...)
-      {  assign("B",as.numeric(svalue(Boot.input)),envir = fit4NM.env)
+      {  B<<-as.numeric(svalue(Boot.input))
          Boot.ctl()     
          Boot.try()
       }
 
       openControl<-function(h,...)
       {  control.file<-gfile(text="Open control file",type="open")
-         assign("current.ctl",readLines(control.file),envir = fit4NM.env)
+         current.ctl<<-readLines(control.file)
          svalue(control.t)<-control.file
          temp<-strsplit(control.file,split="\\\\")[[1]]
          Boot.RUN<-temp[length(temp)]
          setwd(strsplit(control.file,split=Boot.RUN)[[1]])
-         assign("Boot.RUN",strsplit(Boot.RUN,split="\\.")[[1]][1],envir = fit4NM.env)
+         Boot.RUN<<-strsplit(Boot.RUN,split="\\.")[[1]][1]
       }
  
       opendata<-function(h,...)
-      {  assign("data.file",gfile(text="Open data file",type="open"),envir = fit4NM.env)
-         assign("D.data",read.csv(data.file),envir = fit4NM.env)
+      {  data.file<<-gfile(text="Open data file",type="open")
+         D.data<<-read.csv(data.file)
          svalue(data.t)<-data.file
       }
  
@@ -6174,15 +6085,15 @@ if(add.Command!=" ")
       }
      
       bootwin<-gwindow("Bootstrap")
-      BBgroup<-ggroup(container=bootwin,horizontal=FALSE)
+      BBgroup<-ggroup(cont=bootwin,horizontal=FALSE)
  
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       control.t<-gedit(" ",width=50)
       button1<-gbutton("Open control file",handler=openControl)
       add(tmp,button1)
       add(tmp,control.t)
 
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       button2<-gbutton("Open data files",handler=opendata,width=20,height=10)
       data.t<-gedit(" ",width=50)
       add(tmp,button2)
@@ -6194,15 +6105,15 @@ if(add.Command!=" ")
       add(tmp,Boot.label)
       add(tmp,Boot.input)
       Seed.label<-glabel("Seed number")
-      assign("Seed.input",gedit("0",width=10),envir = fit4NM.env)
+      Seed.input<<-gedit("0",width=10)
       add(tmp,Seed.label)
       add(tmp,Seed.input)     
             
       Button<-gbutton("Start bootstrap",handler=setB)
 
       tmp=gframe("",container=BBgroup)
-      	 assign("add.pnm",NULL,envir = fit4NM.env)
-      	 assign("add.Command"," "  ,envir = fit4NM.env)
+      	 add.pnm<<-NULL
+      	 add.Command<<-" "  
       
       temp.option<-gbutton("Parallel",handler=Option2)
       add(tmp,temp.option)      
@@ -6211,16 +6122,16 @@ if(add.Command!=" ")
       
       add(tmp,Button)
 
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button1<-gbutton("Save bootstrap raw data as csv",handler=save1)
       add(tmp,Button1)
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button2<-gbutton("Save bootstrap summary data as csv",handler=save2)
       add(tmp,Button2)
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button3<-gbutton("Summary data from joined bootstrap raw data file (Prob,Obj,Min,COV,EST,SE)",handler=save3)
       add(tmp,Button3)   
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button4<-gbutton("Save bootstrap summary data from joined bootstrap raw data file",handler=save2)
       add(tmp,Button4)          
    }
@@ -6258,7 +6169,7 @@ if(add.Command!=" ")
                 temp.R<-seq(from=(60+temp.int),to=temp.range,by=temp.int)/100
                 TH.est.list<-sort(c((c(-temp.R,temp.R)+1)*TH.est.final,TH.est.list))
               }  
-            assign("LLT.FINAL",LL.prof(TH.select,TH.select.n,TH.est.list)  ,envir = fit4NM.env)
+            LLT.FINAL<<-LL.prof(TH.select,TH.select.n,TH.est.list)  
          }
 
          saveLLT<-function(h,...)
@@ -6276,11 +6187,11 @@ if(add.Command!=" ")
          }
          
          openLLT<-function(h,...)
-         {   assign("LLT.CI",read.csv(paste(gfile(text="Open 95% CI",type="open"))),envir = fit4NM.env)   
+         {   LLT.CI<<-read.csv(paste(gfile(text="Open 95% CI",type="open")))   
          }
 
          openLLT1<-function(h,...)
-         {   assign("LLT.tot",read.csv(paste(gfile(text="Plot plot-data", type="open"))),envir = fit4NM.env)
+         {   LLT.tot<<-read.csv(paste(gfile(text="Plot plot-data", type="open")))
                      
          }  
          
@@ -6305,7 +6216,7 @@ if(add.Command!=" ")
          LL.prof<-function(EST.select,EST.select.n,EST.list)
          {  LLT.tot<-NULL
             win<-gwindow("Loglikelihood profiling progress ",width=400,height=50)
-            LLT.progress<-gslider(from=0,to=length(EST.list),by=1,value=0,container=win)
+            LLT.progress<-gslider(from=0,to=length(EST.list),by=1,value=0,cont=win)
             for(i in 1:length(EST.list))
             {  svalue(LLT.progress)<-i
                orig.CTL<-readLines(paste(runnum.path,"\\",FILE.ID,".ctl",sep=""))
@@ -6335,13 +6246,13 @@ if(add.Command!=" ")
             mid.point<-round((nrow(LLT.save)+1)/2)
             last.point<-nrow(LLT.save)
             colnames(LLT.save)<-c("est","OBJ","Delta.OBJ")
-            assign("LLT.save",LLT.save          ,envir = fit4NM.env)
+            LLT.save<<-LLT.save          
             plot(LLT.tot$est,LLT.tot$diffOBJ,type='l',xlab=EST.select,ylab="Delta.OBJ")
             LLT.save<-LLT.tot
             mid.point<-round((nrow(LLT.save)+1)/2)
             last.point<-nrow(LLT.save)
             colnames(LLT.save)<-c("est","OBJ","Delta.OBJ")
-            assign("LLT.save",LLT.save,envir = fit4NM.env)
+            LLT.save<<-LLT.save
             abline(h=3.84,col=2,lwd=2)
             text(min(LLT.tot$est,na.rm=T),3.84,"3.84",col=2)
             points(LLT.tot$est,LLT.tot$diffOBJ,pch=1)
@@ -6361,13 +6272,13 @@ if(add.Command!=" ")
          }
                
          file.id<-svalue(id.sel)
-         assign("FILE.ID",file.id,envir = fit4NM.env)
+         FILE.ID<<-file.id
          runnum.path<-TOT.RUN$data[which(TOT.RUN$data[,"ID"]==file.id),"path"]
          setwd(runnum.path)
          Data.temp<-read.csv(paste(runnum.path,"\\",file.id,".csv",sep=""))
-         assign("N",nrow(Data.temp),envir = fit4NM.env)
-         assign("D.LST",readLines(paste(runnum.path,"\\",file.id,".res",sep="")),envir = fit4NM.env)
-         assign("D.CTL",readLines(paste(runnum.path,"\\",file.id,".ctl",sep="")),envir = fit4NM.env)
+         N<<-nrow(Data.temp)
+         D.LST<<-readLines(paste(runnum.path,"\\",file.id,".res",sep=""))
+         D.CTL<<-readLines(paste(runnum.path,"\\",file.id,".ctl",sep=""))
          
          EST<-select.EST(D.LST)
          n.theta<-length(EST$TH)
@@ -6380,50 +6291,50 @@ if(add.Command!=" ")
          if(length(TH.list)>10)
          { 
            n.temp<-round(length(TH.list)/3)
-           assign("THcheck1",gcheckboxgroup(TH.list[1:n.temp]),envir = fit4NM.env)
-           assign("THcheck2",gcheckboxgroup(TH.list[(n.temp+1):(2*n.temp)]),envir = fit4NM.env)
-           assign("THcheck3",gcheckboxgroup(TH.list[(2*n.temp+1):length(TH.list)]),envir = fit4NM.env)
+           THcheck1<<-gcheckboxgroup(TH.list[1:n.temp])
+           THcheck2<<-gcheckboxgroup(TH.list[(n.temp+1):(2*n.temp)])
+           THcheck3<<-gcheckboxgroup(TH.list[(2*n.temp+1):length(TH.list)])
            Button1<-gbutton("OK",type="OK",handler=selectTH)
            tmp<-gframe(" Select one parameter ",container=group,horizontal=TRUE)
            add(tmp,THcheck1);add(tmp,THcheck2);add(tmp,THcheck3)
          } else  
-         { assign("THcheck",gcheckboxgroup(TH.list),envir = fit4NM.env)
+         { THcheck<<-gcheckboxgroup(TH.list)
            Button1<-gbutton("OK",type="OK",handler=selectTH)
            tmp<-gframe(" Select one parameter ",container=group,horizontal=FALSE)
            add(tmp,THcheck)       
          }
-         assign("range.E",gedit("60"),envir = fit4NM.env)
-         assign("Int.E",gedit("10"),envir = fit4NM.env)         
-         tmp<-gframe("Maximum percent increase",container=group)
+         range.E<<-gedit("60")
+         Int.E<<-gedit("10")         
+         tmp<-gframe("Maximum percent increase",cont=group)
          add(tmp,range.E)
-         tmp<-gframe("Percent interval",container=group)
+         tmp<-gframe("Percent interval",cont=group)
          add(tmp,Int.E)           
-         tmp<-gframe("Apply log-likelihood profiling method",container=group)
-      	 assign("add.pnm",NULL,envir = fit4NM.env)
-      	 assign("add.Command"," "  ,envir = fit4NM.env)
+         tmp<-gframe("Apply log-likelihood profiling method",cont=group)
+      	 add.pnm<<-NULL
+      	 add.Command<<-" "  
          temp.option<-gbutton("Parallel",handler=Option2)
          add(tmp,temp.option)      
          temp.label<-glabel("      ")
          add(tmp,temp.label)         
          add(tmp,Button1)          
          Button2<-gbutton("SAVE",type="SAVE",handler=saveLLT)      
-         tmp<-gframe("Save 95% CI as csv",container=group)
+         tmp<-gframe("Save 95% CI as csv",cont=group)
          add(tmp,Button2)   
          Button3<-gbutton("SAVE",type="SAVE",handler=saveLLT1)      
-         tmp<-gframe("Save plot-data as csv",container=group)
+         tmp<-gframe("Save plot-data as csv",cont=group)
          add(tmp,Button3)   
          Button4<-gbutton("Open",type="OPEN",handler=openLLT)      
-         tmp<-gframe("Open 95% CI",container=group)
+         tmp<-gframe("Open 95% CI",cont=group)
          add(tmp,Button4)   
          Button5<-gbutton("Open",type="OPEN",handler=openLLT1)      
-         tmp<-gframe("Open plot-data",container=group)
+         tmp<-gframe("Open plot-data",cont=group)
          add(tmp,Button5)   
          Button6<-gbutton("Plot",handler=drawLLT)      
-         tmp<-gframe("Log-likelihood profiling plot",container=group)
+         tmp<-gframe("Log-likelihood profiling plot",cont=group)
          add(tmp,Button6)        
         
-         tmp<-gframe("Delta.OBJ = OBJ during profiling - OBJ of selected model",container=group)
-         tmp<-gframe("redline = delta. OBJ 3.84",container=group)
+         tmp<-gframe("Delta.OBJ = OBJ during profiling - OBJ of selected model",cont=group)
+         tmp<-gframe("redline = delta. OBJ 3.84",cont=group)
     
          
       }
@@ -6432,8 +6343,8 @@ if(add.Command!=" ")
       id.sel<-gdroplist(runid.list)
 
       win<-gwindow("Log-likelihood profiling method")
-      assign("BigGroup",ggroup(container=win),envir = fit4NM.env)
-      group=ggroup(horizontal=FALSE,container=BigGroup)
+      BigGroup<<-ggroup(cont=win)
+      group=ggroup(horizontal=FALSE,cont=BigGroup)
       tmp<-gframe("Runnumber of selected model",container=group)
       add(tmp,id.sel)
       add(tmp,Button)
@@ -6449,7 +6360,7 @@ if(add.Command!=" ")
             TH.cov<-select.COV(D.LST)           
             TH.est<-EST$TH
             TH.namelist<-names(TH.est)
-            assign("OBJ.full",select.OBJ(D.LST),envir = fit4NM.env)
+            OBJ.full<<-select.OBJ(D.LST)
            if(!is.na(OBJ.full))
            {
             tot.n.param<- select.n.param(D.LST)
@@ -6462,11 +6373,11 @@ if(add.Command!=" ")
             sel.id<-which(duplicated(c(TH.select,TH.namelist))[-c(1:length(TH.select))])          
             TH.cov.final<-as.matrix(TH.cov[sel.id,sel.id]   )
             TH.est.final<-TH.est[sel.id]
-            assign("WA.FINAL",wa.test(TH.est.final,TH.cov.final,tot.n.param,N),envir = fit4NM.env)  
-#            tmp<-gframe("WAM result",container=BigGroup,width=600)
+            WA.FINAL<<-wa.test(TH.est.final,TH.cov.final,tot.n.param,N)  
+#            tmp<-gframe("WAM result",cont=BigGroup,width=600)
 #            table1<-gtable(WA.FINAL)
 #            add(tmp,table1) 
-            gtable(WA.FINAL,container=gwindow("Top 15 models based on the WAM algorithm",width=600,height=300)) 
+            gtable(WA.FINAL,cont=gwindow("Top 15 models based on the WAM algorithm",width=600,height=300)) 
             } else
             { warnings("WAM fail! Please try another model")
             }
@@ -6496,7 +6407,7 @@ if(add.Command!=" ")
          openWA<-function(h,...)
          {  open.WA.t<-read.csv(paste(gfile(text="Open WAM result",
             type="open",filter=list("csv files"=list(patterns=c("*.csv"))))))   
-            gtable(open.WA.t,container=gwindow("Top 15 models based on the WAM algorithm",width=600,height=300))                               
+            gtable(open.WA.t,cont=gwindow("Top 15 models based on the WAM algorithm",width=600,height=300))                               
             open.WA<-open.WA.t[which(!is.na(open.WA.t[,7])),]
             temp<-open.WA
             spearman.corr<-cor(temp$SBC.W,temp$SBC,method="spearman")
@@ -6544,7 +6455,7 @@ if(add.Command!=" ")
             Lambda.T<-NULL
             SBC.T<-NULL
             win<-gwindow(paste("WAM progress : top",min(nrow(WA.tot.A),15)," selections"),width=400,height=50)
-            WAM.progress<-gslider(from=0,to=min(nrow(WA.tot.A),15),by=1,value=0,container=win)
+            WAM.progress<-gslider(from=0,to=min(nrow(WA.tot.A),15),by=1,value=0,cont=win)
             WA.directory<-getwd()
             for(i in 1:min(nrow(WA.tot.A),15))
             {  setwd(WA.directory)
@@ -6599,16 +6510,16 @@ if(add.Command!=" ")
 #NLRT[i] <- obj 
 #NSBC[i]  <- -0.5*(obj+nparams*log(n))          
             dispose(WAM.progress)
-            assign("temp.1",WA.tot.A,envir = fit4NM.env)
-            assign("temp.2",SBC.T,envir = fit4NM.env)
-            assign("open.WA",cbind(as.numeric(WA.tot.A[,3]),SBC.T),envir = fit4NM.env)
+            temp.1<<-WA.tot.A
+            temp.2<<-SBC.T
+            open.WA<<-cbind(as.numeric(WA.tot.A[,3]),SBC.T)
             open.WA<-data.frame(open.WA)            
             Lambda.T<-c(round(Lambda.T,3),rep(NA,nrow(WA.tot.A)-length(Lambda.T)))
             SBC.T<-c(round(SBC.T,3),rep(NA,nrow(WA.tot.A)-length(SBC.T)))
             Rank.T<-c(rank(-SBC.T),rep(NA,nrow(WA.tot.A)-length(SBC.T)))
             WA.tot.A<-cbind(1:length(Lambda.T),WA.tot.A,Rank.T,Lambda.T,SBC.T)
             colnames(WA.tot.A)<-c("WAM rank","Covariate parameters fixed to 0","Lambda.W","SBC.W"," Actual rank","Lambda","SBC")
-            assign("WA.tot.A",WA.tot.A,envir = fit4NM.env)
+            WA.tot.A<<-WA.tot.A
             n.temp<-min(nrow(WA.tot.A),15)
             if(nrow(WA.tot.A)>1)
             {  spearman.corr<-cor(open.WA[1:n.temp,1],open.WA[1:n.temp,2],method="spearman")
@@ -6631,17 +6542,17 @@ if(add.Command!=" ")
          
                   
          file.id<-svalue(id.sel)
-         assign("FILE.ID",file.id,envir = fit4NM.env)
+         FILE.ID<<-file.id
          runnum.path<-TOT.RUN$data[which(TOT.RUN$data[,"ID"]==file.id),"path"]
          setwd(runnum.path)
          Data.temp<-read.csv(paste(runnum.path,"\\",file.id,".csv",sep=""))
          if(sum(colnames(Data.temp)=="MDV")==1)
-         {  assign("N",nrow(Data.temp[Data.temp$MDV==0,]),envir = fit4NM.env)
+         {  N<<-nrow(Data.temp[Data.temp$MDV==0,])
          } else
-         {  assign("N",nrow(Data.temp),envir = fit4NM.env)
+         {  N<<-nrow(Data.temp)
          }
          
-         assign("D.LST",readLines(paste(runnum.path,"\\",file.id,".res",sep="")),envir = fit4NM.env)
+         D.LST<<-readLines(paste(runnum.path,"\\",file.id,".res",sep=""))
          EST<-select.EST(D.LST)
          n.theta<-length(EST$TH)
          TH.list<-paste("TH",1:n.theta,sep="")
@@ -6652,16 +6563,16 @@ if(add.Command!=" ")
          }         
          if(length(TH.list)>10)
          {  n.temp<-round(length(TH.list)/3)
-            assign("THcheck1",gcheckboxgroup(TH.list[1:n.temp]),envir = fit4NM.env)
-            assign("THcheck2",gcheckboxgroup(TH.list[(n.temp+1):(2*n.temp)]),envir = fit4NM.env)
-            assign("THcheck3",gcheckboxgroup(TH.list[(2*n.temp+1):length(TH.list)]),envir = fit4NM.env)
+            THcheck1<<-gcheckboxgroup(TH.list[1:n.temp])
+            THcheck2<<-gcheckboxgroup(TH.list[(n.temp+1):(2*n.temp)])
+            THcheck3<<-gcheckboxgroup(TH.list[(2*n.temp+1):length(TH.list)])
             Button1<-gbutton("OK",type="OK",handler=selectTH)
             tmp<-gframe(" Select covariate parameters ",container=group,horizontal=TRUE)
             add(tmp,THcheck1);add(tmp,THcheck2);add(tmp,THcheck3)
-            tmp<-gframe("Apply Wald approximation method",container=group)
+            tmp<-gframe("Apply Wald approximation method",cont=group)
 
-      	 assign("add.pnm",NULL,envir = fit4NM.env)
-      	 assign("add.Command"," "  ,envir = fit4NM.env)
+      	 add.pnm<<-NULL
+      	 add.Command<<-" "  
          temp.option<-gbutton("Parallel",handler=Option2)
          add(tmp,temp.option)      
          temp.label<-glabel("      ")
@@ -6669,13 +6580,13 @@ if(add.Command!=" ")
              
             add(tmp,Button1)                    
          } else  
-         {  assign("THcheck",gcheckboxgroup(TH.list),envir = fit4NM.env)
+         {  THcheck<<-gcheckboxgroup(TH.list)
             Button1<-gbutton("OK",type="OK",handler=selectTH)
             tmp<-gframe(" Select covariate parameters ",container=group,horizontal=FALSE)
             add(tmp,THcheck)
-            tmp<-gframe("Apply Wald approximation method",container=group)
-      	 assign("add.pnm",NULL,envir = fit4NM.env)
-      	 assign("add.Command"," "  ,envir = fit4NM.env)
+            tmp<-gframe("Apply Wald approximation method",cont=group)
+      	 add.pnm<<-NULL
+      	 add.Command<<-" "  
          temp.option<-gbutton("Parallel",handler=Option2)
          add(tmp,temp.option)      
          temp.label<-glabel("      ")
@@ -6684,22 +6595,22 @@ if(add.Command!=" ")
             add(tmp,Button1)         
          }
          Button2<-gbutton("SAVE",type="SAVE",handler=saveWA)         
-         tmp<-gframe("Save as csv",container=group)         
+         tmp<-gframe("Save as csv",cont=group)         
          add(tmp,Button2)  
 
          Button3<-gbutton("Open",type="OPEN",handler=openWA)         
-         tmp<-gframe("Load WAM result",container=group)         
+         tmp<-gframe("Load WAM result",cont=group)         
          add(tmp,Button3)  
          
-         tmp<-gframe("Solid line : line of identity",container=group)         
+         tmp<-gframe("Solid line : line of identity",cont=group)         
       }
       Button<-gbutton("OK",handler=selRUNnum)
       runid.list<-unique(TOT.RUN$data[,"ID"])
       id.sel<-gdroplist(runid.list)
 
       win<-gwindow("Wald approximation method")
-      assign("BigGroup",ggroup(container=win),envir = fit4NM.env)
-      group=ggroup(horizontal=FALSE,container=BigGroup)
+      BigGroup<<-ggroup(cont=win)
+      group=ggroup(horizontal=FALSE,cont=BigGroup)
       tmp<-gframe("Runnumber of full model",container=group)
       add(tmp,id.sel)
       add(tmp,Button)
@@ -6730,55 +6641,55 @@ if(add.Command!=" ")
             ID.list<-c(ID.list,svalue(PE.list[[i]]))
          EX.data.temp<-EX.data.T[,ID.list]
          colnames(EX.data.temp)<-c("ID","TIME","Cm","Cp")
-         assign("EX.data",data.frame(EX.data.temp),envir = fit4NM.env)
+         EX.data<<-data.frame(EX.data.temp)
          print(dim(EX.data))
          Peformance.Error(EX.data)
-         tmp<-gframe("Save external validation - Population",container=Bgroup1)
-         gbutton("OK",handler=save.PE.pop,container=tmp)
-         tmp<-gframe("Save external validation - Individual",container=Bgroup1)
-         gbutton("OK",handler=save.PE.indiv,container=tmp)
-         tmp<-gframe("Save raw data with PE and absolute PE(APE)",container=Bgroup1)
-         gbutton("OK",handler=save.Raw.PE,container=tmp)         
+         tmp<-gframe("Save external validation - Population",cont=Bgroup1)
+         gbutton("OK",handler=save.PE.pop,cont=tmp)
+         tmp<-gframe("Save external validation - Individual",cont=Bgroup1)
+         gbutton("OK",handler=save.PE.indiv,cont=tmp)
+         tmp<-gframe("Save raw data with PE and absolute PE(APE)",cont=Bgroup1)
+         gbutton("OK",handler=save.Raw.PE,cont=tmp)         
       }
     
       select.PE<-function(h,...)
       {  noh.name<-gfile(text="data file",type="open")
          svalue(file.PE)<-noh.name
-         assign("EX.data.T",read.csv(noh.name,na.strings="."),envir = fit4NM.env)
+         EX.data.T<<-read.csv(noh.name,na.string=".")
          temp.list<-colnames(EX.data.T)  
          PEparam.input<-c("ID      ","TIME ","Observation    ","Prediction     ")
          PE.g<-list()
          PE.list<-list()
          for(i in 1:4)
-         {  PE.g[[i]]<-ggroup(container=Bgroup1)
-            glabel(PEparam.input[i],container=PE.g[[i]])
-            temp<- gdroplist(temp.list,container=PE.g[[i]])
+         {  PE.g[[i]]<-ggroup(cont=Bgroup1)
+            glabel(PEparam.input[i],cont=PE.g[[i]])
+            temp<- gdroplist(temp.list,cont=PE.g[[i]])
             if(i==2)
-               time.t<-gdroplist(c("sec","min","hour","day"),container=PE.g[[i]])
+               time.t<-gdroplist(c("sec","min","hour","day"),cont=PE.g[[i]])
             PE.list[[i]]<-temp
          }
-         assign("PE.list",PE.list,envir = fit4NM.env)
-         assign("time.t",time.t,envir = fit4NM.env)
-         tmp<-gframe("Calculate performance errors",container=Bgroup1)
-         gbutton("OK",handler=calc.PE,container=tmp)
-         tmp<-gframe("Formulae",container=Bgroup1,horizontal=FALSE)        
-         glabel("Performance error(PE) = (observation-prediction)/prediction x 100(%)\n",container=tmp)                
-         glabel("Median performance error(MDPE) = median(PE)\n",container=tmp)        
-         glabel("Median absolute performance error(MDAPE) = median(|PE|)\n",container=tmp)        
-         glabel("Mean performance error(MPE) = mean(PE)\n",container=tmp)        
-         glabel("Mean absolute performance error(MAPE) = mean(|PE|)\n",container=tmp)                   
-         glabel("Divergence = the slope of |PE| ~ time(hour)\n",container=tmp)        
-         glabel("Wobble = median(|PE-individual MDPE|)\n",container=tmp)              
-         glabel("TS : Two-stage approach\n",container=tmp)
-         glabel("PD : Pooled data approach\n",container=tmp)
-         glabel("VW : Variance-weighted approach\n",container=tmp)       
+         PE.list<<-PE.list
+         time.t<<-time.t
+         tmp<-gframe("Calculate performance errors",cont=Bgroup1)
+         gbutton("OK",handler=calc.PE,cont=tmp)
+         tmp<-gframe("Formulae",cont=Bgroup1,horizontal=FALSE)        
+         glabel("Performance error(PE) = (observation-prediction)/prediction x 100(%)\n",cont=tmp)                
+         glabel("Median performance error(MDPE) = median(PE)\n",cont=tmp)        
+         glabel("Median absolute performance error(MDAPE) = median(|PE|)\n",cont=tmp)        
+         glabel("Mean performance error(MPE) = mean(PE)\n",cont=tmp)        
+         glabel("Mean absolute performance error(MAPE) = mean(|PE|)\n",cont=tmp)                   
+         glabel("Divergence = the slope of |PE| ~ time(hour)\n",cont=tmp)        
+         glabel("Wobble = median(|PE-individual MDPE|)\n",cont=tmp)              
+         glabel("TS : Two-stage approach\n",cont=tmp)
+         glabel("PD : Pooled data approach\n",cont=tmp)
+         glabel("VW : Variance-weighted approach\n",cont=tmp)       
       }
 
       Peformance.Error<-function(Ex.data)
       {  ID.list<-unique(Ex.data$ID)
          Ex.data$PE<-ifelse(Ex.data$Cp!=0,(Ex.data$Cm-Ex.data$Cp)/Ex.data$Cp,0)*100
          Ex.data$APE<-abs(Ex.data$PE)
-         asssign("Raw.PE",Ex.data,envir = fit4NM.env)
+         Raw.PE<<-Ex.data
          Eff<-data.frame(N=c(2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20),
                 E=c(1,0.743,0.838,0.697,0.776,0.679,0.743,0.669,0.723,0.663,
                 0.709,0.659,0.699,0.656,0.692,0.653,0.686,0.651,0.681))
@@ -6859,23 +6770,23 @@ if(add.Command!=" ")
          EX.pop.temp<-cbind(rownames(EX.pop),round(EX.pop,5))
 
          g1<-gwindow("External validation of TCI - Population")
-         gtable(EX.pop.temp,container=g1)
+         gtable(EX.pop.temp,cont=g1)
 
          EX.Indiv.temp<-cbind(rownames(EX.Indiv),round(EX.Indiv,5))
          colnames(EX.Indiv.temp)<-c("ID",colnames(EX.Indiv))
 
          g2<-gwindow("External validation of TCI - Individual")
-         gtable(EX.Indiv.temp,container=g2)
-         assign("EX.Indiv",EX.Indiv,envir = fit4NM.env)
-         assign("EX.pop",EX.pop,envir = fit4NM.env)
+         gtable(EX.Indiv.temp,cont=g2)
+         EX.Indiv<<-EX.Indiv
+         EX.pop<<-EX.pop
       }
 
-      assign("PE.win",gwindow("External validation of TCI"),envir = fit4NM.env)
-      BBgroup<-ggroup(container=PE.win,horizontal=TRUE)
-      Bgroup1<-ggroup(container=BBgroup, horizontal=FALSE)
-      tmp<-gframe("Open csv file with ID, TIME, observation, and prediction",container=Bgroup1)
-      assign("file.PE",gedit(" ",container=tmp),envir = fit4NM.env)
-      gbutton("Open",handler=select.PE,container=tmp)
+      PE.win<<-gwindow("External validation of TCI")
+      BBgroup<-ggroup(cont=PE.win,horizontal=TRUE)
+      Bgroup1<-ggroup(cont=BBgroup, horizontal=FALSE)
+      tmp<-gframe("Open csv file with ID, TIME, observation, and prediction",cont=Bgroup1)
+      file.PE<<-gedit(" ",cont=tmp)
+      gbutton("Open",handler=select.PE,cont=tmp)
    }
    
    #### case deletion / jackkinfe  #############################################
@@ -6906,8 +6817,8 @@ if(add.Command!=" ")
          ID.list<-unique(D.data[,ID.id])
          N<-length(ID.list)      
          win<-gwindow(paste("Case deletion progress : N=",N,sep=""),width=300,height=50)
-         CDD.progress<-gslider(from=0,to=N,by=1,value=0,container=win)
-         assign("D.LST1",readLines(paste(CDD.RUN,".RES",sep="")),envir = fit4NM.env)
+         CDD.progress<-gslider(from=0,to=N,by=1,value=0,cont=win)
+         D.LST1<<-readLines(paste(CDD.RUN,".RES",sep=""))
          EST<-select.EST(D.LST1)   
          COV<-select.COV(D.LST1)
          OBJ<-select.OBJ(D.LST1)
@@ -6930,7 +6841,7 @@ if(add.Command!=" ")
 }            
             system(CDD.command)   
            
-            assign("D.LST",readLines("CDD.RES"),envir = fit4NM.env)
+            D.LST<<-readLines("CDD.RES")
             RUN.EST<-select.EST(D.LST)
             RUN.COV<-select.COV(D.LST)
             RUN.SE<-select.SE(D.LST)
@@ -6971,14 +6882,14 @@ if(add.Command!=" ")
             result<-c(result,CS,CR)   
             CDD.tot<-rbind(CDD.tot,result)  
          }
-         assign("temp.CDD",CDD.tot,envir = fit4NM.env)
+         temp.CDD<<-CDD.tot
          omega.name.m<-outer(1:nrow(EST$OMEGA.m),1:nrow(EST$OMEGA.m),function(x,y) paste("OM",x,y,sep=""))
          colnames(CDD.tot)<-c("k","OBJ","MIN","COV", names(RUN.EST$TH),
                        omega.name.m[upper.tri(omega.name.m,diag=TRUE)],names(RUN.EST$SIGMA),
                        paste("SE-",c(names(RUN.EST$TH),omega.name.m[lower.tri(omega.name.m,diag=TRUE)],names(RUN.EST$SIGMA)),sep=""),
                        "CS","CR")
          CDD.tot<-data.frame(CDD.tot)
-         assign("CDD.tot",CDD.tot,envir = fit4NM.env)
+         CDD.tot<<-CDD.tot
          dispose(win)
          EST.tot<-c(EST$TH,EST$OMEGA,EST$SIGMA)
          EST.CDD<-CDD.tot[,(1:length(EST.tot))+4]
@@ -6993,7 +6904,7 @@ if(add.Command!=" ")
          Jack.U<-Jack.est+qt(0.975,N-1)*sqrt(Jack.var)
          CDD.summary<-cbind(bias,EST.tot,Jack.est,Jack.var,Jack.L,Jack.U)   
          colnames(CDD.summary)<-c("Bias","Parameter est","Jackknife est.","Jackkinfe SE","Jackknife 2.5%","Jackknife 97.5%")     
-         assign("CDD.summary.P",data.frame(Parameter=rownames(CDD.summary),CDD.summary) ,envir = fit4NM.env)
+         CDD.summary.P<<-data.frame(Parameter=rownames(CDD.summary),CDD.summary) 
          if(!is.na(COV)&sum(!is.na(CDD.tot$CS))!=0)
          { par(mfrow=c(2,2))
            plot(ID.list,as.numeric(as.character(CDD.tot$CS)),type='n',xlab="ID",ylab="Cook's distance")
@@ -7006,22 +6917,22 @@ if(add.Command!=" ")
            abline(h=1,col=2)
          }  
          g1<-gwindow("Case deletion summary")         
-         gtable(CDD.summary.P,container=g1)         
+         gtable(CDD.summary.P,cont=g1)         
       }
 
       openControl<-function(h,...)
       {  control.file<-gfile(text="Open control file(runnumber subdirectory)",type="open")
-         assign("current.ctl",readLines(control.file),envir = fit4NM.env)
+         current.ctl<<-readLines(control.file)
          svalue(control.t)<-control.file
          temp<-strsplit(control.file,split="\\\\")[[1]]
          CDD.RUN<-temp[length(temp)]
          setwd(strsplit(control.file,split=CDD.RUN)[[1]])
-         assign("CDD.RUN",strsplit(CDD.RUN,split="\\.")[[1]][1],envir = fit4NM.env)
+         CDD.RUN<<-strsplit(CDD.RUN,split="\\.")[[1]][1]
       }
  
       opendata<-function(h,...)
-      {  assign("data.file",gfile(text="Open data file(runnumber subdirectory)",type="open"),envir = fit4NM.env)
-         assign("D.data",read.csv(data.file,na.strings="."),envir = fit4NM.env)
+      {  data.file<<-gfile(text="Open data file(runnumber subdirectory)",type="open")
+         D.data<<-read.csv(data.file,na.string=".")
          svalue(data.t)<-data.file
       }
  
@@ -7060,7 +6971,7 @@ if(add.Command!=" ")
          Jack.U<-EST.tot+qt(0.975,N-1)*sqrt(Jack.var)
          CDD.summary<-cbind(bias,EST.tot,Jack.est,Jack.var,Jack.L,Jack.U)   
          colnames(CDD.summary)<-c("Bias","Parameter est","Jackknife est.","Jackkinfe SE","Jackknife 2.5%","Jackknife 97.5%")     
-         assign("CDD.summary.P",data.frame(Parameter=rownames(CDD.summary),CDD.summary) ,envir = fit4NM.env)
+         CDD.summary.P<<-data.frame(Parameter=rownames(CDD.summary),CDD.summary) 
          par(mfrow=c(2,2))
          plot(ID.list,as.numeric(as.character(CDD.tot$CS)),type='n',xlab="ID",ylab="Cook's distance")
          text(ID.list,as.numeric(as.character(CDD.tot$CS)),as.character(ID.list))
@@ -7071,20 +6982,20 @@ if(add.Command!=" ")
          text(as.numeric(as.character(CDD.tot$CS)),as.numeric(as.character(CDD.tot$CR)),as.character(ID.list))         
          abline(h=1,col=2)
          g1<-gwindow("Case deletion summary")         
-         gtable(CDD.summary.P,container=g1)         
+         gtable(CDD.summary.P,cont=g1)         
       }
      
       CDDwin<-gwindow("Case deletion diagnostics")
-      BigGroup<-ggroup(container=CDDwin,horizontal=TRUE)
-      BBgroup<-ggroup(container=BigGroup,horizontal=FALSE)
+      BigGroup<-ggroup(cont=CDDwin,horizontal=TRUE)
+      BBgroup<-ggroup(cont=BigGroup,horizontal=FALSE)
  
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       control.t<-gedit(" ",width=50)
       button1<-gbutton("Open control file(runnumber subdirectory)",handler=openControl)
       add(tmp,button1)
       add(tmp,control.t)
 
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       button2<-gbutton("Open data files(runnumber subdirectory)",handler=opendata,width=20,height=10)
       data.t<-gedit(" ",width=50)
       add(tmp,button2)
@@ -7093,8 +7004,8 @@ if(add.Command!=" ")
       Button<-gbutton("Start case deletion",handler=CDDcalc)
 
       tmp=gframe("",container=BBgroup)
-      	 assign("add.pnm",NULL,envir = fit4NM.env)
-      	 assign("add.Command"," "  ,envir = fit4NM.env)
+      	 add.pnm<<-NULL
+      	 add.Command<<-" "  
          temp.option<-gbutton("Parallel",handler=Option2)
          add(tmp,temp.option)      
          temp.label<-glabel("      ")
@@ -7102,27 +7013,27 @@ if(add.Command!=" ")
        
       add(tmp,Button)
 
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button1<-gbutton("Save case deletion raw data as csv",handler=save1)
       add(tmp,Button1)
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button2<-gbutton("Save case deletion summary data as csv",handler=save2)
       add(tmp,Button2)
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button4<-gbutton("Load case deletion raw data",handler=load1)
       add(tmp,Button4)
       
-      tmp<-gframe("Formulae",container=BBgroup,horizontal=FALSE)
-      glabel("bias = (N-1)*(mean(TH(-k))-TH) \n",container=tmp)      
-      glabel("CS : Cook's distance(k) = sqrt((TH(-k)-TH)*COV(TH)^(-1)*(TH(-k)-TH)) : best=0 \n",container=tmp)
-      glabel("CR : Cov ratio(k) = det(COV(TH))/det(COV(TH(-k))) : best=1\n",container=tmp)
-      glabel("bias = (N-1)*(mean(TH(-k))-TH) \n",container=tmp)      
-      glabel("Jackknife est. = sum(N*TH-(N-1)*TH(-k))/N\n",container=tmp)
-      glabel("Jackknife SE = sqrt(sum((N*TH-(N-1)*TH(-k)-Jackknife est.)**2)/(N*N-N))\n",container=tmp)
-      glabel("Jackknife 95% CI lower bound = Jackknife est. - qt(0.975,N-1)*Jackknife SE\n",container=tmp)
-      glabel("Jackknife 95% CI upper bound = Jackknife est. + qt(0.975,N-1)*Jackknife SE\n",container=tmp)
+      tmp<-gframe("Formulae",cont=BBgroup,horizontal=FALSE)
+      glabel("bias = (N-1)*(mean(TH(-k))-TH) \n",cont=tmp)      
+      glabel("CS : Cook's distance(k) = sqrt((TH(-k)-TH)*COV(TH)^(-1)*(TH(-k)-TH)) : best=0 \n",cont=tmp)
+      glabel("CR : Cov ratio(k) = det(COV(TH))/det(COV(TH(-k))) : best=1\n",cont=tmp)
+      glabel("bias = (N-1)*(mean(TH(-k))-TH) \n",cont=tmp)      
+      glabel("Jackknife est. = sum(N*TH-(N-1)*TH(-k))/N\n",cont=tmp)
+      glabel("Jackknife SE = sqrt(sum((N*TH-(N-1)*TH(-k)-Jackknife est.)**2)/(N*N-N))\n",cont=tmp)
+      glabel("Jackknife 95% CI lower bound = Jackknife est. - qt(0.975,N-1)*Jackknife SE\n",cont=tmp)
+      glabel("Jackknife 95% CI upper bound = Jackknife est. + qt(0.975,N-1)*Jackknife SE\n",cont=tmp)
      
-#      tmp<-gframe("",container=BBgroup)
+#      tmp<-gframe("",cont=BBgroup)
 #      Button3<-gbutton("Summary data from joined bootstrap raw data file (Prob,Obj,Min,COV,EST,SE)",handler=save3)
 #      add(tmp,Button3)   
      add(BigGroup,ggraphics())
@@ -7211,7 +7122,7 @@ if(add.Command!=" ")
       CVcalc<-function(h,...)
       {  
          CVRUN.ctl()
-         assign("K",as.numeric(svalue(CV.input)),envir = fit4NM.env)
+         K<<-as.numeric(svalue(CV.input))
          var.name<-tolower(colnames(D.data))
          ID.id<-which(var.name=="x.id")
            
@@ -7225,9 +7136,9 @@ if(add.Command!=" ")
          }   
          CV.n<-max(CV.list)
          win<-gwindow(paste("Cross validation progress : K=",CV.n,sep=""),width=300,height=50)
-         CV.progress<-gslider(from=0,to=CV.n,by=1,value=0,container=win)
+         CV.progress<-gslider(from=0,to=CV.n,by=1,value=0,cont=win)
          D.LST<-readLines(paste(CV.RUN,".RES",sep=""))
-         assign("EST",select.EST(D.LST)   ,envir = fit4NM.env)
+         EST<<-select.EST(D.LST)   
          COV<-select.COV(D.LST)
          OBJ<-select.OBJ(D.LST)
          CV.tot<-NULL
@@ -7263,9 +7174,9 @@ if(add.Command!=" ")
 }
             system(CV.command)   
             
-            assign("D.LST",readLines("CV-RUN.RES"),envir = fit4NM.env)
+            D.LST<<-readLines("CV-RUN.RES")
             D.temp<-readLines("CV-RUN.RES")
-            assign("RUN.EST",select.EST(D.temp)   ,envir = fit4NM.env)
+            RUN.EST<<-select.EST(D.temp)   
             RUN.COV<-select.COV(D.temp)
             RUN.SE<-select.SE(D.temp)            
             RUN.OBJ<-select.OBJ(D.temp)
@@ -7329,7 +7240,7 @@ if(add.Command!=" ")
             }                                 
             result<-c(result,CS,CR, MDAWR,MDWR,MAWR,MWR,RMSWR)   
             CV.tot<-rbind(CV.tot,result)    
-            assign("CV.tot.t",CV.tot          ,envir = fit4NM.env)
+            CV.tot.t<<-CV.tot          
          }
          omega.name.m<-outer(1:nrow(EST$OMEGA.m),1:nrow(EST$OMEGA.m),function(x,y) paste("OM",x,y,sep=""))
          omega.name.m[lower.tri(omega.name.m,diag=TRUE)]
@@ -7338,7 +7249,7 @@ if(add.Command!=" ")
                        paste("SE-",c(names(RUN.EST$TH),omega.name.m[lower.tri(omega.name.m,diag=TRUE)],names(RUN.EST$SIGMA)),sep=""),
                        "CS","CR","MDAWR","MDWR","MAWR","MWR","RMSWR") 
          CV.tot<-data.frame(CV.tot)
-         assign("CV.tot",CV.tot,envir = fit4NM.env)
+         CV.tot<<-CV.tot
 
          dispose(win)
          EST.tot<-c(EST$TH,EST$OMEGA,EST$SIGMA)
@@ -7361,27 +7272,27 @@ if(add.Command!=" ")
          names(EST.CV.tot)<-colnames(CV.tot)[5:(5+n.last)]
          CV.summary<-cbind(bias,EST.CV.tot,EST.tot)     
          colnames(CV.summary)<-c("Bias","CV parameter est.","Parameter est")     
-         assign("CV.summary.P",data.frame(parameter=rownames(CV.summary),CV.summary) ,envir = fit4NM.env)
+         CV.summary.P<<-data.frame(parameter=rownames(CV.summary),CV.summary) 
          
          g1<-gwindow("Cross validation summary")         
-         gtable(CV.summary.P,container=g1)                 
+         gtable(CV.summary.P,cont=g1)                 
       }
       
       
 
       openControl<-function(h,...)
       {  control.file<-gfile(text="Open control file(runnumber subdirectory)",type="open")
-         assign("current.ctl",readLines(control.file),envir = fit4NM.env)
+         current.ctl<<-readLines(control.file)
          svalue(control.t)<-control.file
          temp<-strsplit(control.file,split="\\\\")[[1]]
          CV.RUN<-temp[length(temp)]
          setwd(strsplit(control.file,split=CV.RUN)[[1]])
-         assign("CV.RUN",strsplit(CV.RUN,split="\\.")[[1]][1],envir = fit4NM.env)
+         CV.RUN<<-strsplit(CV.RUN,split="\\.")[[1]][1]
       }
  
       opendata<-function(h,...)
-      {  assign("data.file",gfile(text="Open data file(runnumber subdirectory)",type="open"),envir = fit4NM.env)
-         assign("D.data",read.csv(data.file,na.strings="."),envir = fit4NM.env)
+      {  data.file<<-gfile(text="Open data file(runnumber subdirectory)",type="open")
+         D.data<<-read.csv(data.file,na.string=".")
          svalue(data.t)<-data.file
       }
  
@@ -7426,22 +7337,22 @@ if(add.Command!=" ")
          names(EST.CV.tot)<-colnames(CV.tot)[5:(5+n.last)]
          CV.summary<-cbind(bias,EST.CV.tot,EST.tot)     
          colnames(CV.summary)<-c("Bias","CV parameter est.","Parameter est")     
-         assign("CV.summary.P",data.frame(parameter=rownames(CV.summary),CV.summary) ,envir = fit4NM.env)
+         CV.summary.P<<-data.frame(parameter=rownames(CV.summary),CV.summary) 
          
          g1<-gwindow("Cross validation summary")         
-         gtable(CV.summary.P,container=g1)                 
+         gtable(CV.summary.P,cont=g1)                 
         }
      
       CVwin<-gwindow("Cross-validation")
-      BBgroup<-ggroup(container=CVwin,horizontal=FALSE)
+      BBgroup<-ggroup(cont=CVwin,horizontal=FALSE)
  
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       control.t<-gedit(" ",width=50)
       button1<-gbutton("Open control file(runnumber subdirectory)",handler=openControl)
       add(tmp,button1)
       add(tmp,control.t)
 
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       button2<-gbutton("Open data files(runnumber subdirectory)",handler=opendata,width=20,height=10)
       data.t<-gedit(" ",width=50)
       add(tmp,button2)
@@ -7456,8 +7367,8 @@ if(add.Command!=" ")
       Button<-gbutton("Start cross-validation",handler=CVcalc)
 
       tmp=gframe("",container=BBgroup)
-      	 assign("add.pnm",NULL,envir = fit4NM.env)
-      	 assign("add.Command"," "  ,envir = fit4NM.env)
+      	 add.pnm<<-NULL
+      	 add.Command<<-" "  
          temp.option<-gbutton("Parallel",handler=Option2)
          add(tmp,temp.option)      
          temp.label<-glabel("      ")
@@ -7465,17 +7376,17 @@ if(add.Command!=" ")
       
       add(tmp,Button)
 
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button1<-gbutton("Save cross-validation raw data as csv",handler=save1)
       add(tmp,Button1)
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button2<-gbutton("Save cross-validation summary data as csv",handler=save2)
       add(tmp,Button2)
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button4<-gbutton("Load cross-validation raw data",handler=load1)
       add(tmp,Button4)
       
-#      tmp<-gframe("",container=BBgroup)
+#      tmp<-gframe("",cont=BBgroup)
 #      Button3<-gbutton("Summary data from joined bootstrap raw data file (Prob,Obj,Min,COV,EST,SE)",handler=save3)
 #      add(tmp,Button3)   
    }  
@@ -7700,11 +7611,11 @@ if(add.Command!=" ")
 #}      
       system(NM.command)
       temp.LST<-readLines(paste(runID,".res",sep=""))
-      assign("AA",temp.LST,envir = fit4NM.env)
+      AA<<-temp.LST
       data.n<- select.N(read.csv(paste(runID,".csv",sep="")))
       TOT.RUN$num<-TOT.RUN$num+1
       TOT.RUN$data<-rbind(TOT.RUN$data,c(runID,getwd(),parent))
-      assign("TOT.RUN",TOT.RUN,envir = fit4NM.env)
+      TOT.RUN<<-TOT.RUN
       if(length(grep("0MINIMIZATION",temp.LST))!=0)
       { addRunTable(temp.LST,Description,runID,dir.name,parent,data.n,runID)
       } else
@@ -7781,7 +7692,7 @@ if(add.Command!=" ")
 #      } else
 #      {  run.table[][TOT.RUN$num,]<-temp
 #      }
-      assign("run.table",run.table,envir = fit4NM.env)
+      run.table<<-run.table
    }
 
 
@@ -8092,7 +8003,7 @@ if(add.Command!=" ")
                 \n         University of Ulsan College of Medicine
                 \n         Seoul, Korea.
                 \nVersion: 3.5.1 (Oct. 17, 2011)
-                \nfit4NM 3.5.1 was developed in R 2.13.1 and tested in up to R 2.13.1.",container=TRUE,width=600)   
+                \nfit4NM 3.5.1 was developed in R 2.13.1 and tested in up to R 2.13.1.",cont=TRUE,width=600)   
    }
    
    ############################################################################# 
@@ -8101,29 +8012,29 @@ if(add.Command!=" ")
  Option1<-function(h,...)
  {  ff<-function(h,...)
     { if(svalue(h$obj)=="Custom")
-      {   assign("path.Custom",gfile(text="Choose path for *.pnm(Custom)",type="open") ,envir = fit4NM.env)
+      {   path.Custom<<-gfile(text="Choose path for *.pnm(Custom)",type="open") 
            temp<-readLines(path.Custom)
            temp.t<-apply(as.matrix(temp),1,function(x) {strsplit(x,split="=")[[1]][1]})
            node.id<-which(temp.t=="[nodes]")
-           assign("Nodes",as.numeric(strsplit(temp[node.id],split="=")[[1]][2]),envir = fit4NM.env)
-           assign("svalue(num.node)",Nodes,envir = fit4NM.env)
-           assign("svalue(path.pnm)",path.Custom   ,envir = fit4NM.env)
+           Nodes<<-as.numeric(strsplit(temp[node.id],split="=")[[1]][2])
+           svalue(num.node)<<-Nodes
+           svalue(path.pnm)<<-path.Custom   
       } else if(svalue(h$obj)=="MPI")
-      {    assign("svalue(path.pnm)",path.MPI  ,envir = fit4NM.env)
+      {    svalue(path.pnm)<<-path.MPI  
            temp<-readLines(path.MPI)
            temp.t<-apply(as.matrix(temp),1,function(x) {strsplit(x,split="=")[[1]][1]})
            node.id<-which(temp.t=="[nodes]")
-           assign("Nodes",as.numeric(strsplit(temp[node.id],split="=")[[1]][2]),envir = fit4NM.env)
-           assign("svalue(num.node)",Nodes,envir = fit4NM.env)
+           Nodes<<-as.numeric(strsplit(temp[node.id],split="=")[[1]][2])
+           svalue(num.node)<<-Nodes
       } else if(svalue(h$obj)=="FPI")
-      {   assign("svalue(path.pnm)",path.FPI  ,envir = fit4NM.env)
+      {   svalue(path.pnm)<<-path.FPI  
            temp<-readLines(path.FPI)
            temp.t<-apply(as.matrix(temp),1,function(x) {strsplit(x,split="=")[[1]][1]})
            node.id<-which(temp.t=="[nodes]")
-           assign("Nodes",as.numeric(strsplit(temp[node.id],split="=")[[1]][2]),envir = fit4NM.env)
-           assign("svalue(num.node)",Nodes      ,envir = fit4NM.env)
+           Nodes<<-as.numeric(strsplit(temp[node.id],split="=")[[1]][2])
+           svalue(num.node)<<-Nodes      
       } else if(svalue(h$obj)=="None")
-      {   assign("svalue(path.pnm)"," "     ,envir = fit4NM.env)
+      {   svalue(path.pnm)<<-" "     
       }   
     }
    optioncheck1<-function(h,...)
@@ -8133,7 +8044,7 @@ if(add.Command!=" ")
              temp<-temp[length(temp)]
              temp.command<-paste(temp.command, " -PARAFILE=",temp,sep="")
  #            file.copy(svalue(path.pnm),temp.dir,overwrite=T)
-             assign("Nodes",svalue(num.node),envir = fit4NM.env)
+             Nodes<<-svalue(num.node)
              temp.command<-paste(temp.command, " [nodes]=",Nodes,sep="")
           }
           if(svalue(par.check2)=="Force recompile(-prcompile)")
@@ -8153,9 +8064,9 @@ if(add.Command!=" ")
           }   
        
   
-       assign("svalue(NONMEM.c)",temp.command,envir = fit4NM.env)
-       assign("add.Command",temp.command,envir = fit4NM.env)
-       assign("add.pnm",svalue(path.pnm),envir = fit4NM.env)
+       svalue(NONMEM.c)<<-temp.command
+       add.Command<<-temp.command
+       add.pnm<<-svalue(path.pnm)
    }
     
    optionOK1<-function(h,...)
@@ -8163,56 +8074,56 @@ if(add.Command!=" ")
       optioncheck1()
      dispose(OptionW1)     
    }
-    assign("add.Command"," ",envir = fit4NM.env)
-    assign("OptionW1",gwindow("NONMEM 7.2.0 or higher version"),envir = fit4NM.env)
-    assign("BBgroup1",ggroup(container=OptionW1,horizontal=FALSE),envir = fit4NM.env)
-    assign("tmp",gframe("Parallelization:",container=BBgroup1),envir = fit4NM.env)
-    assign("path.pnm",gedit(path.MPI,container=tmp),envir = fit4NM.env)
-    assign("par.check1",gradio(c("MPI","FPI","Custom"),container=tmp,horizontal=TRUE,handler=ff),envir = fit4NM.env)
-    assign("tmp",gframe("Nodes",container=BBgroup1),envir = fit4NM.env)
-    assign("num.node",gedit("8",container=tmp),envir = fit4NM.env)
-    tmp<-gframe("Additional Arguments:",container=BBgroup1)
-    assign("par.check2",gradio(c("None","Force recompile(-prcompile)","Force skip (-prsame)","Do not recompile except FSUBS (-prdefault)"),container=tmp),envir = fit4NM.env)
-    tmp<-gframe("",container=BBgroup1)
-    glabel("Runpdir:",container=tmp) 
-    assign("RUNpdir",gedit("temp_dir ",container=tmp),envir = fit4NM.env)
-    tmp<-gframe("",container=BBgroup1)
-    assign("check1",gcheckbox("Skip the NMTRAN step (-trskip)",container=tmp),envir = fit4NM.env)
-    assign("check2",gcheckbox("Do not make the XML output file (-xmloff)",container=tmp),envir = fit4NM.env)
-    tmp<-gframe("",container=BBgroup1)  
-    gbutton("NONMEM command",handler=optioncheck1,container=tmp)
-    gbutton("OK",handler=optionOK1,container=tmp)
-    tmp<-gframe("NONMEM command",container=BBgroup1)
-    assign("NONMEM.c",gtext("",container=tmp,width=500,height=40),envir = fit4NM.env)
+    add.Command<<-" "
+    OptionW1<<-gwindow("NONMEM 7.2.0 or higher version")
+    BBgroup1<<-ggroup(cont=OptionW1,horizontal=FALSE)
+    tmp<<-gframe("Parallelization:",cont=BBgroup1)
+    path.pnm<<-gedit(path.MPI,cont=tmp)
+    par.check1<<-gradio(c("MPI","FPI","Custom"),cont=tmp,horizontal=TRUE,handler=ff)
+    tmp<<-gframe("Nodes",cont=BBgroup1)
+    num.node<<-gedit("8",cont=tmp)
+    tmp<-gframe("Additional Arguments:",cont=BBgroup1)
+    par.check2<<-gradio(c("None","Force recompile(-prcompile)","Force skip (-prsame)","Do not recompile except FSUBS (-prdefault)"),cont=tmp)
+    tmp<-gframe("",cont=BBgroup1)
+    glabel("Runpdir:",cont=tmp) 
+    RUNpdir<<-gedit("temp_dir ",cont=tmp)
+    tmp<-gframe("",cont=BBgroup1)
+    check1<<-gcheckbox("Skip the NMTRAN step (-trskip)",cont=tmp)
+    check2<<-gcheckbox("Do not make the XML output file (-xmloff)",cont=tmp)
+    tmp<-gframe("",cont=BBgroup1)  
+    gbutton("NONMEM command",handler=optioncheck1,cont=tmp)
+    gbutton("OK",handler=optionOK1,cont=tmp)
+    tmp<-gframe("NONMEM command",cont=BBgroup1)
+    NONMEM.c<<-gtext("",cont=tmp,width=500,height=40)
  }
  
  
  Option2<-function(h,...)
  {  ff<-function(h,...)
     { if(svalue(h$obj)=="Custom")
-      {   assign("path.Custom",gfile(text="Choose path for *.pnm(Custom)",type="open") ,envir = fit4NM.env)
+      {   path.Custom<<-gfile(text="Choose path for *.pnm(Custom)",type="open") 
            temp<-readLines(path.Custom)
            temp.t<-apply(as.matrix(temp),1,function(x) {strsplit(x,split="=")[[1]][1]})
            node.id<-which(temp.t=="[nodes]")
-           assign("Nodes",as.numeric(strsplit(temp[node.id],split="=")[[1]][2]),envir = fit4NM.env)
-           assign("svalue(num.node)",Nodes,envir = fit4NM.env)
-           assign("svalue(path.pnm)",path.Custom   ,envir = fit4NM.env)
+           Nodes<<-as.numeric(strsplit(temp[node.id],split="=")[[1]][2])
+           svalue(num.node)<<-Nodes
+           svalue(path.pnm)<<-path.Custom   
       } else if(svalue(h$obj)=="MPI")
-      {    assign("svalue(path.pnm)",path.MPI  ,envir = fit4NM.env)
+      {    svalue(path.pnm)<<-path.MPI  
            temp<-readLines(path.MPI)
            temp.t<-apply(as.matrix(temp),1,function(x) {strsplit(x,split="=")[[1]][1]})
            node.id<-which(temp.t=="[nodes]")
-           assign("Nodes",as.numeric(strsplit(temp[node.id],split="=")[[1]][2]),envir = fit4NM.env)
-           assign("svalue(num.node)",Nodes,envir = fit4NM.env)
+           Nodes<<-as.numeric(strsplit(temp[node.id],split="=")[[1]][2])
+           svalue(num.node)<<-Nodes
       } else if(svalue(h$obj)=="FPI")
-      {   assign("svalue(path.pnm)",path.FPI  ,envir = fit4NM.env)
+      {   svalue(path.pnm)<<-path.FPI  
            temp<-readLines(path.FPI)
            temp.t<-apply(as.matrix(temp),1,function(x) {strsplit(x,split="=")[[1]][1]})
            node.id<-which(temp.t=="[nodes]")
-           assign("Nodes",as.numeric(strsplit(temp[node.id],split="=")[[1]][2]),envir = fit4NM.env)
-           assign("svalue(num.node)",Nodes      ,envir = fit4NM.env)
+           Nodes<<-as.numeric(strsplit(temp[node.id],split="=")[[1]][2])
+           svalue(num.node)<<-Nodes      
       } else if(svalue(h$obj)=="None")
-      {   assign("svalue(path.pnm)"," "     ,envir = fit4NM.env)
+      {   svalue(path.pnm)<<-" "     
       }   
     }
     
@@ -8223,13 +8134,13 @@ if(add.Command!=" ")
              temp<-temp[length(temp)]
              temp.command<-paste(temp.command, " -PARAFILE=",temp,sep="")
  #            file.copy(svalue(path.pnm),temp.dir,overwrite=T)
-             assign("Nodes",svalue(num.node),envir = fit4NM.env)
+             Nodes<<-svalue(num.node)
              temp.command<-paste(temp.command, " [nodes]=",Nodes,sep="")
           }
         
-               assign("svalue(NONMEM.c)",temp.command,envir = fit4NM.env)
-       assign("add.Command",temp.command,envir = fit4NM.env)
-       assign("add.pnm",svalue(path.pnm),envir = fit4NM.env)
+               svalue(NONMEM.c)<<-temp.command
+       add.Command<<-temp.command
+       add.pnm<<-svalue(path.pnm)
    }
       
    optionOK1<-function(h,...)
@@ -8237,19 +8148,19 @@ if(add.Command!=" ")
       optioncheck1()
      dispose(OptionW1)     
    }
-    assign("add.Command"," ",envir = fit4NM.env)
-    assign("OptionW1",gwindow("NONMEM 7.2.0 or higher version"),envir = fit4NM.env)
-    assign("BBgroup1",ggroup(container=OptionW1,horizontal=FALSE),envir = fit4NM.env)
-    assign("tmp",gframe("Parallelization:",container=BBgroup1),envir = fit4NM.env)
-    assign("path.pnm",gedit(path.MPI,container=tmp),envir = fit4NM.env)
-    assign("par.check1",gradio(c("MPI","FPI","Custom"),container=tmp,horizontal=TRUE,handler=ff),envir = fit4NM.env)
-    assign("tmp",gframe("Nodes",container=BBgroup1),envir = fit4NM.env)
-    assign("num.node",gedit("8",container=tmp),envir = fit4NM.env)
-    tmp<-gframe("",container=BBgroup1)  
-    gbutton("NONMEM command",handler=optioncheck1,container=tmp)
-    gbutton("OK",handler=optionOK1,container=tmp)
-    tmp<-gframe("NONMEM command",container=BBgroup1)
-    assign("NONMEM.c",gtext("",container=tmp,width=500,height=40),envir = fit4NM.env)
+    add.Command<<-" "
+    OptionW1<<-gwindow("NONMEM 7.2.0 or higher version")
+    BBgroup1<<-ggroup(cont=OptionW1,horizontal=FALSE)
+    tmp<<-gframe("Parallelization:",cont=BBgroup1)
+    path.pnm<<-gedit(path.MPI,cont=tmp)
+    par.check1<<-gradio(c("MPI","FPI","Custom"),cont=tmp,horizontal=TRUE,handler=ff)
+    tmp<<-gframe("Nodes",cont=BBgroup1)
+    num.node<<-gedit("8",cont=tmp)
+    tmp<-gframe("",cont=BBgroup1)  
+    gbutton("NONMEM command",handler=optioncheck1,cont=tmp)
+    gbutton("OK",handler=optionOK1,cont=tmp)
+    tmp<-gframe("NONMEM command",cont=BBgroup1)
+    NONMEM.c<<-gtext("",cont=tmp,width=500,height=40)
  }
 
  
@@ -8274,7 +8185,7 @@ if(add.Command!=" ")
       temp.CTL[id]<-"$DATA perm.csv"
       id<-which(indicator=="$TABLE")
       temp.CTL<-temp.CTL[1:(id[1]-1)]      
-      assign("Perm.CTL",temp.CTL,envir = fit4NM.env)
+      Perm.CTL<<-temp.CTL
    }
    
    Perm.try<-function()
@@ -8283,7 +8194,7 @@ if(add.Command!=" ")
       ID.list<-as.numeric(names(table(D.data[,ID.id])))
       Boot.tot<-NULL
       win<-gwindow(paste("Permutation progress : N=",P,sep=""),width=300,height=50)
-      Perm.progress<-gslider(from=0,to=P,by=1,value=0,container=win)
+      Perm.progress<-gslider(from=0,to=P,by=1,value=0,cont=win)
  
       for(b in 1:(P-1))
       {  p.filename1<-paste("Perm",b,".ctl",sep="")
@@ -8321,24 +8232,24 @@ if(add.Command!=" ")
 
    lineup.init<-function()
    {  setPerm<-function(h,...)
-      {  assign("P",as.numeric(svalue(Perm.input)),envir = fit4NM.env)
+      {  P<<-as.numeric(svalue(Perm.input))
          Perm.ctl()     
          Perm.try()
       }
 
       openControl<-function(h,...)
       {  control.file<-gfile(text="Open control file",type="open")
-         assign("current.ctl",readLines(control.file),envir = fit4NM.env)
+         current.ctl<<-readLines(control.file)
          svalue(control.t)<-control.file
          temp<-strsplit(control.file,split="\\\\")[[1]]
          Perm.RUN<-temp[length(temp)]
          setwd(strsplit(control.file,split=Perm.RUN)[[1]])
-         assign("Perm.RUN",strsplit(Perm.RUN,split="\\.")[[1]][1],envir = fit4NM.env)
+         Perm.RUN<<-strsplit(Perm.RUN,split="\\.")[[1]][1]
       }
  
       opendata<-function(h,...)
-      {  assign("data.file",gfile(text="Open data file",type="open"),envir = fit4NM.env)
-         assign("D.data",read.csv(data.file),envir = fit4NM.env)
+      {  data.file<<-gfile(text="Open data file",type="open")
+         D.data<<-read.csv(data.file)
          svalue(data.t)<-data.file
       }
  
@@ -8392,15 +8303,15 @@ if(add.Command!=" ")
    
      
       bootwin<-gwindow("Lineup Protocol")
-      BBgroup<-ggroup(container=bootwin,horizontal=FALSE)
+      BBgroup<-ggroup(cont=bootwin,horizontal=FALSE)
  
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       control.t<-gedit(" ",width=50)
       button1<-gbutton("Open control file",handler=openControl)
       add(tmp,button1)
       add(tmp,control.t)
 
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       button2<-gbutton("Open data files",handler=opendata,width=20,height=10)
       data.t<-gedit(" ",width=50)
       add(tmp,button2)
@@ -8415,18 +8326,18 @@ if(add.Command!=" ")
       Button<-gbutton("Start permutation",handler=setPerm)
 
       tmp=gframe("",container=BBgroup)
-      	 assign("add.pnm",NULL,envir = fit4NM.env)
-      	 assign("add.Command"," "  ,envir = fit4NM.env)
+      	 add.pnm<<-NULL
+      	 add.Command<<-" "  
            
       add(tmp,Button)
 
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button1<-gbutton("Lineup plot: OBS vs. PRED (in RGui)",handler=plot1.PRED)
       add(tmp,Button1)
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button2<-gbutton("Lineup plot: OBS vs. IPRED (in RGui)",handler=plot2.IPRED)
       add(tmp,Button2)
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button3<-gbutton("Lineup plot: WRES (in RGui)",handler=plot3.WRES)
       add(tmp,Button3)   
       Button4<-gbutton("Lineup plot: CWRES (in RGui)",handler=plot4.CWRES)
@@ -8441,27 +8352,27 @@ if(add.Command!=" ")
    # New Method : PV with Binomial test
    #############################################################################
    set.VPCNB<-function(h,...)
-   {  assign("VPC.N",as.numeric(svalue(VPC.input)),envir = fit4NM.env)
+   {  VPC.N<<-as.numeric(svalue(VPC.input))
       VPC.tryB()
    }
    openFB<-function(h,...)
-   {  assign("VPC.dir",gfile("Select runnumber foler with PC.sim",type="selectdir"),envir = fit4NM.env)
+   {  VPC.dir<<-gfile("Select runnumber foler with PC.sim",type="selectdir")
       setwd(VPC.dir)
       svalue(dir.g1)<-VPC.dir
       temp<-strsplit(VPC.dir,split="\\\\")[[1]]
-      assign("VPC.RUN",temp[length(temp)],envir = fit4NM.env)
-      assign("current.result",paste(VPC.RUN,".noh",sep=""),envir = fit4NM.env)
-      D.data<-read.csv(paste(VPC.RUN,".csv",sep=""),na.strings=".")
+      VPC.RUN<<-temp[length(temp)]
+      current.result<<-paste(VPC.RUN,".noh",sep="")
+      D.data<-read.csv(paste(VPC.RUN,".csv",sep=""),na.string=".")
        
       Var.Name<-colnames(D.data)
-      assign("group1",ggroup(horizontal=TRUE,container=group),envir = fit4NM.env)
+      group1<<-ggroup(horizontal=TRUE,cont=group)   
       From.label.1<-glabel("")
-      assign("VarList.g1",gdroplist(c("MDV",Var.Name)),envir = fit4NM.env)
-      assign("VarList.g2",gdroplist(c("NONE",c("NONE",Var.Name))),envir = fit4NM.env)
-      assign("id.g1",gedit("0",width=10),envir = fit4NM.env)
-      assign("id.g2",gedit(" ",width=10),envir = fit4NM.env)
-      assign("label.g1",glabel("Include"),envir = fit4NM.env)
-      assign("label.g2",glabel("Exclude"),envir = fit4NM.env)
+      VarList.g1<<-gdroplist(c("MDV",Var.Name))
+      VarList.g2<<-gdroplist(c("NONE",c("NONE",Var.Name)))
+      id.g1<<-gedit("0",width=10)
+      id.g2<<-gedit(" ",width=10)
+      label.g1<<-glabel("Include")
+      label.g2<<-glabel("Exclude")
       
       tmp<-gframe("Select data",container=group1)
       add(tmp,label.g1)
@@ -8471,38 +8382,38 @@ if(add.Command!=" ")
       add(tmp,VarList.g2)
       add(tmp,id.g2)
 
-      assign("id.g3",gedit(" ",width=10),envir = fit4NM.env)
-      assign("VarList.g3",gdroplist(c("NONE",c("NONE",Var.Name))),envir = fit4NM.env)
+      id.g3<<-gedit(" ",width=10)
+      VarList.g3<<-gdroplist(c("NONE",c("NONE",Var.Name)))
       tmp<-gframe("Stratification",container=group)
       add(tmp,VarList.g3)
       add(tmp,id.g3)
    
-      tmp<-gframe("Calculate predictive checks",container=group)
-      assign("Button2",gbutton("OK",handler=CalcNPC2),envir = fit4NM.env)
+      tmp<-gframe("Calculate predictive checks",cont=group)
+      Button2<<-gbutton("OK",handler=CalcNPC2)
       add(tmp,Button2)
          
-      tmp<-gframe("Save predictive checks calculation",container=group)
+      tmp<-gframe("Save predictive checks calculation",cont=group)
 
-      assign("Button13",gbutton("OK",handler=SavePC),envir = fit4NM.env)
+      Button13<<-gbutton("OK",handler=SavePC)
       add(tmp,Button13)
 
-      tmp<-gframe("Load predictive checks calculation",container=group)
+      tmp<-gframe("Load predictive checks calculation",cont=group)
 
-      assign("Button14",gbutton("Open",handler=OpenPC),envir = fit4NM.env)
-      assign("edit14",gedit(""),envir = fit4NM.env)
+      Button14<<-gbutton("Open",handler=OpenPC)
+      edit14<<-gedit("")
       add(tmp,Button14)
       add(tmp,edit14)
  
-      assign("CI.list",gdroplist(c("95%","90%","80%")),envir = fit4NM.env)
-      assign("Button",gbutton("OK",handler=updatePlot),envir = fit4NM.env)
-      tmp<-gframe("PI",container=group)
+      CI.list<<-gdroplist(c("95%","90%","80%"))
+      Button<<-gbutton("OK",handler=updatePlot)
+      tmp<-gframe("PI",cont=group)
       add(tmp,CI.list)
-      tmp<-gframe("Plot",container=group)
+      tmp<-gframe("Plot",cont=group)
       add(tmp,Button)  
                    
-      tmp<-gframe("Summary",container=group)
-      assign("Button3",gbutton("OK",handler=NumericalCheck.Btest),envir = fit4NM.env)
-      assign("Button3.save",gbutton("save",handler=NumericalCheck.save),envir = fit4NM.env)
+      tmp<-gframe("Summary",cont=group)
+      Button3<<-gbutton("OK",handler=NumericalCheck.Btest)
+      Button3.save<<-gbutton("save",handler=NumericalCheck.save)
       add(tmp,Button3) 
       add(tmp,Button3.save)         
       tmp<-gframe("solid circles : DV",container=group)
@@ -8541,19 +8452,19 @@ if(add.Command!=" ")
       VPC2GUIB()
    }
     VPC2GUIB<-function()
-   {  assign("VPC.N",as.numeric(svalue(VPC.input))    ,envir = fit4NM.env)
+   {  VPC.N<<-as.numeric(svalue(VPC.input))    
       dispose(vpcwin)
       win<-gwindow("Predictive checks with Binomial test")
-      assign("BigGroup",ggroup(container=win),envir = fit4NM.env)
-      assign("group",ggroup(horizontal=FALSE,container=BigGroup)     ,envir = fit4NM.env)
+      BigGroup<<-ggroup(cont=win)
+      group<<-ggroup(horizontal=FALSE,cont=BigGroup)     
       
-      assign("dir.g1",gedit(""),envir = fit4NM.env)
+      dir.g1<<-gedit("")
       button.g1<-gbutton("Open folder",handler=openFB)
 
       tmp<-gframe("Runnumber subdirectory with PC.sim",container=group)
       add(tmp,button.g1)
       add(tmp,dir.g1)
-      assign("N.g1",gedit(VPC.N),envir = fit4NM.env)
+      N.g1<<-gedit(VPC.N)
       tmp<-gframe("Number of simulated sample",container=group)
       add(tmp,N.g1)
    }
@@ -8569,7 +8480,7 @@ if(add.Command!=" ")
       L2<-svalue(VarList.g2)
       L3<-svalue(VarList.g3)
          
-      DV.data<-read.csv(paste(VPC.RUN,".csv",sep=""),na.strings=".")
+      DV.data<-read.csv(paste(VPC.RUN,".csv",sep=""),na.string=".")
 
       if(L1!="NONE"& sum(colnames(D.data)==L1)!=0)
       {  L1.d<-as.numeric(svalue(id.g1))
@@ -8666,40 +8577,40 @@ if(add.Command!=" ")
                                round(NPC.sum[7]/NPC.sum[8],2),"\n",sep="")
       NPC.txt<-paste(NPC.txt,"---------------------------------------------\n",sep="")
       edit.win<-gwindow("Predictive checks with Binomial test")
-      g<-ggroup(horizontal=FALSE,container=edit.win)
+      g<-ggroup(horizontal=FALSE,cont=edit.win)
       tmp<-gframe("",container=g)
       a<-gtext(NPC.txt,width=410,height=310,font.attr=c(sizes="large",family="monospace"))
       add(tmp,a)
-      assign("NPC",NPC.txt,envir = fit4NM.env)
+      NPC<<-NPC.txt
    }
 
    PV.Btest<-function(h,...)    
-   {  assign("vpcwin",gwindow("Predictive checks with Binomial test"),envir = fit4NM.env)
-      BBgroup<-ggroup(container=vpcwin,horizontal=FALSE)
+   {  vpcwin<<-gwindow("Predictive checks with Binomial test")
+      BBgroup<-ggroup(cont=vpcwin,horizontal=FALSE)
  
-      tmp<-gframe("Find runnumber subdirectory",container=BBgroup)
-      assgn("control.t",gedit(" ",width=50),envir = fit4NM.env)
+      tmp<-gframe("Find runnumber subdirectory",cont=BBgroup)
+      control.t<<-gedit(" ",width=50)
       button1<-gbutton("Open control file",handler=openControl)
       add(tmp,button1)
       add(tmp,control.t)
 
-      tmp<-gframe("Find runnumber subdirectory ",container=BBgroup)
+      tmp<-gframe("Find runnumber subdirectory ",cont=BBgroup)
       button2<-gbutton("Open data file for predictive checks",handler=opendata,width=20,height=10)
-      assign("data.t",gedit(" ",width=50),envir = fit4NM.env)
+      data.t<<-gedit(" ",width=50)
       add(tmp,button2)
       add(tmp,data.t)
  
       tmp=gframe("Number of simulations",container=BBgroup)
       VPC.label<-glabel("")
-      assign("VPC.input",gedit("1000",width=10),envir = fit4NM.env)
+      VPC.input<<-gedit("1000",width=10)
       
       
       Button<-gbutton("Start predictive checks",handler=set.VPCN)
       add(tmp,VPC.label)
       add(tmp,VPC.input)
       tmp=gframe("",container=BBgroup)
-      	 assign("add.pnm",NULL,envir = fit4NM.env)
-      	 assign("add.Command"," "  ,envir = fit4NM.env)
+      	 add.pnm<<-NULL
+      	 add.Command<<-" "  
       
 #      temp.option<-gbutton("Parallel",handler=Option2)
 #      add(tmp,temp.option)      
@@ -8731,7 +8642,7 @@ if(add.Command!=" ")
 #      temp.CTL[id[1]+1]<-"$ESTIMATION METHOD=SAEM INTER print=1"
       temp.CTL[id[1]+1]<-paste("$ESTIMATION METHOD=BAYES INTER NBURN=",NB," NITER=",NI, " PRINT=1  SEED=",sample(1:1000000,1))
       temp.CTL<-temp.CTL[1:(id[1]+1)]
-      assign("BAYES.CTL",temp.CTL,envir = fit4NM.env)
+      BAYES.CTL<<-temp.CTL
       write.table(BAYES.CTL,"BAYES-test.ctl",quote=FALSE,row.names=FALSE,col.names=FALSE)
    }
    
@@ -8741,7 +8652,7 @@ if(add.Command!=" ")
       ID.list<-as.numeric(names(table(D.data[,ID.id])))
       BAYES.tot<-NULL
       win<-gwindow(paste("BAYES progress : B=",MC,sep=""),width=300,height=50)
-      BAYES.progress<-gslider(from=0,to=MC,by=1,value=0,container=win)
+      BAYES.progress<-gslider(from=0,to=MC,by=1,value=0,cont=win)
       temp.chain<-list()
       for(b in 1:MC)
       {    svalue(BAYES.progress)<-b
@@ -8750,7 +8661,7 @@ if(add.Command!=" ")
            file.name3<-paste("BAYES-",b,".ext",sep="")
            temp.CTL<-BAYES.CTL
            temp.CTL[length(temp.CTL)]<-paste("$ESTIMATION METHOD=BAYES INTER NBURN=",NB," NITER=",NI, " PRINT=1  SEED=",sample(1:1000000,1))
-           aassign("BAYES.CTL",temp.CTL,envir = fit4NM.env)
+           BAYES.CTL<<-temp.CTL
            write.table(BAYES.CTL,file.name1,quote=FALSE,row.names=FALSE,col.names=FALSE)
            BAYES.command<-paste(Default.NMpath,file.name1,file.name2)
            if(add.Command!=" ")
@@ -8767,64 +8678,64 @@ if(add.Command!=" ")
            temp.chain[[b]]<-temp.data
       }
       dispose(win)
-      assign("MCMC.tot.chain",temp.chain,envir = fit4NM.env)
+      MCMC.tot.chain<<-temp.chain
   }
 
 
    BAYES.B.init<-function()
    {  setBAYES<-function(h,...)
-      {  assign("MC",as.numeric(svalue(BAYES.input)),envir = fit4NM.env)
-         assign("NB",as.numeric(svalue(BAYES.input1)),envir = fit4NM.env)
-         assign("NI",as.numeric(svalue(BAYES.input2)),envir = fit4NM.env)
+      {  MC<<-as.numeric(svalue(BAYES.input))
+         NB<<-as.numeric(svalue(BAYES.input1))
+         NI<<-as.numeric(svalue(BAYES.input2))
          BAYES.ctl()     
          BAYES.try()
       }
 
       openControl<-function(h,...)
       {  control.file<-gfile(text="Open control file",type="open")
-         assign("current.ctl",readLines(control.file),envir = fit4NM.env)
+         current.ctl<<-readLines(control.file)
          svalue(control.t)<-control.file
          temp<-strsplit(control.file,split="\\\\")[[1]]
          BAYES.RUN<-temp[length(temp)]
          setwd(strsplit(control.file,split=BAYES.RUN)[[1]])
-         assign("BAYES.RUN",strsplit(BAYES.RUN,split="\\.")[[1]][1],envir = fit4NM.env)
+         BAYES.RUN<<-strsplit(BAYES.RUN,split="\\.")[[1]][1]
       }
  
       opendata<-function(h,...)
-      {  assign("data.file",gfile(text="Open data file",type="open"),envir = fit4NM.env)
-         assign("D.data",read.csv(data.file),envir = fit4NM.env)
+      {  data.file<<-gfile(text="Open data file",type="open")
+         D.data<<-read.csv(data.file)
          svalue(data.t)<-data.file
       }
  
    Single.chain<-function(h,...) 
-   {   assign( "MC",as.numeric(svalue(BAYES.input)),envir = fit4NM.env)
+   {    MC<<-as.numeric(svalue(BAYES.input))
         updateBAYESPlot1<-function(h,...)
        {  chain.ID<-svalue(BAYES.rep,index=T)
           chain.VAR<-svalue(BAYES.EST.List,index=T)
           dev.set(which=Dev.BAYESplot)
-          data.t<-coda::mcmc(MCMC.tot.chain[[chain.ID]][,chain.VAR+1])
-          coda::traceplot(data.t)
+          data.t<-mcmc(MCMC.tot.chain[[chain.ID]][,chain.VAR+1])
+          traceplot(data.t)
        }
        
        updateBAYESPlot2<-function(h,...)
        {  chain.ID<-svalue(BAYES.rep,index=T)
           chain.VAR<-svalue(BAYES.EST.List,index=T)
           dev.set(which=Dev.BAYESplot)
-          data.t<-coda::mcmc(MCMC.tot.chain[[chain.ID]][,chain.VAR+1])
-          coda::densplot(data.t)
+          data.t<-mcmc(MCMC.tot.chain[[chain.ID]][,chain.VAR+1])
+          densplot(data.t)
        }
        updateBAYESPlot3<-function(h,...)
        {  chain.ID<-svalue(BAYES.rep,index=T)
           chain.VAR<-svalue(BAYES.EST.List,index=T)
           dev.set(which=Dev.BAYESplot)
-          data.t<-coda::mcmc(MCMC.tot.chain[[chain.ID]][,chain.VAR+1])
-          coda::cumuplot(data.t,auto.layout=FALSE)    
+          data.t<-mcmc(MCMC.tot.chain[[chain.ID]][,chain.VAR+1])
+          cumuplot(data.t,auto.layout=FALSE)    
        }
        updateBAYESPlot4<-function(h,...)
        {  chain.ID<-svalue(BAYES.rep,index=T)
           chain.VAR<-svalue(BAYES.EST.List,index=T)
           dev.set(which=Dev.BAYESplot)
-          data.t<-coda::mcmc(MCMC.tot.chain[[chain.ID]][,chain.VAR+1])   
+          data.t<-mcmc(MCMC.tot.chain[[chain.ID]][,chain.VAR+1])   
           acf(data.t,main="")
        }
        updateBAYESPlot5<-function(h,...)
@@ -8832,8 +8743,8 @@ if(add.Command!=" ")
           chain.VAR<-svalue(BAYES.EST.List,index=T)
           dev.set(which=Dev.BAYESplot)
           temp.data<-MCMC.tot.chain[[chain.ID]]
-          data.t<-coda::mcmc(temp.data[,-c(1,ncol(temp.data))])   
-          coda::crosscorr.plot(data.t,col=c("gray100","gray90","gray80","gray70","gray60","gray50",
+          data.t<-mcmc(temp.data[,-c(1,ncol(temp.data))])   
+          crosscorr.plot(data.t,col=c("gray100","gray90","gray80","gray70","gray60","gray50",
                                          "gray40", "gray30","gray20","gray10","gray0", "gray10",
                                          "gray20", "gray30","gray40","gray50","gray60","gray70",
                                          "gray80", "gray90","gray100"))
@@ -8848,8 +8759,8 @@ if(add.Command!=" ")
       Button4<-gbutton("OK",handler=updateBAYESPlot4)
       Button5<-gbutton("OK",handler=updateBAYESPlot5)
       win<-gwindow("MCMC check plot: Single Chain")
-      BigGroup<-ggroup(container=win)
-      group<-ggroup(horizontal=FALSE,container=BigGroup)
+      BigGroup<-ggroup(cont=win)
+      group<-ggroup(horizontal=FALSE,cont=BigGroup)
       tmp<-gframe(" Chain ID",container=group)
       add(tmp,BAYES.rep)
       tmp<-gframe(" EST.Name",container=group)
@@ -8869,85 +8780,85 @@ if(add.Command!=" ")
    } 
 
    Multi.chain<-function(h,...) 
-   {   assign("MC",as.numeric(svalue(BAYES.input)),envir = fit4NM.env)
-       assign("NI",as.numeric(svalue(BAYES.input2)),envir = fit4NM.env)
+   {   MC<<-as.numeric(svalue(BAYES.input))
+       NI<<-as.numeric(svalue(BAYES.input2))
    
        updateBAYESMPlot1<-function(h,...)
-       {  assign("MC",as.numeric(svalue(BAYES.input)),envir = fit4NM.env)
+       {  MC<<-as.numeric(svalue(BAYES.input))
           chain.VAR<-svalue(BAYES.EST.List,index=T)
           t.data<-list()
           prob.n<-0
           for(i in 1:MC)
           { temp<-MCMC.tot.chain[[i]][,chain.VAR+1]
             if(length(temp)== NI-500)
-            {    t.data[[i-prob.n]]<- coda::mcmc(temp)
+            {    t.data[[i-prob.n]]<- mcmc(temp)
             }  else    
             {  prob.n<-prob.n+1
             }
           }  
-          assign("MC",MC-prob.n,envir = fit4NM.env)
-          temp.data<-coda::mcmc.list(t.data)                     
+          MC<<-MC-prob.n
+          temp.data<-mcmc.list(t.data)                     
           dev.set(which=Dev.BAYESMplot)
-          coda::traceplot(temp.data,col=(1:MC)+1,smooth=TRUE)
+          traceplot(temp.data,col=(1:MC)+1,smooth=TRUE)
        }
        
        updateBAYESMPlot2<-function(h,...)
-       {  assign("MC",as.numeric(svalue(BAYES.input)),envir = fit4NM.env)
+       {  MC<<-as.numeric(svalue(BAYES.input))
           chain.VAR<-svalue(BAYES.EST.List,index=T)
           t.data<-list()
           prob.n<-0
           for(i in 1:MC)
           { temp<-MCMC.tot.chain[[i]][,chain.VAR+1]
             if(length(temp)== NI-500)
-            {    t.data[[i-prob.n]]<- coda::mcmc(temp)
+            {    t.data[[i-prob.n]]<- mcmc(temp)
             }  else    
             {  prob.n<-prob.n+1
             }
           }  
-          assign("MC",MC-prob.n,envir = fit4NM.env)
-          temp.data<-coda::mcmc.list(t.data)                     
+          MC<<-MC-prob.n
+          temp.data<-mcmc.list(t.data)                     
                      
           dev.set(which=Dev.BAYESMplot)
-          coda::densplot(temp.data)
+          densplot(temp.data)
        }
        
        updateBAYESMPlot3<-function(h,...)
-       {  assign("MC",as.numeric(svalue(BAYES.input)),envir = fit4NM.env)
+       {  MC<<-as.numeric(svalue(BAYES.input))
           chain.VAR<-svalue(BAYES.EST.List,index=T)
           t.data<-list()
           prob.n<-0
           for(i in 1:MC)
           { temp<-MCMC.tot.chain[[i]][,chain.VAR+1]
             if(length(temp)== NI-500)
-            {    t.data[[i-prob.n]]<- coda::mcmc(temp)
+            {    t.data[[i-prob.n]]<- mcmc(temp)
             }  else    
             {  prob.n<-prob.n+1
             }
           }  
-          assign("MC",MC-prob.n,envir = fit4NM.env)
-          temp.data<-coda::mcmc.list(t.data)                     
+          MC<<-MC-prob.n
+          temp.data<-mcmc.list(t.data)                     
                    
           dev.set(which=Dev.BAYESMplot)
-          coda::gelman.plot(temp.data)
+          gelman.plot(temp.data)
        }
        updateBAYESMPlot4<-function(h,...)
-       {  assign("MC",as.numeric(svalue(BAYES.input)),envir = fit4NM.env)
+       {  MC<<-as.numeric(svalue(BAYES.input))
           chain.VAR<-svalue(BAYES.EST.List,index=T)
           t.data<-list()
           prob.n<-0
           for(i in 1:MC)
           { temp<-MCMC.tot.chain[[i]][,chain.VAR+1]
             if(length(temp)== NI-500)
-            {    t.data[[i-prob.n]]<- coda::mcmc(temp)
+            {    t.data[[i-prob.n]]<- mcmc(temp)
             }  else    
             {  prob.n<-prob.n+1
             }
           }  
-          assign("MC",MC-prob.n,envir = fit4NM.env)
-          temp.data<-coda::mcmc.list(t.data)                     
+          MC<<-MC-prob.n
+          temp.data<-mcmc.list(t.data)                     
                    
           dev.set(which=Dev.BAYESMplot)
-          coda::geweke.plot(temp.data)
+          geweke.plot(temp.data)
        }
        updateBAYESMPlot5<-function(h,...)
        {  chain.VAR<-svalue(BAYES.EST.List,index=T)
@@ -8955,9 +8866,9 @@ if(add.Command!=" ")
           for(i in 1:MC)
             t.matrix<- cbind(t.matrix,MCMC.tot.chain[[i]][,chain.VAR+1])
           colnames(t.matrix)<-paste("chain",1:MC)  
-          temp.data<-coda::mcmc(t.matrix)                     
+          temp.data<-mcmc(t.matrix)                     
           dev.set(which=Dev.BAYESMplot)
-          coda::crosscorr.plot(temp.data,col=c("gray100","gray90","gray80","gray70","gray60","gray50",
+          crosscorr.plot(temp.data,col=c("gray100","gray90","gray80","gray70","gray60","gray50",
                                          "gray40", "gray30","gray20","gray10","gray0", "gray10",
                                          "gray20", "gray30","gray40","gray50","gray60","gray70",
                                          "gray80", "gray90","gray100"))
@@ -8972,8 +8883,8 @@ if(add.Command!=" ")
       Button4<-gbutton("OK",handler=updateBAYESMPlot4)
       Button5<-gbutton("OK",handler=updateBAYESMPlot5)
       win<-gwindow("MCMC check plot: Multple Chains")
-      BigGroup<-ggroup(container=win)
-      group<-ggroup(horizontal=FALSE,container=BigGroup)
+      BigGroup<-ggroup(cont=win)
+      group<-ggroup(horizontal=FALSE,cont=BigGroup)
       tmp<-gframe(" EST.Name",container=group)
       add(tmp,BAYES.EST.List)
       tmp<-gframe("Trace plot",container=group)
@@ -8991,15 +8902,15 @@ if(add.Command!=" ")
    } 
 
       bootwin<-gwindow("MCMC BAYES - stationarity and convergence check")
-      BBgroup<-ggroup(container=bootwin,horizontal=FALSE)
+      BBgroup<-ggroup(cont=bootwin,horizontal=FALSE)
  
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       control.t<-gedit(" ",width=50)
       button1<-gbutton("Open control file",handler=openControl)
       add(tmp,button1)
       add(tmp,control.t)
 
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       button2<-gbutton("Open data files",handler=opendata,width=20,height=10)
       data.t<-gedit(" ",width=50)
       add(tmp,button2)
@@ -9022,15 +8933,15 @@ if(add.Command!=" ")
       Button<-gbutton("Start to fit model with BAYES option",handler=setBAYES)
 
       tmp=gframe("",container=BBgroup)
-    	assign("add.pnm",NULL,envir = fit4NM.env)
-    	assign("add.Command"," "  ,envir = fit4NM.env)
+    	add.pnm<<-NULL
+    	add.Command<<-" "  
       
       add(tmp,Button)
 
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button1<-gbutton("Check single chain",handler=Single.chain)
       add(tmp,Button1)
-      tmp<-gframe("",container=BBgroup)
+      tmp<-gframe("",cont=BBgroup)
       Button2<-gbutton("Check multiple chains",handler=Multi.chain)
       add(tmp,Button2)
    }
@@ -9047,30 +8958,30 @@ if(add.Command!=" ")
     { 
      openControl<-function(h,...)
       {  control.file<-gfile(text="Open control file",type="open")
-         assign("current.ctl",readLines(control.file),envir = fit4NM.env)
+         current.ctl<<-readLines(control.file)
          svalue(control.t)<-control.file
          temp<-strsplit(control.file,split="\\\\")[[1]]
          Random.RUN<-temp[length(temp)]
          setwd(strsplit(control.file,split=Random.RUN)[[1]])
-         assign("Random.RUN",strsplit(Random.RUN,split="\\.")[[1]][1],envir = fit4NM.env)
-         assign("file.id",strsplit(Random.RUN,split="\\.")[[1]][1],envir = fit4NM.env)
+         Random.RUN<<-strsplit(Random.RUN,split="\\.")[[1]][1]
+         file.id<<-strsplit(Random.RUN,split="\\.")[[1]][1]
       }
       
       opendata<-function(h,...)
-      {  assign("data.file",gfile(text="Open data file",type="open"),envir = fit4NM.env)
-         assign("D.data",read.csv(data.file,na.strings="."),envir = fit4NM.env)
+      {  data.file<<-gfile(text="Open data file",type="open")
+         D.data<<-read.csv(data.file,na.string=".")
          svalue(data.t)<-data.file
          Var.list<-colnames(D.data)
-         tmp<-gframe("Covariates",container=BBgroup)
-         assign("cov.t",gtable(Var.list,multiple=T),envir = fit4NM.env)
+         tmp<-gframe("Covariates",cont=BBgroup)
+         cov.t<<-gtable(Var.list,multiple=T)
           size(cov.t)<-c(500,200)
          add(tmp,cov.t)
          eta.data<-read.table(paste(file.id,".ETA",sep=""),skip=1,header=T)
          eta.list<-colnames(eta.data)[-1]
-         assign("eta.t",gdroplist(eta.list),envir = fit4NM.env)
-         tmp<-gframe("Eta",container=BBgroup)
+         eta.t<<-gdroplist(eta.list)
+         tmp<-gframe("Eta",cont=BBgroup)
          add(tmp,eta.t)
-         tmp<-gframe("PPtree test",container=BBgroup)
+         tmp<-gframe("PPtree test",cont=BBgroup)
          button3<-gbutton("Start",handler=PPtreestart,width=20,height=10)
          add(tmp,button3)
       }
@@ -9081,10 +8992,10 @@ if(add.Command!=" ")
          cov.T<-svalue(cov.t)
          eta.T<-svalue(eta.t)
 
-         COV.data<-read.csv(paste(file.id,".csv",sep=""),na.strings=".")
+         COV.data<-read.csv(paste(file.id,".csv",sep=""),na.string=".")
          COV.data<-COV.data[!duplicated(COV.data$X.ID),cov.T]
          
-         tree.result<-PPtree::PP.Tree("LDA",factor(eta.data[,eta.T]),COV.data)
+         tree.result<-PP.Tree("LDA",factor(eta.data[,eta.T]),COV.data)
          importance.tree<-apply(tree.result$Alpha.Keep,2,function(x) mean(abs(x)))
          names(importance.tree)<-colnames(COV.data)
          plot(1:length(importance.tree),importance.tree,type='h',axes=F,
@@ -9095,39 +9006,39 @@ if(add.Command!=" ")
       }     
        
       timewin<-gwindow("Covariate Search with PPtree")
-      Bgroup<-ggroup(container=timewin,horizontal=TRUE)
-      BBgroup<-ggroup(container=Bgroup,horizontal=FALSE) 
-      tmp<-gframe("Find runnumber subdirectory",container=BBgroup)
+      Bgroup<-ggroup(cont=timewin,horizontal=TRUE)
+      BBgroup<-ggroup(cont=Bgroup,horizontal=FALSE) 
+      tmp<-gframe("Find runnumber subdirectory",cont=BBgroup)
       control.t<-gedit("",width=50)
       button1<-gbutton("Open control file",handler=openControl)
       add(tmp,button1)
       add(tmp,control.t)
-      tmp<-gframe("Find runnumber subdirectory",container=BBgroup)
+      tmp<-gframe("Find runnumber subdirectory",cont=BBgroup)
       button2<-gbutton("Open data files",handler=opendata,width=20,height=10)
       data.t<-gedit(" ",width=50)
       add(tmp,button2)
       add(tmp,data.t) 
       add(Bgroup,ggraphics())
-            	 assign("add.pnm",NULL,envir = fit4NM.env)
-      	 assign("add.Command"," "  	,envir = fit4NM.env)
+            	 add.pnm<<-NULL
+      	 add.Command<<-" "  	
    }   
   
 
    cAIC<-function(h,...)
    {
    
-   }    
-   
-   
+   }  
    ############################################################################# 
    # Main GUI
    #############################################################################
    TOT.temp<-list()
    TOT.temp$num<-0
    TOT.temp$data<-c(NULL,NULL,NULL)
-   TOT.RUN<-TOT.temp
-   TOT.RESULT<-list()
-   NONMEM.win<-gwindow("GUI for NONMEM",width=850,height=300)
+   
+   TOT.RUN<<-TOT.temp
+   TOT.RESULT<<-list()
+
+   NONMEM.win<<-gwindow("GUI for NONMEM",width=850,height=300)
    menu.list<-list(Configuration=
                        list('Notes before configuration'=list(handler=ConfigNotes),
                             'Set NONMEM path-default'=list(handler=NMpath1),
@@ -9222,18 +9133,18 @@ if(add.Command!=" ")
                                       'Open alternative help'=list(handler=Help2)),    
                    'Program information'=  list(handler=PI),                           
                    'Exit'=  list(handler=function(h,...) dispose(NONMEM.win)),
-
                    'New Method'=list('line-up protocol'=list(handler=lineup.Plot),
                    'predictive check-binomial test'=list(handler=PV.Btest),
                    'MCMC-check'=list(handler=MCMCcheck),
+#                   'cAIC'=list(handler=cAIC),
                    'COVselect-PPtree'=list(handler=COV.PPtree))
                   ) 
-   gmenu(menu.list,container=NONMEM.win)
+   gmenu(menu.list,cont=NONMEM.win)
    table.name<-c("Run number","Date","Time","MIN","COV","OFV","AIC","AICc","SBC","Condtion number",
                 "Parents","Model description","# of parameters") 
-   nonmem.run<-matrix("",ncol=length(table.name),nrow=2)
+   nonmem.run<<-matrix("",ncol=length(table.name),nrow=2)
    colnames(nonmem.run)<-table.name
-   run.table<-gtable(nonmem.run,chosencol=length(table.name),container=NONMEM.win)
+   run.table<<-gtable(nonmem.run,chosencol=length(table.name),cont=NONMEM.win)
 }
 
        
