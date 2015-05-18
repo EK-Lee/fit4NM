@@ -1,20 +1,10 @@
 Package: fit4NM
-Version: 4.0.0
-Date: 2014-10-9
 Title: NONMEM platform
-Author: Eun-Kyung Lee, Gyujeong Noh
+Description:fit4NM is the software for the exploratory analysis for pharmacometrics. It helps NONMEM users check their data, fit their model using NONMEM, and diagnosis their fitted model.
+Version: 4.0.0
+Author: Eun-Kyung Lee, Gyujeong Noh 
 Maintainer: Eun-Kyung Lee <lee.eunk@gmail.com>
-Depends:
-    gWidgets,
-    tcltk,
-    tkrplot,
-    RGtk2,
-    gWidgetsRGtk2,
-    cairoDevice,
-    mcsm
-Imports:
-    PPtree,
-    coda
-Description: This package is for NONMEM user
-License: LGPL-2.1
-NeedsCompilation: yes
+Date: 2015-5-17
+Depends: R (>= 2.14)
+Imports: mcsm, PPtreeViz,gWidgetsRGtk2,tcltk,cairoDevice,tkrplot,gWidgets,RGtk2
+License: GPL (>= 2)
