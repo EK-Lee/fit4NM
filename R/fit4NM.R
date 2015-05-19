@@ -7,14 +7,17 @@
 #' including running NONMEM.  Therefore, na?ve users can use fit4NM to check 
 #' their data, fit their model using NONMEM, and diagnosis their model by 
 #' clicking mouse button.
-#' @usage fit4NM()
+#' @usage fit4NM(a)
+#' @param a just temp value
 #' @references Lee, E., Noh, GJ(2011) 
 #' fit4NM: A tool for NONMEM users, PAGANZ 2011, Auckland
 #' @keywords  GUI
 #' @export
+#' @examples
+#' fit4NM(1)
 #' @import gWidgets tcltk tkrplot gWidgetsRGtk2 mcsm  cairoDevice PPtreeViz gWidgets RGtk2
-fit4NM<-function(){  
-  
+fit4NM<-function(a){  
+   print(a)
    fit4NM.env<-new.env()
    with(fit4NM.env,{
    dir.create("c:/fit4NM",showWarnings=FALSE)
@@ -10359,12 +10362,11 @@ fit4NM<-function(){
    # Main GUI
    #############################################################################
    with(fit4NM.env,{
-   TOT.temp<-list()
-   TOT.temp$num<-0
-   TOT.temp$data<-c(NULL,NULL,NULL)
-   
-   assign("TOT.RUN",TOT.temp,envir=fit4NM.env)
-   assign("TOT.RESULT",list(),envir=fit4NM.env)
+   options(guiToolkit="RGtk2") 
+   TOT.RUN<-list()
+   TOT.RUN$num<-0
+   TOT.RUN$data<-c(NULL,NULL,NULL)
+   TOT.RESULT<-list()
    
    NONMEM.win<-gwindow("GUI for NONMEM",width=850,height=300)
    menu.list<-

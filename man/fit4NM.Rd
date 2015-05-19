@@ -4,7 +4,10 @@
 \alias{fit4NM}
 \title{Platform for PKPD modelling using NONMEM}
 \usage{
-fit4NM()
+fit4NM(a)
+}
+\arguments{
+\item{a}{just temp value}
 }
 \description{
 fit4NM is the software for the exploratory analysis for pharmacometrics.
@@ -14,6 +17,9 @@ a user-friendly graphical interface for the graphics and statistical analysis
 including running NONMEM.  Therefore, na?ve users can use fit4NM to check
 their data, fit their model using NONMEM, and diagnosis their model by
 clicking mouse button.
+}
+\examples{
+fit4NM(1)
 }
 \references{
 Lee, E., Noh, GJ(2011)
