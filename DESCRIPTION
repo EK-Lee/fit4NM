@@ -1,5 +1,5 @@
 Package: fit4NM
-Title: NONMEM platform
+Title: NONMEM Platform
 Description:fit4NM is the software for the exploratory analysis for pharmacometrics. It helps NONMEM users check their data, fit their model using NONMEM, and diagnosis their fitted model.
 Version: 4.0.0
 Author: Eun-Kyung Lee, Gyujeong Noh 

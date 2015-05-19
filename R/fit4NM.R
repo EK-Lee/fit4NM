@@ -7,17 +7,16 @@
 #' including running NONMEM.  Therefore, na?ve users can use fit4NM to check 
 #' their data, fit their model using NONMEM, and diagnosis their model by 
 #' clicking mouse button.
-#' @usage fit4NM(a)
+#' @usage fit4NM()
 #' @param a just temp value
 #' @references Lee, E., Noh, GJ(2011) 
 #' fit4NM: A tool for NONMEM users, PAGANZ 2011, Auckland
 #' @keywords  GUI
 #' @export
 #' @examples
-#' fit4NM(1)
+#' fit4NM()
 #' @import gWidgets tcltk tkrplot gWidgetsRGtk2 mcsm  cairoDevice PPtreeViz gWidgets RGtk2
-fit4NM<-function(a){  
-   print(a)
+fit4NM<-function(){  
    fit4NM.env<-new.env()
    with(fit4NM.env,{
    dir.create("c:/fit4NM",showWarnings=FALSE)
@@ -5916,7 +5915,6 @@ fit4NM<-function(a){
                font.attr=c(sizes="large",family="monospace"))
       add(tmp,a)
       NPC<-NPC.txt
-      print(NPC)
       })
    }
    
@@ -6055,6 +6053,7 @@ fit4NM<-function(a){
    CalcNPC2<-function(h,...){
       with(fit4NM.env,{     
       VPC.N<-as.numeric(svalue(N.g1))
+      LLOQ<-as.numeric(svalue(cut.g2))
       temp.id<-which(TOT.RUN$data[,"ID"]==VPC.RUN)
       temp.id<-temp.id[length(temp.id)]
       current.dir<-TOT.RUN$data[temp.id,"path"]
@@ -6125,6 +6124,7 @@ fit4NM<-function(a){
          
          close(con)
          sort.DV<-sort(unlist(temp[,3]))
+         sort.DV<-sort.DV[sort.DV>=LLOQ]
          n.DV<-length(sort.DV)
          Q02.5<-sort.DV[max(round(n.DV*0.025),1)]
          Q05<-sort.DV[max(round(n.DV*0.05),1)]
@@ -6277,6 +6277,10 @@ fit4NM<-function(a){
       N.g1<-gedit(VPC.N)
       tmp<-gframe("Number of simulated sample",container=group)
       add(tmp,N.g1)
+      cut.g2<-gedit("0")
+      tmp<-gframe("LLOQ",container=group)
+      add(tmp,cut.g2)
+      
       })
    }
    
